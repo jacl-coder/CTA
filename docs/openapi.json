@@ -1,0 +1,681 @@
+{
+  "components": {
+    "schemas": {
+      "AccountResponse": {
+        "properties": {
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "fees": {
+            "title": "Fees",
+            "type": "string"
+          },
+          "initial_capital": {
+            "title": "Initial Capital",
+            "type": "string"
+          },
+          "opening_balance": {
+            "title": "Opening Balance",
+            "type": "string"
+          },
+          "realized_pnl": {
+            "title": "Realized Pnl",
+            "type": "string"
+          },
+          "revision": {
+            "title": "Revision",
+            "type": "integer"
+          },
+          "trading_day": {
+            "format": "date",
+            "title": "Trading Day",
+            "type": "string"
+          }
+        },
+        "required": [
+          "account_id",
+          "trading_day",
+          "initial_capital",
+          "opening_balance",
+          "realized_pnl",
+          "fees",
+          "revision"
+        ],
+        "title": "AccountResponse",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "LivenessResponse": {
+        "properties": {
+          "status": {
+            "const": "alive",
+            "default": "alive",
+            "title": "Status",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "version"
+        ],
+        "title": "LivenessResponse",
+        "type": "object"
+      },
+      "Offset": {
+        "enum": [
+          "OPEN",
+          "CLOSE_TODAY",
+          "CLOSE_YESTERDAY"
+        ],
+        "title": "Offset",
+        "type": "string"
+      },
+      "PositionAggregateResponse": {
+        "properties": {
+          "instrument_id": {
+            "title": "Instrument Id",
+            "type": "string"
+          },
+          "product_id": {
+            "title": "Product Id",
+            "type": "string"
+          },
+          "quantity": {
+            "title": "Quantity",
+            "type": "integer"
+          },
+          "side": {
+            "$ref": "#/components/schemas/Side"
+          },
+          "today_quantity": {
+            "title": "Today Quantity",
+            "type": "integer"
+          },
+          "yesterday_quantity": {
+            "title": "Yesterday Quantity",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "instrument_id",
+          "product_id",
+          "side",
+          "quantity",
+          "today_quantity",
+          "yesterday_quantity"
+        ],
+        "title": "PositionAggregateResponse",
+        "type": "object"
+      },
+      "PositionResponse": {
+        "properties": {
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "instrument_id": {
+            "title": "Instrument Id",
+            "type": "string"
+          },
+          "product_id": {
+            "title": "Product Id",
+            "type": "string"
+          },
+          "quantity": {
+            "title": "Quantity",
+            "type": "integer"
+          },
+          "side": {
+            "$ref": "#/components/schemas/Side"
+          },
+          "today_quantity": {
+            "title": "Today Quantity",
+            "type": "integer"
+          },
+          "yesterday_quantity": {
+            "title": "Yesterday Quantity",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "account_id",
+          "instrument_id",
+          "product_id",
+          "side",
+          "quantity",
+          "today_quantity",
+          "yesterday_quantity"
+        ],
+        "title": "PositionResponse",
+        "type": "object"
+      },
+      "Side": {
+        "enum": [
+          "LONG",
+          "SHORT"
+        ],
+        "title": "Side",
+        "type": "string"
+      },
+      "SystemResponse": {
+        "properties": {
+          "ledger_available": {
+            "default": false,
+            "title": "Ledger Available",
+            "type": "boolean"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Reasons",
+            "type": "array"
+          },
+          "stage": {
+            "default": "foundation",
+            "enum": [
+              "foundation",
+              "ledger"
+            ],
+            "title": "Stage",
+            "type": "string"
+          },
+          "trading_available": {
+            "title": "Trading Available",
+            "type": "boolean"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "trading_available",
+          "reasons"
+        ],
+        "title": "SystemResponse",
+        "type": "object"
+      },
+      "TradeResponse": {
+        "properties": {
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "fee": {
+            "title": "Fee",
+            "type": "string"
+          },
+          "fill_id": {
+            "title": "Fill Id",
+            "type": "string"
+          },
+          "instrument_id": {
+            "title": "Instrument Id",
+            "type": "string"
+          },
+          "offset": {
+            "$ref": "#/components/schemas/Offset"
+          },
+          "price": {
+            "title": "Price",
+            "type": "string"
+          },
+          "quantity": {
+            "title": "Quantity",
+            "type": "integer"
+          },
+          "sequence": {
+            "title": "Sequence",
+            "type": "integer"
+          },
+          "side": {
+            "$ref": "#/components/schemas/Side"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "trading_day": {
+            "format": "date",
+            "title": "Trading Day",
+            "type": "string"
+          }
+        },
+        "required": [
+          "fill_id",
+          "account_id",
+          "instrument_id",
+          "trading_day",
+          "sequence",
+          "side",
+          "offset",
+          "quantity",
+          "price",
+          "fee",
+          "source"
+        ],
+        "title": "TradeResponse",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "CTA 期货风控 API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/accounts": {
+      "get": {
+        "operationId": "listAccounts",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AccountResponse"
+                  },
+                  "title": "Response Listaccounts",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Accounts",
+        "tags": [
+          "ledger"
+        ]
+      }
+    },
+    "/api/accounts/{account_id}": {
+      "get": {
+        "operationId": "getAccount",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "schema": {
+              "title": "Account Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Account",
+        "tags": [
+          "ledger"
+        ]
+      }
+    },
+    "/api/health/live": {
+      "get": {
+        "operationId": "getLiveness",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LivenessResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Liveness",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/api/health/ready": {
+      "get": {
+        "operationId": "getReadiness",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemResponse"
+                }
+              }
+            },
+            "description": "交易服务尚未就绪"
+          }
+        },
+        "summary": "Readiness",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/api/positions": {
+      "get": {
+        "operationId": "listPositions",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "account_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Account Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "product_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Product Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PositionResponse"
+                  },
+                  "title": "Response Listpositions",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Positions",
+        "tags": [
+          "ledger"
+        ]
+      }
+    },
+    "/api/positions/summary": {
+      "get": {
+        "operationId": "summarizePositions",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "product_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Product Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PositionAggregateResponse"
+                  },
+                  "title": "Response Summarizepositions",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Position Summary",
+        "tags": [
+          "ledger"
+        ]
+      }
+    },
+    "/api/system": {
+      "get": {
+        "operationId": "getSystemStatus",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "System Status",
+        "tags": [
+          "system"
+        ]
+      }
+    },
+    "/api/trades": {
+      "get": {
+        "operationId": "listTrades",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "account_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Account Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "product_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Product Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 1000,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/TradeResponse"
+                  },
+                  "title": "Response Listtrades",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Trades",
+        "tags": [
+          "ledger"
+        ]
+      }
+    }
+  }
+}
