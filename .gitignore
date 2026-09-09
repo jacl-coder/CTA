@@ -1,0 +1,32 @@
+# Runtime and local configuration
+var/
+.env
+.env.*
+!.env.example
+*.log
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Frontend and release artifacts
+node_modules/
+dist/
+build/
+backend/src/cta_risk/static/
+frontend/playwright-report/
+frontend/test-results/
+.playwright-mcp/
+*.tsbuildinfo
+
+# Editors
+.idea/
+.vscode/
+.DS_Store
