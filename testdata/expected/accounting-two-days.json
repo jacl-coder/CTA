@@ -1,0 +1,12 @@
+{
+  "2026-09-09": {
+    "A": {"realized_pnl": "100.00", "holding_pnl": "400.00", "fees": "8.00", "net_pnl": "492.00", "closing_balance": "100492.00", "margin": "7040.00", "available": "93452.00"},
+    "B": {"realized_pnl": "0.00", "holding_pnl": "2000.00", "fees": "6.00", "net_pnl": "1994.00", "closing_balance": "201994.00", "margin": "18960.00", "available": "183034.00"},
+    "C": {"realized_pnl": "0.00", "holding_pnl": "300.00", "fees": "5.00", "net_pnl": "295.00", "closing_balance": "1000295.00", "margin": "144036.00", "available": "856259.00"}
+  },
+  "2026-09-10": {
+    "A": {"realized_pnl": "200.00", "holding_pnl": "600.00", "fees": "8.00", "net_pnl": "792.00", "closing_balance": "101284.00", "margin": "7080.00", "available": "94204.00"},
+    "B": {"realized_pnl": "-500.00", "holding_pnl": "1000.00", "fees": "3.00", "net_pnl": "497.00", "closing_balance": "202491.00", "margin": "9360.00", "available": "193131.00"},
+    "C": {"realized_pnl": "-300.00", "holding_pnl": "0.00", "fees": "5.00", "net_pnl": "-305.00", "closing_balance": "999990.00", "margin": "0.00", "available": "999990.00"}
+  }
+}
