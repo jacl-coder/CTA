@@ -537,7 +537,7 @@ class LedgerService:
         else:
             transition = advance(
                 self._trading,
-                OrderCommand(command, self._market_fresh()),
+                OrderCommand(command, self._market_fresh(), self._wall_clock()),
                 self.definition,
                 self.policy,
                 self.settlement_plan,

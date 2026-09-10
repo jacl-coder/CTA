@@ -1,6 +1,7 @@
 """原题 RISK-04：从真实下单入口验证阈值熔断、拒单、有效平仓及恢复。"""
 
 import asyncio
+import json
 import sqlite3
 import threading
 from dataclasses import replace
@@ -130,6 +131,78 @@ async def test_restart_retains_breaker_results_and_requires_new_price(
         with pytest.raises(CommandConflict):
             await restored.submit_order(order("filled", quantity=2))
         assert restored.available
+    finally:
+        await restored.close()
+
+
+async def test_order_times_are_committed_once_and_survive_restart(demo_settings: Settings) -> None:
+    assert demo_settings.ledger is not None
+    now = [1_788_976_800_123]
+
+    def service_at_clock() -> LedgerService:
+        return LedgerService(
+            demo_settings.ledger.definition(),
+            SQLiteLedgerStore(demo_settings.ledger.database),
+            policy=POLICY,
+            wall_clock=lambda: now[0],
+        )
+
+    service = service_at_clock()
+    await service.start()
+    try:
+        rejected = await service.submit_order(order("timed-rejected"))
+        assert rejected.status == "REJECTED" and rejected.processed_at_ms == now[0]
+        now[0] += 1234
+        await service.publish_frame(frame(1))
+        filled = await service.submit_order(order("timed-filled"))
+        assert filled.status == "FILLED" and filled.processed_at_ms == now[0]
+        now[0] += 60_000
+        assert await service.submit_order(order("timed-filled")) == replace(filled, duplicate=True)
+        assert await service.submit_order(order("timed-rejected")) == replace(
+            rejected, duplicate=True
+        )
+    finally:
+        await service.close()
+    restored = service_at_clock()
+    await restored.start()
+    try:
+        assert [result for _, result in restored.trading_state().orders] == [rejected, filled]
+        assert await restored.submit_order(order("timed-filled")) == replace(filled, duplicate=True)
+    finally:
+        await restored.close()
+
+
+async def test_legacy_order_journal_recovers_without_inventing_time(
+    demo_settings: Settings,
+) -> None:
+    assert demo_settings.ledger is not None
+    service = make_service(demo_settings)
+    await service.start()
+    await service.publish_frame(frame(1))
+    await service.submit_order(order("legacy"))
+    await service.close()
+    # Reproduce the pre-timestamp on-disk schema, including its exact canonical JSON encoding.
+    with sqlite3.connect(demo_settings.ledger.database) as connection:
+        command, outcome = connection.execute(
+            "SELECT command_json, outcome_json FROM trading_journal WHERE revision=2"
+        ).fetchone()
+        command_raw, outcome_raw = json.loads(command), json.loads(outcome)
+        command_raw.pop("processed_at_ms")
+        outcome_raw["result"].pop("processed_at_ms")
+        connection.execute(
+            "UPDATE trading_journal SET command_json=?, outcome_json=? WHERE revision=2",
+            tuple(
+                json.dumps(raw, sort_keys=True, ensure_ascii=False)
+                for raw in (command_raw, outcome_raw)
+            ),
+        )
+    restored = make_service(demo_settings)
+    await restored.start()
+    try:
+        result = await restored.submit_order(order("legacy"))
+        assert result.duplicate and result.status == "FILLED" and result.processed_at_ms is None
+        await restored.publish_frame(frame(2))
+        assert (await restored.submit_order(order("new-timed"))).processed_at_ms is not None
     finally:
         await restored.close()
 
@@ -447,6 +520,8 @@ async def test_real_http_circuit_breaker_and_session_boundary(demo_settings: Set
         trades_before = (await client.get("/api/trades")).json()
         rejected = (await client.post("/api/orders", json=body, headers=headers)).json()
         assert rejected["status"] == "REJECTED" and rejected["reason"] == "CIRCUIT_BROKEN"
+        assert isinstance(rejected["processed_at_ms"], int)
+        assert all(trade["executed_at_ms"] is None for trade in trades_before)
         assert (await client.get("/api/trades")).json() == trades_before
         assert (await client.get("/api/orders/A/http-open")).json() == rejected
         assert (await client.post("/api/orders", json=body, headers=headers)).json()["duplicate"]
@@ -465,6 +540,10 @@ async def test_real_http_circuit_breaker_and_session_boundary(demo_settings: Set
             )
         ).json()
         assert close["status"] == "FILLED" and close["price"] == "3350" and close["fee"] == "2.00"
+        assert isinstance(close["processed_at_ms"], int)
+        filled_trade = (await client.get("/api/trades?account_id=A")).json()[-1]
+        assert filled_trade["fill_id"] == close["fill_id"]
+        assert filled_trade["executed_at_ms"] == close["processed_at_ms"]
         assert len((await client.get("/api/orders?account_id=A&limit=1&offset=1")).json()) == 1
         events = (await client.get("/api/risk-events?account_id=A")).json()
         assert sum(item["kind"] == "CIRCUIT_BREAK" for item in events) == 1
@@ -479,3 +558,6 @@ async def test_real_http_circuit_breaker_and_session_boundary(demo_settings: Set
         assert (await client.post("/api/orders", json=body, headers=headers)).status_code == 401
         assert (await client.get("/api/risk?account_id=A")).json()[0]["circuit_broken"]
         assert (await client.get("/api/health/ready")).status_code == 503
+        assert (await client.get("/api/orders/A/http-close")).json() == close
+        assert (await client.get("/api/orders/A/http-open")).json() == rejected
+        assert (await client.get("/api/trades?account_id=A")).json()[-1] == filled_trade

@@ -609,6 +609,8 @@ export interface components {
             frame_sequence: number | null;
             /** Price */
             price: string | null;
+            /** Processed At Ms */
+            processed_at_ms?: number | null;
             /** Reason */
             reason: string;
             /** Request Id */
@@ -951,6 +953,8 @@ export interface components {
         TradeResponse: {
             /** Account Id */
             account_id: string;
+            /** Executed At Ms */
+            executed_at_ms?: number | null;
             /** Fee */
             fee: string;
             /** Fill Id */

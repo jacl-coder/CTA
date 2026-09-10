@@ -462,6 +462,17 @@
             ],
             "title": "Price"
           },
+          "processed_at_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Processed At Ms"
+          },
           "reason": {
             "title": "Reason",
             "type": "string"
@@ -1448,6 +1459,17 @@
           "account_id": {
             "title": "Account Id",
             "type": "string"
+          },
+          "executed_at_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Executed At Ms"
           },
           "fee": {
             "title": "Fee",

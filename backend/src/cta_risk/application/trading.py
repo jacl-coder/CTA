@@ -28,6 +28,8 @@ def encode(value: object) -> str:
     def default(item: object) -> object:
         if is_dataclass(item) and not isinstance(item, type):
             raw = asdict(item)
+            if isinstance(item, OrderResult) and item.processed_at_ms is None:
+                raw.pop("processed_at_ms")  # Keep pre-timestamp journal outcomes replayable.
             if isinstance(item, SettlementPlan) and not item.repeat_daily:
                 raw.pop("repeat_daily")  # Preserve existing finite-run journal/report hashes.
             return raw
@@ -49,6 +51,7 @@ class OrderResult:
     price: Decimal | None = None
     fee: Decimal | None = None
     duplicate: bool = False
+    processed_at_ms: int | None = None
 
 
 @dataclass(frozen=True)
@@ -61,6 +64,13 @@ class FrameResult:
 class OrderCommand:
     order: Order
     market_ready: bool
+    processed_at_ms: int | None = None
+
+    def __post_init__(self) -> None:
+        if self.processed_at_ms is not None and (
+            type(self.processed_at_ms) is not int or self.processed_at_ms < 0
+        ):
+            raise AccountingError("订单处理时间必须为非负毫秒时间戳")
 
 
 Command = PriceFrame | OrderCommand | DayCommand
@@ -95,6 +105,7 @@ def decode_command(payload: str) -> Command:
             item["quantity"],
         ),
         raw["market_ready"],
+        raw.get("processed_at_ms"),
     )
 
 
@@ -261,6 +272,7 @@ def advance(
             record.fill.fill_id if record else None,
             record.fill.price if record else None,
             record.fee if record else None,
+            processed_at_ms=command.processed_at_ms,
         )
         updated = state
         if record is not None and book is not None:
@@ -275,7 +287,18 @@ def advance(
             )
             updated = _refresh(replace(state, ledger=ledger), policy)
         updated = replace(updated, orders=(*updated.orders, (order, result)))
-        payload = encode({"kind": "order", "order": order, "market_ready": command.market_ready})
+        payload = encode(
+            {
+                "kind": "order",
+                "order": order,
+                "market_ready": command.market_ready,
+                **(
+                    {"processed_at_ms": command.processed_at_ms}
+                    if command.processed_at_ms is not None
+                    else {}
+                ),
+            }
+        )
     updated = replace(updated, revision=state.revision + 1)
     outcome = encode(
         {

@@ -77,6 +77,7 @@ class TradeResponse(BaseModel):
     price: str
     fee: str
     source: str
+    executed_at_ms: int | None = None
 
 
 @router.get("/accounts", operation_id="listAccounts")
@@ -144,6 +145,16 @@ async def trades(
         records = service.trades(account_id, product_id)
     except AccountNotFound as exc:
         raise HTTPException(404, "账户不存在") from exc
+    # Match the committed execution result; bootstrap and legacy trades have no known time.
+    execution_times = (
+        {
+            (result.account_id, result.fill_id): result.processed_at_ms
+            for _, result in service.trading_state().orders
+            if result.fill_id is not None
+        }
+        if service.trading_enabled
+        else {}
+    )
     return [
         TradeResponse(
             fill_id=record.fill.fill_id,
@@ -157,6 +168,7 @@ async def trades(
             price=str(record.fill.price),
             fee=str(record.fee),
             source=record.source,
+            executed_at_ms=execution_times.get((record.fill.account_id, record.fill.fill_id)),
         )
         for record in records[offset : offset + limit]
     ]

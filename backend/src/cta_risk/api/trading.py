@@ -77,6 +77,7 @@ class OrderResponse(BaseModel):
     price: str | None
     fee: str | None
     duplicate: bool
+    processed_at_ms: int | None = None
 
     @classmethod
     def from_result(cls, result: OrderResult) -> "OrderResponse":
