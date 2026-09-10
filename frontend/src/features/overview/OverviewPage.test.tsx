@@ -1,24 +1,35 @@
-import { cleanup, render, screen } from '@testing-library/react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { browserMocks, context, wrap } from '../../test/workspace';
 import { OverviewPage } from './OverviewPage';
 
-afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
-
-describe('服务就绪状态', () => {
-  it('后端可连接时仍显示明确的交易阻止原因', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({
-      version: '0.1.0', stage: 'foundation', trading_available: false, reasons: ['行情尚未接入'],
-    }))));
-    render(<OverviewPage />);
-    expect(await screen.findByText('后端已连接')).toBeInTheDocument();
-    expect(screen.getByText('交易服务尚未就绪')).toBeInTheDocument();
-    expect(screen.getByText('行情尚未接入')).toBeInTheDocument();
-  });
-
-  it('网络失败不会被显示成可交易状态', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('网络不可用')));
-    render(<OverviewPage />);
-    expect(await screen.findByText('无法连接服务')).toBeInTheDocument();
-    expect(screen.queryByText('交易服务已就绪')).not.toBeInTheDocument();
-  });
+beforeEach(browserMocks);
+afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
+it('账户筛选独立于全账户指标，金额保持十进制精度', () => {
+  const value = context({ account: 'A' });
+  value.data!.totals.equity = '9007199254740993.123456789';
+  render(wrap(<OverviewPage />, value));
+  expect(screen.getByText('9,007,199,254,740,993.123456789')).toBeInTheDocument();
+  expect(screen.getByText('账户 A')).toBeInTheDocument();
+  expect(screen.queryByText('账户 B')).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('link', { name: '持仓' }));
+  expect(value.selectAccount).toHaveBeenCalledWith('A');
+});
+it('无报价不会伪装成零，断线保留估值但禁止显示可开仓', () => {
+  const value = context({ fresh: false });
+  value.data!.totals.equity = null;
+  render(wrap(<OverviewPage />, value));
+  expect(screen.getByText('等待有效报价')).toBeInTheDocument();
+  expect(screen.getAllByText('历史行情估值')).toHaveLength(3);
+  expect(screen.queryByText('可申请开仓')).not.toBeInTheDocument();
+  expect(screen.getAllByText('暂不可开仓')).toHaveLength(3);
+});
+it('勾选两个账户后可以集中对比', () => {
+  render(wrap(<OverviewPage />));
+  const boxes = screen.getAllByRole('checkbox');
+  fireEvent.click(boxes[1]); fireEvent.click(boxes[3]);
+  fireEvent.click(screen.getByRole('switch', { name: '仅比较所选账户' }));
+  expect(screen.getByText('账户 A')).toBeInTheDocument();
+  expect(screen.getByText('账户 C')).toBeInTheDocument();
+  expect(screen.queryByText('账户 B')).not.toBeInTheDocument();
 });

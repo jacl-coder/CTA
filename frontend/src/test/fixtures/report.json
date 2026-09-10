@@ -1,0 +1,207 @@
+{
+  "run_id": "settlement-demo-20260909",
+  "trading_day": "2026-09-09",
+  "close_sequence": 1,
+  "config_hash": "3b7d5e72897ab01982c3d144bff0a26509e8d48eba0dd1b78de5a61368f778f5",
+  "policy_hash": "71cdeb2c5967b85b645af6c0af693cf9ccb5550f2bede0a2e36df3e0b46158c3",
+  "settlement_plan_hash": "d7272e549224ac18f244d67c6a301027fc43153da9d62f6234cd124a56e14df8",
+  "prices": {
+    "CFFEX.IF2609": "4005",
+    "DCE.i2701": "810",
+    "SHFE.rb2610": "3510"
+  },
+  "accounts": [
+    {
+      "account_id": "A",
+      "initial_capital": "100000.00",
+      "settlement": {
+        "opening_balance": "100000.00",
+        "realized_pnl": "100.00",
+        "holding_pnl": "200.00",
+        "fees": "8.00",
+        "net_pnl": "292.00",
+        "closing_balance": "100292.00",
+        "margin": "7020.00",
+        "available": "93272.00",
+        "account_id": "A",
+        "trading_day": "2026-09-09",
+        "prices": [
+          [
+            "SHFE.rb2610",
+            "3510"
+          ]
+        ],
+        "lines": [
+          {
+            "lot_id": "A-open-1",
+            "instrument_id": "SHFE.rb2610",
+            "side": "LONG",
+            "quantity": 2,
+            "basis": "3500",
+            "settlement_price": "3510",
+            "pnl": "200.00"
+          }
+        ]
+      },
+      "valuation": {
+        "positions": [
+          {
+            "account_id": "A",
+            "instrument_id": "SHFE.rb2610",
+            "product_id": "SHFE.rb",
+            "side": "LONG",
+            "quantity": 2,
+            "notional": "70200",
+            "margin": "7020.00",
+            "floating_pnl": "200.00"
+          }
+        ],
+        "floating_pnl": "200.00",
+        "equity": "100292.00",
+        "margin": "7020.00",
+        "available": "93272.00",
+        "gross_exposure": "70200.00",
+        "net_exposure": "70200.00"
+      },
+      "risk": {
+        "account_id": "A",
+        "warning": false,
+        "circuit_broken": false,
+        "restricted_products": []
+      },
+      "risk_event_count": 0
+    },
+    {
+      "account_id": "B",
+      "initial_capital": "200000.00",
+      "settlement": {
+        "opening_balance": "200000.00",
+        "realized_pnl": "0.00",
+        "holding_pnl": "-2000.00",
+        "fees": "6.00",
+        "net_pnl": "-2006.00",
+        "closing_balance": "197994.00",
+        "margin": "19440.00",
+        "available": "178554.00",
+        "account_id": "B",
+        "trading_day": "2026-09-09",
+        "prices": [
+          [
+            "DCE.i2701",
+            "810"
+          ]
+        ],
+        "lines": [
+          {
+            "lot_id": "B-open-1",
+            "instrument_id": "DCE.i2701",
+            "side": "SHORT",
+            "quantity": 2,
+            "basis": "800",
+            "settlement_price": "810",
+            "pnl": "-2000.00"
+          }
+        ]
+      },
+      "valuation": {
+        "positions": [
+          {
+            "account_id": "B",
+            "instrument_id": "DCE.i2701",
+            "product_id": "DCE.i",
+            "side": "SHORT",
+            "quantity": 2,
+            "notional": "162000",
+            "margin": "19440.00",
+            "floating_pnl": "-2000.00"
+          }
+        ],
+        "floating_pnl": "-2000.00",
+        "equity": "197994.00",
+        "margin": "19440.00",
+        "available": "178554.00",
+        "gross_exposure": "162000.00",
+        "net_exposure": "-162000.00"
+      },
+      "risk": {
+        "account_id": "B",
+        "warning": false,
+        "circuit_broken": false,
+        "restricted_products": []
+      },
+      "risk_event_count": 0
+    },
+    {
+      "account_id": "C",
+      "initial_capital": "1000000.00",
+      "settlement": {
+        "opening_balance": "1000000.00",
+        "realized_pnl": "0.00",
+        "holding_pnl": "1500.00",
+        "fees": "5.00",
+        "net_pnl": "1495.00",
+        "closing_balance": "1001495.00",
+        "margin": "144180.00",
+        "available": "857315.00",
+        "account_id": "C",
+        "trading_day": "2026-09-09",
+        "prices": [
+          [
+            "CFFEX.IF2609",
+            "4005"
+          ]
+        ],
+        "lines": [
+          {
+            "lot_id": "C-open-1",
+            "instrument_id": "CFFEX.IF2609",
+            "side": "LONG",
+            "quantity": 1,
+            "basis": "4000",
+            "settlement_price": "4005",
+            "pnl": "1500.00"
+          }
+        ]
+      },
+      "valuation": {
+        "positions": [
+          {
+            "account_id": "C",
+            "instrument_id": "CFFEX.IF2609",
+            "product_id": "CFFEX.IF",
+            "side": "LONG",
+            "quantity": 1,
+            "notional": "1201500",
+            "margin": "144180.00",
+            "floating_pnl": "1500.00"
+          }
+        ],
+        "floating_pnl": "1500.00",
+        "equity": "1001495.00",
+        "margin": "144180.00",
+        "available": "857315.00",
+        "gross_exposure": "1201500.00",
+        "net_exposure": "1201500.00"
+      },
+      "risk": {
+        "account_id": "C",
+        "warning": false,
+        "circuit_broken": false,
+        "restricted_products": []
+      },
+      "risk_event_count": 0
+    }
+  ],
+  "totals": {
+    "opening_balance": "1300000.00",
+    "realized_pnl": "100.00",
+    "holding_pnl": "-300.00",
+    "fees": "19.00",
+    "net_pnl": "-219.00",
+    "closing_balance": "1299781.00",
+    "margin": "170640.00",
+    "available": "1129141.00",
+    "gross_exposure": "1433700.00",
+    "net_exposure": "1109700.00"
+  }
+}

@@ -1,0 +1,203 @@
+{
+  "instance_id": "ba11aa1d24f024a4",
+  "run_id": "settlement-demo-20260909",
+  "revision": 1,
+  "server_time_ms": 1788979339246,
+  "system": {
+    "version": "0.1.0",
+    "stage": "trading",
+    "ledger_available": true,
+    "trading_available": true,
+    "reasons": []
+  },
+  "accounts": [
+    {
+      "account_id": "A",
+      "trading_day": "2026-09-09",
+      "initial_capital": "100000.00",
+      "opening_balance": "100000.00",
+      "realized_pnl": "100.00",
+      "fees": "8.00",
+      "revision": 2
+    },
+    {
+      "account_id": "B",
+      "trading_day": "2026-09-09",
+      "initial_capital": "200000.00",
+      "opening_balance": "200000.00",
+      "realized_pnl": "0.00",
+      "fees": "6.00",
+      "revision": 1
+    },
+    {
+      "account_id": "C",
+      "trading_day": "2026-09-09",
+      "initial_capital": "1000000.00",
+      "opening_balance": "1000000.00",
+      "realized_pnl": "0.00",
+      "fees": "5.00",
+      "revision": 1
+    }
+  ],
+  "instruments": [
+    {
+      "instrument_id": "SHFE.rb2610",
+      "product_id": "SHFE.rb",
+      "multiplier": 10,
+      "tick_size": "1",
+      "margin_rate": "0.10",
+      "fee_per_lot": "2"
+    },
+    {
+      "instrument_id": "DCE.i2701",
+      "product_id": "DCE.i",
+      "multiplier": 100,
+      "tick_size": "0.5",
+      "margin_rate": "0.12",
+      "fee_per_lot": "3"
+    },
+    {
+      "instrument_id": "CFFEX.IF2609",
+      "product_id": "CFFEX.IF",
+      "multiplier": 300,
+      "tick_size": "0.2",
+      "margin_rate": "0.12",
+      "fee_per_lot": "5"
+    }
+  ],
+  "positions": [
+    {
+      "account_id": "A",
+      "instrument_id": "SHFE.rb2610",
+      "product_id": "SHFE.rb",
+      "side": "LONG",
+      "quantity": 2,
+      "today_quantity": 2,
+      "yesterday_quantity": 0
+    },
+    {
+      "account_id": "B",
+      "instrument_id": "DCE.i2701",
+      "product_id": "DCE.i",
+      "side": "SHORT",
+      "quantity": 2,
+      "today_quantity": 2,
+      "yesterday_quantity": 0
+    },
+    {
+      "account_id": "C",
+      "instrument_id": "CFFEX.IF2609",
+      "product_id": "CFFEX.IF",
+      "side": "LONG",
+      "quantity": 1,
+      "today_quantity": 1,
+      "yesterday_quantity": 0
+    }
+  ],
+  "risks": [
+    {
+      "account_id": "A",
+      "trading_day": "2026-09-09",
+      "frame_sequence": 1,
+      "market_ready": true,
+      "warning": false,
+      "circuit_broken": false,
+      "restricted_products": [],
+      "opening_allowed": true,
+      "blocking_reasons": [],
+      "floating_pnl": "200.00",
+      "equity": "100292.00",
+      "margin": "7020.00",
+      "available_funds": "93272.00",
+      "gross_exposure": "70200.00"
+    },
+    {
+      "account_id": "B",
+      "trading_day": "2026-09-09",
+      "frame_sequence": 1,
+      "market_ready": true,
+      "warning": false,
+      "circuit_broken": false,
+      "restricted_products": [],
+      "opening_allowed": true,
+      "blocking_reasons": [],
+      "floating_pnl": "-2000.00",
+      "equity": "197994.00",
+      "margin": "19440.00",
+      "available_funds": "178554.00",
+      "gross_exposure": "162000.00"
+    },
+    {
+      "account_id": "C",
+      "trading_day": "2026-09-09",
+      "frame_sequence": 1,
+      "market_ready": true,
+      "warning": false,
+      "circuit_broken": false,
+      "restricted_products": [],
+      "opening_allowed": true,
+      "blocking_reasons": [],
+      "floating_pnl": "1500.00",
+      "equity": "1001495.00",
+      "margin": "144180.00",
+      "available_funds": "857315.00",
+      "gross_exposure": "1201500.00"
+    }
+  ],
+  "market": {
+    "sequence": 1,
+    "trading_day": "2026-09-09",
+    "source": "manual-demo",
+    "prices": {
+      "CFFEX.IF2609": "4005",
+      "DCE.i2701": "810",
+      "SHFE.rb2610": "3510"
+    },
+    "market_ready": true
+  },
+  "sources": null,
+  "settlement": {
+    "trading_day": "2026-09-09",
+    "phase": "OPEN",
+    "close_sequence": 1,
+    "applied_sequence": 1,
+    "market_ready": true,
+    "settled_days": [],
+    "report_errors": {}
+  },
+  "settlement_days": [
+    {
+      "trading_day": "2026-09-09",
+      "close_sequence": 1,
+      "prices": {
+        "CFFEX.IF2609": "4005",
+        "DCE.i2701": "810",
+        "SHFE.rb2610": "3510"
+      }
+    },
+    {
+      "trading_day": "2026-09-10",
+      "close_sequence": 2,
+      "prices": {
+        "CFFEX.IF2609": "4010",
+        "DCE.i2701": "800",
+        "SHFE.rb2610": "3490"
+      }
+    }
+  ],
+  "automatic_settlement": false,
+  "capabilities": {
+    "ledger": true,
+    "trading": true,
+    "manual_market": true,
+    "multi_source": false,
+    "settlement": true
+  },
+  "totals": {
+    "equity": "1299781.00",
+    "floating_pnl": "-300.00",
+    "margin": "170640.00",
+    "available_funds": "1129141.00",
+    "gross_exposure": "1433700.00"
+  }
+}
