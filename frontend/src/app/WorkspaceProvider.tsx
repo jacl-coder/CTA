@@ -1,10 +1,16 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { WorkspaceContext } from './workspaceContext';
 import { usePolling } from '../hooks/usePolling';
 import type { Workspace } from '../api/types';
 
 export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const resource = usePolling<Workspace>('/workspace', 500);
+  const [refreshVersion, setRefreshVersion] = useState(0);
+  const refreshWorkspace = resource.refresh;
+  const refresh = useCallback(() => {
+    refreshWorkspace();
+    setRefreshVersion(value => value + 1);
+  }, [refreshWorkspace]);
   const [account, selectAccount] = useState<string>();
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
@@ -13,7 +19,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   }, []);
   const fresh = !!resource.data && !resource.error && now - resource.updatedAt < 3000;
   const selected = resource.data?.accounts.some(item => item.account_id === account) ? account : undefined;
-  return <WorkspaceContext.Provider value={{ ...resource, fresh, account: selected, selectAccount }}>
+  return <WorkspaceContext.Provider value={{ ...resource, refresh, refreshVersion, fresh, account: selected, selectAccount }}>
     {children}
   </WorkspaceContext.Provider>;
 }

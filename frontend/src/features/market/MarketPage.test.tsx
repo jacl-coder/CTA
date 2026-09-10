@@ -24,7 +24,7 @@ function workspace(): Workspace {
 }
 function page(data = workspace(), fresh = true, error?: string) {
   return <WorkspaceContext.Provider value={{ data, fresh, error, loading: false, updatedAt: Date.now(),
-    refresh: vi.fn(), selectAccount: vi.fn() }}><MarketPage /></WorkspaceContext.Provider>;
+    refreshVersion: 0, refresh: vi.fn(), selectAccount: vi.fn() }}><MarketPage /></WorkspaceContext.Provider>;
 }
 
 beforeEach(() => {

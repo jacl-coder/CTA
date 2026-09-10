@@ -3,7 +3,7 @@ import { messageOf, request } from '../api/client';
 
 type Resource<T> = { path: string; data?: T; error?: string; updatedAt: number; loading: boolean };
 
-export function usePolling<T>(path: string | null, interval = 1000) {
+export function usePolling<T>(path: string | null, interval = 1000, refreshVersion = 0) {
   const [state, setState] = useState<Resource<T>>({ path: '', updatedAt: 0, loading: true });
   const [revision, setRevision] = useState(0);
   const refresh = useCallback(() => setRevision(value => value + 1), []);
@@ -28,7 +28,7 @@ export function usePolling<T>(path: string | null, interval = 1000) {
     };
     void poll();
     return () => { active = false; clearTimeout(timer); controller?.abort(); };
-  }, [path, interval, revision]);
+  }, [path, interval, revision, refreshVersion]);
   const current = state.path === path ? state : { updatedAt: 0, loading: path !== null, data: undefined, error: undefined };
   return { ...current, refresh };
 }

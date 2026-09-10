@@ -11,7 +11,7 @@ export const workspace = snapshot as Workspace;
 export const dailyReport = frozen as unknown as DailyReport;
 export function context(overrides: Partial<WorkspaceContextValue> = {}): WorkspaceContextValue {
   return { data: structuredClone(workspace), fresh: true, loading: false, updatedAt: Date.now(),
-    refresh: vi.fn(), selectAccount: vi.fn(), ...overrides };
+    refreshVersion: 0, refresh: vi.fn(), selectAccount: vi.fn(), ...overrides };
 }
 export function wrap(children: ReactNode, value = context()) {
   return <MemoryRouter><WorkspaceContext.Provider value={value}>{children}</WorkspaceContext.Provider></MemoryRouter>;

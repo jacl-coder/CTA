@@ -19,7 +19,7 @@ const workspace = {
 
 function context(selected: string | undefined = account): WorkspaceContextValue {
   return { data: workspace, account: selected, fresh: true, updatedAt: Date.now(), loading: false,
-    refresh: vi.fn(), selectAccount: vi.fn() };
+    refreshVersion: 0, refresh: vi.fn(), selectAccount: vi.fn() };
 }
 function page(value = context()) {
   return <WorkspaceContext.Provider value={value}><PositionsPage /></WorkspaceContext.Provider>;
@@ -98,7 +98,7 @@ describe('持仓与真实成交分页', () => {
     const view = render(page());
     fireEvent.click(screen.getByRole('tab', { name: '成交记录' }));
     expect(await screen.findByText('fill-0')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: '刷新成交' }));
+    view.rerender(page({ ...context(), refreshVersion: 1 }));
     expect(await screen.findByText('旧数据：刷新失败或已过期')).toBeInTheDocument();
     expect(screen.getByText('fill-0')).toBeInTheDocument();
     view.rerender(page(context('B')));

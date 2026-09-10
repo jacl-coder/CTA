@@ -7,9 +7,9 @@ import { EventsPage } from './EventsPage';
 const account = 'A &+#账户';
 const workspace = { instance_id: 'instance', run_id: 'run', capabilities: { trading: true },
   accounts: [{ account_id: account }, { account_id: 'B' }] } as Workspace;
-function page(selected = account) {
+function page(selected = account, refreshVersion = 0) {
   const value: WorkspaceContextValue = { data: workspace, account: selected, loading: false,
-    fresh: true, updatedAt: Date.now(), refresh: vi.fn(), selectAccount: vi.fn() };
+    fresh: true, updatedAt: Date.now(), refreshVersion, refresh: vi.fn(), selectAccount: vi.fn() };
   return <WorkspaceContext.Provider value={value}><EventsPage /></WorkspaceContext.Provider>;
 }
 const events: RiskEvent[] = Array.from({ length: 21 }, (_, index) => ({ event_id: index + 1,
@@ -56,12 +56,12 @@ describe('风险事件', () => {
       .mockResolvedValueOnce(new Response(JSON.stringify(events.slice(0, 1))))
       .mockRejectedValue(new Error('刷新超时'));
     vi.stubGlobal('fetch', fetcher);
-    render(page());
+    const view = render(page());
     expect(await screen.findByText('风险事件查询失败')).toBeInTheDocument();
     expect(screen.queryByText('当前筛选下暂无风险事件')).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: '刷新事件' }));
+    view.rerender(page(account, 1));
     expect(await screen.findByText('浮亏告警', { selector: '.ant-tag' })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: '刷新事件' }));
+    view.rerender(page(account, 2));
     expect(await screen.findByText('旧数据：刷新失败或已过期')).toBeInTheDocument();
     expect(screen.getByText('浮亏告警', { selector: '.ant-tag' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '下一页' })).toBeDisabled();

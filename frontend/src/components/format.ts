@@ -21,3 +21,13 @@ const reasons: Record<string, string> = {
 };
 export const reasonLabel = (reason: string) => reasons[reason] ?? reason;
 export const timeLabel = (timestamp?: number | null) => timestamp == null ? '—' : new Date(timestamp).toLocaleTimeString('zh-CN', { hour12: false });
+
+const recordTimeFormatter = new Intl.DateTimeFormat('sv-SE', {
+  timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit',
+  hour: '2-digit', minute: '2-digit', second: '2-digit', fractionalSecondDigits: 3, hourCycle: 'h23',
+});
+export const recordTimeLabel = (timestamp?: number | null) => timestamp == null || !Number.isFinite(new Date(timestamp).getTime())
+  ? '未记录' : recordTimeFormatter.format(timestamp).replace(',', '.');
+
+const products: Record<string, string> = { 'SHFE.rb': '螺纹钢', 'DCE.i': '铁矿石', 'CFFEX.IF': '沪深300股指', 'SHFE.cu': '沪铜' };
+export const productLabel = (product: string) => products[product] ?? '';

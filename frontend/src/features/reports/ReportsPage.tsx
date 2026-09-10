@@ -1,11 +1,12 @@
-import { Alert, Button, Descriptions, Empty, Select, Steps, Table, Tag } from 'antd';
+import { Alert, Button, Descriptions, Select, Steps, Table, Tag } from 'antd';
 import { useRef, useState } from 'react';
 import { useWorkspace } from '../../app/workspaceContext';
 import { messageOf, writeApi } from '../../api/client';
 import type { DailyReport } from '../../api/types';
-import { Amount, ModeGate, PageHeading, Panel, RiskTags } from '../../components/Shared';
+import { Amount, ModeGate, PageGuide, PageHeading, Panel, RiskTags } from '../../components/Shared';
+import { Icon } from '../../components/Icon';
 import { phaseLabel, sideLabel } from '../../components/format';
-import { usePolling } from '../../hooks/usePolling';
+import { useWorkspacePolling } from '../../hooks/useWorkspacePolling';
 
 type Notice = { success: boolean; message: string };
 export function ReportsPage() {
@@ -16,7 +17,7 @@ export function ReportsPage() {
   const [notice, setNotice] = useState<Notice>();
   const days = data?.settlement?.settled_days ?? [];
   const selectedDay = selected && days.includes(selected) ? selected : days.at(-1);
-  const report = usePolling<DailyReport>(selectedDay ? `/reports/${encodeURIComponent(selectedDay)}` : null, 0);
+  const report = useWorkspacePolling<DailyReport>(selectedDay ? `/reports/${encodeURIComponent(selectedDay)}` : null, 0);
   const state = data?.settlement;
   const planIndex = data?.settlement_days.findIndex(day => day.trading_day === state?.trading_day) ?? -1;
   const plan = data?.settlement_days[planIndex];
@@ -24,7 +25,7 @@ export function ReportsPage() {
   const mutate = async (path: string, body: unknown, success: string) => {
     if (locked.current || !fresh || Date.now() - updatedAt >= 3000) return;
     locked.current = true; setBusy(true); setNotice(undefined);
-    try { await writeApi(path, body); setNotice({ success: true, message: success }); refresh(); report.refresh(); }
+    try { await writeApi(path, body); setNotice({ success: true, message: success }); refresh(); }
     catch (error) { setNotice({ success: false, message: `${messageOf(error)}。请刷新阶段核对结果；相同交易日与结算价重试不会重复入账。` }); refresh(); }
     finally { locked.current = false; setBusy(false); }
   };
@@ -41,25 +42,27 @@ export function ReportsPage() {
     } catch (error) { setNotice({ success: false, message: messageOf(error) }); }
     finally { locked.current = false; setBusy(false); }
   };
-  return <><PageHeading title="日结与风控日报" description="先补齐收盘行情，再清算与结转；每份日报保留已提交的结算结果。" />
+  return <><PageHeading title="日结与风控日报" description="查看一天结束后的盈亏、资金与保证金，下载可核对的风控日报。" />
     <ModeGate capability="settlement">
+      <PageGuide>日结按结算价计算当日盈亏，剩余持仓结转到下一日。已生成的日报固定保存，不随后续行情变化。</PageGuide>
       <Panel title="交易日进度" extra={<Tag>{state?.trading_day}</Tag>}>
         <Steps className="settlement-steps" size="small" current={state?.phase === 'OPEN' ? 0 : state?.phase === 'CLOSING' ? 1 : 2} items={[{ title: '盘中交易' }, { title: '封账并补齐行情' }, { title: '清算完成' }]} />
-        <div className="facts inline-facts"><div><span>当前阶段</span><b>{phaseLabel(state?.phase)}</b></div><div><span>收盘帧</span><b>{state?.close_sequence}</b></div><div><span>已处理行情帧</span><b>{state?.applied_sequence}</b></div><div><span>下一交易日</span><b>{nextDay?.trading_day ?? '本场景最后一日'}</b></div></div>
-        <p className="description">{data?.automatic_settlement ? '已启用自动日结：到达配置收盘时刻后封账，数据补齐后自动清算和结转。' : '当前使用手工日结。封账会立即停止本日新增交易，清算需等待收盘帧完整。'}</p>
-        <div className="toolbar section-action">
+        <div className="facts inline-facts"><div><span>当前阶段</span><b>{phaseLabel(state?.phase)}</b></div><div><span>日结方式</span><b>{data?.automatic_settlement ? '自动清算' : '手工清算'}</b></div><div><span>已生成日报</span><b>{days.length} 份</b></div><div><span>下一交易日</span><b>{nextDay?.trading_day ?? '本场景最后一日'}</b></div></div>
+        <p className="description">{data?.automatic_settlement ? '自动日结已开启，你无需手工操作。收盘后系统会依次封账、补齐行情、生成日报并结转。' : '当前使用手工日结。封账会立即停止本日新增交易，清算需等待收盘帧完整。'}</p>
+        <details className="details" open={!data?.automatic_settlement}><summary>{data?.automatic_settlement ? '手工日结操作（按需展开）' : '执行手工日结'}</summary><div className="toolbar section-action">
           <Button disabled={!fresh || busy || state?.phase !== 'OPEN'} onClick={() => void mutate('/settlement/close', { trading_day: state?.trading_day }, '封账已提交，新开平仓已暂停。')}>封账并停止交易</Button>
           <Button type="primary" disabled={!fresh || busy || state?.phase !== 'CLOSING' || state.applied_sequence !== state.close_sequence || !plan}
             onClick={() => void mutate('/settlement/settle', { trading_day: state?.trading_day, prices: plan?.prices }, '全账户清算已提交。')}>按计划结算价清算</Button>
           <Button disabled={!fresh || busy || state?.phase !== 'SETTLED' || !nextDay} onClick={() => void mutate('/settlement/open', { trading_day: nextDay?.trading_day }, '已结转到下一交易日，等待有效行情。')}>结转下一交易日</Button>
-        </div>
+        </div></details>
         <details className="details"><summary>查看本日冻结结算价</summary><div className="price-plan">{Object.entries(plan?.prices ?? {}).map(([key, value]) => <span key={key}>{key} <Amount value={value} /></span>)}</div><p className="muted">结算价来自本次运行的冻结配置，可能与收盘前行情不同。</p></details>
+        <details className="details"><summary>行情处理进度</summary><p className="muted">已处理行情帧 {state?.applied_sequence ?? '—'} / 收盘帧 {state?.close_sequence ?? '—'}。收盘行情补齐后才可完成清算。</p></details>
       </Panel>
       {notice && <Alert className="inline-alert" showIcon type={notice.success ? 'success' : 'warning'} message={notice.message} role="status" />}
       {state && Object.entries(state.report_errors).map(([day, error]) => <Alert className="inline-alert" key={day} type="warning" showIcon message={`${day} 日报文件未导出`} description={`${error}。账本清算已保留，可以重试导出。`} />)}
       <Panel title="冻结风控日报" extra={<Select aria-label="日报交易日" placeholder="等待首份日报" value={selectedDay} onChange={setSelected} style={{ width: 165 }} options={days.map(day => ({ value: day, label: day }))} />}>
-        {!selectedDay ? <Empty description="尚无已提交日报，完成首日日结后在此查看" /> : <>
-          <div className="toolbar report-actions"><Button onClick={() => void download('html')} disabled={!fresh || busy}>下载 HTML</Button><Button onClick={() => void download('json')} disabled={!fresh || busy}>下载 JSON</Button><Button loading={busy} disabled={!fresh} onClick={() => void mutate(`/reports/${encodeURIComponent(selectedDay)}/export`, {}, '日报文件已重新导出，清算未重复入账。')}>重新导出</Button><Button onClick={report.refresh}>重新读取</Button></div>
+        {!selectedDay ? <div className="report-empty"><Icon name="report" size={35} /><h3>尚无已提交日报，完成首日日结后在此查看</h3><p>{data?.automatic_settlement ? '首日日结完成后，日报会自动出现在这里。' : '请先完成上方的封账和清算操作。'}<br />日报包含账户盈亏、保证金和风险敞口，支持下载 HTML / JSON。</p></div> : <>
+          <div className="toolbar report-actions"><Button onClick={() => void download('html')} disabled={!fresh || busy}>下载 HTML</Button><Button onClick={() => void download('json')} disabled={!fresh || busy}>下载 JSON</Button><Button loading={busy} disabled={!fresh} onClick={() => void mutate(`/reports/${encodeURIComponent(selectedDay)}/export`, {}, '日报文件已重新导出，清算未重复入账。')}>重新导出</Button></div>
           {report.error && <Alert className="inline-alert" type="error" showIcon message="日报读取失败" description={report.error} />}
           {report.data ? <ReportBody report={report.data} account={account} /> : report.loading && <p role="status">正在读取冻结日报…</p>}
         </>}
