@@ -6,7 +6,7 @@ package = root / "backend" / "src" / "cta_risk"
 static = package / "static"
 migrations = package / "storage" / "migrations"
 if not (static / "index.html").is_file():
-    raise SystemExit("Missing frontend build: run make build-web first")
+    raise SystemExit("Missing frontend build: run make build first")
 if not list(migrations.glob("*.sql")):
     raise SystemExit("Missing database migrations")
 

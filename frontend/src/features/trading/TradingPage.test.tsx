@@ -4,19 +4,24 @@ import { browserMocks, context, wrap } from '../../test/workspace';
 import { TradingPage } from './TradingPage';
 import { attemptKey } from './orderAttempt';
 
-beforeEach(() => { browserMocks(); sessionStorage.clear(); });
+beforeEach(() => {
+  browserMocks(); sessionStorage.clear();
+  // Snapshot freshness must not depend on the machine's component-rendering speed.
+  vi.spyOn(Date, 'now').mockReturnValue(1788976800000);
+});
 afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 it('断线与熔断禁止开仓，熔断仍允许选择平今', async () => {
   vi.stubGlobal('fetch', vi.fn().mockImplementation(() => Promise.resolve(new Response('[]'))));
   const value = context({ fresh: false });
   const view = render(wrap(<TradingPage />, value));
-  expect(screen.getByRole('button', { name: '提交模拟订单' })).toBeDisabled();
+  const submit = screen.getByRole('button', { name: '提交模拟订单' });
+  expect(submit).toBeDisabled();
   value.fresh = true; value.data!.risks[0].circuit_broken = true; value.data!.risks[0].opening_allowed = false;
   view.rerender(wrap(<TradingPage />, { ...value }));
-  expect(screen.getByRole('button', { name: '提交模拟订单' })).toBeDisabled();
-  fireEvent.mouseDown(screen.getByRole('combobox', { name: '开平意图' }));
+  expect(submit).toBeDisabled();
+  fireEvent.mouseDown(screen.getByLabelText('开平意图'));
   fireEvent.click(await screen.findByText('平今仓', { selector: '.ant-select-item-option-content' }));
-  expect(screen.getByRole('button', { name: '提交模拟订单' })).toBeEnabled();
+  expect(submit).toBeEnabled();
 });
 it('提交回包丢失后刷新页面仍保留原编号，核对与重试不生成新订单', async () => {
   const value = context();
