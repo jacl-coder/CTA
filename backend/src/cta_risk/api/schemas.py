@@ -10,7 +10,7 @@ class LivenessResponse(BaseModel):
 
 class SystemResponse(BaseModel):
     version: str
-    stage: Literal["foundation", "ledger"] = "foundation"
+    stage: Literal["foundation", "ledger", "trading"] = "foundation"
     ledger_available: bool = False
     trading_available: bool
     reasons: list[str]

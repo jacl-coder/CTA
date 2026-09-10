@@ -72,6 +72,75 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/market": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Market */
+        get: operations["getMarketSnapshot"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/market/sources": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Sources */
+        get: operations["getMarketSources"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Orders */
+        get: operations["listOrders"];
+        put?: never;
+        /** Submit Order */
+        post: operations["submitOrder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/orders/{account_id}/{request_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Order */
+        get: operations["getOrder"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/positions": {
         parameters: {
             query?: never;
@@ -100,6 +169,210 @@ export interface paths {
         get: operations["summarizePositions"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Reports */
+        get: operations["listDailyReports"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/reports/{trading_day}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Report */
+        get: operations["getDailyReport"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/reports/{trading_day}/download/{format}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Download */
+        get: operations["downloadDailyReport"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/reports/{trading_day}/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Export */
+        post: operations["exportDailyReport"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/risk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Risk */
+        get: operations["listAccountRisk"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/risk-events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Risk Events */
+        get: operations["listRiskEvents"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/session": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Session */
+        get: operations["getLocalSession"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/settlement/close": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Close Day */
+        post: operations["closeTradingDay"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/settlement/open": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Open Day */
+        post: operations["openNextTradingDay"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/settlement/settle": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Settle */
+        post: operations["settleTradingDay"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/settlement/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Status */
+        get: operations["getSettlementStatus"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/simulation/frames": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Publish Frame */
+        post: operations["publishSimulationFrame"];
         delete?: never;
         options?: never;
         head?: never;
@@ -140,6 +413,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/workspace": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Workspace */
+        get: operations["getWorkspace"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -164,10 +454,92 @@ export interface components {
              */
             trading_day: string;
         };
+        /** Capabilities */
+        Capabilities: {
+            /** Ledger */
+            ledger: boolean;
+            /** Manual Market */
+            manual_market: boolean;
+            /** Multi Source */
+            multi_source: boolean;
+            /** Settlement */
+            settlement: boolean;
+            /** Trading */
+            trading: boolean;
+        };
+        /** DailyReportResponse */
+        DailyReportResponse: {
+            /** Accounts */
+            accounts: components["schemas"]["ReportAccountResponse"][];
+            /** Close Sequence */
+            close_sequence: number;
+            /** Config Hash */
+            config_hash: string;
+            /** Policy Hash */
+            policy_hash: string;
+            /** Prices */
+            prices: {
+                [key: string]: string;
+            };
+            /** Run Id */
+            run_id: string;
+            /** Settlement Plan Hash */
+            settlement_plan_hash: string;
+            totals: components["schemas"]["ReportTotalsResponse"];
+            /** Trading Day */
+            trading_day: string;
+        };
+        /** DayInput */
+        DayInput: {
+            /** Trading Day */
+            trading_day: string;
+        };
+        /** DayResponse */
+        DayResponse: {
+            /** Duplicate */
+            duplicate: boolean;
+            /** Phase */
+            phase: string;
+            /** Trading Day */
+            trading_day: string;
+        };
+        /** FrameInput */
+        FrameInput: {
+            /** Prices */
+            prices: {
+                [key: string]: string;
+            };
+            /** Sequence */
+            sequence: number;
+            /** Trading Day */
+            trading_day: string;
+        };
+        /** FrameResponse */
+        FrameResponse: {
+            /** Duplicate */
+            duplicate: boolean;
+            /** Sequence */
+            sequence: number;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** InstrumentResponse */
+        InstrumentResponse: {
+            /** Fee Per Lot */
+            fee_per_lot: string;
+            /** Instrument Id */
+            instrument_id: string;
+            /** Margin Rate */
+            margin_rate: string;
+            /** Multiplier */
+            multiplier: number;
+            /** Product Id */
+            product_id: string;
+            /** Tick Size */
+            tick_size: string;
         };
         /** LivenessResponse */
         LivenessResponse: {
@@ -180,11 +552,73 @@ export interface components {
             /** Version */
             version: string;
         };
+        /** MarketResponse */
+        MarketResponse: {
+            /** Market Ready */
+            market_ready: boolean;
+            /** Prices */
+            prices: {
+                [key: string]: string;
+            };
+            /** Sequence */
+            sequence: number | null;
+            /** Source */
+            source: string | null;
+            /** Trading Day */
+            trading_day: string | null;
+        };
         /**
          * Offset
          * @enum {string}
          */
         Offset: "OPEN" | "CLOSE_TODAY" | "CLOSE_YESTERDAY";
+        /** OrderInput */
+        OrderInput: {
+            /** Account Id */
+            account_id: string;
+            /** Instrument Id */
+            instrument_id: string;
+            /**
+             * Offset
+             * @enum {string}
+             */
+            offset: "OPEN" | "CLOSE_TODAY" | "CLOSE_YESTERDAY";
+            /** Quantity */
+            quantity: number;
+            /** Request Id */
+            request_id: string;
+            /**
+             * Side
+             * @enum {string}
+             */
+            side: "LONG" | "SHORT";
+            /** Trading Day */
+            trading_day: string;
+        };
+        /** OrderResponse */
+        OrderResponse: {
+            /** Account Id */
+            account_id: string;
+            /** Duplicate */
+            duplicate: boolean;
+            /** Fee */
+            fee: string | null;
+            /** Fill Id */
+            fill_id: string | null;
+            /** Frame Sequence */
+            frame_sequence: number | null;
+            /** Price */
+            price: string | null;
+            /** Reason */
+            reason: string;
+            /** Request Id */
+            request_id: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "FILLED" | "REJECTED";
+        };
         /** PositionAggregateResponse */
         PositionAggregateResponse: {
             /** Instrument Id */
@@ -215,11 +649,271 @@ export interface components {
             /** Yesterday Quantity */
             yesterday_quantity: number;
         };
+        /** ReportAccountResponse */
+        ReportAccountResponse: {
+            /** Account Id */
+            account_id: string;
+            /** Initial Capital */
+            initial_capital: string;
+            risk: components["schemas"]["ReportRiskResponse"];
+            /** Risk Event Count */
+            risk_event_count: number;
+            settlement: components["schemas"]["SettlementResultResponse"];
+            valuation: components["schemas"]["ReportValuationResponse"];
+        };
+        /** ReportPositionResponse */
+        ReportPositionResponse: {
+            /** Account Id */
+            account_id: string;
+            /** Floating Pnl */
+            floating_pnl: string;
+            /** Instrument Id */
+            instrument_id: string;
+            /** Margin */
+            margin: string;
+            /** Notional */
+            notional: string;
+            /** Product Id */
+            product_id: string;
+            /** Quantity */
+            quantity: number;
+            side: components["schemas"]["Side"];
+        };
+        /** ReportRiskResponse */
+        ReportRiskResponse: {
+            /** Account Id */
+            account_id: string;
+            /** Circuit Broken */
+            circuit_broken: boolean;
+            /** Restricted Products */
+            restricted_products: string[];
+            /** Warning */
+            warning: boolean;
+        };
+        /** ReportTotalsResponse */
+        ReportTotalsResponse: {
+            /** Available */
+            available: string;
+            /** Closing Balance */
+            closing_balance: string;
+            /** Fees */
+            fees: string;
+            /** Gross Exposure */
+            gross_exposure: string;
+            /** Holding Pnl */
+            holding_pnl: string;
+            /** Margin */
+            margin: string;
+            /** Net Exposure */
+            net_exposure: string;
+            /** Net Pnl */
+            net_pnl: string;
+            /** Opening Balance */
+            opening_balance: string;
+            /** Realized Pnl */
+            realized_pnl: string;
+        };
+        /** ReportValuationResponse */
+        ReportValuationResponse: {
+            /** Available */
+            available: string;
+            /** Equity */
+            equity: string;
+            /** Floating Pnl */
+            floating_pnl: string;
+            /** Gross Exposure */
+            gross_exposure: string;
+            /** Margin */
+            margin: string;
+            /** Net Exposure */
+            net_exposure: string;
+            /** Positions */
+            positions: components["schemas"]["ReportPositionResponse"][];
+        };
+        /** RiskEventResponse */
+        RiskEventResponse: {
+            /** Account Id */
+            account_id: string;
+            /** Detected Ms */
+            detected_ms?: number | null;
+            /** Event Id */
+            event_id: number;
+            /** Frame Sequence */
+            frame_sequence: number;
+            /** Kind */
+            kind: string;
+            /** Occurred Ms */
+            occurred_ms?: number | null;
+            /** Product Id */
+            product_id: string | null;
+            /** Recovered */
+            recovered?: boolean | null;
+            /** Trading Day */
+            trading_day?: string | null;
+        };
+        /** RiskResponse */
+        RiskResponse: {
+            /** Account Id */
+            account_id: string;
+            /** Available Funds */
+            available_funds: string | null;
+            /** Blocking Reasons */
+            blocking_reasons: string[];
+            /** Circuit Broken */
+            circuit_broken: boolean;
+            /** Equity */
+            equity: string | null;
+            /** Floating Pnl */
+            floating_pnl: string | null;
+            /** Frame Sequence */
+            frame_sequence: number | null;
+            /** Gross Exposure */
+            gross_exposure: string | null;
+            /** Margin */
+            margin: string | null;
+            /** Market Ready */
+            market_ready: boolean;
+            /** Opening Allowed */
+            opening_allowed: boolean;
+            /** Restricted Products */
+            restricted_products: string[];
+            /**
+             * Trading Day
+             * Format: date
+             */
+            trading_day: string;
+            /** Warning */
+            warning: boolean;
+        };
+        /** SessionResponse */
+        SessionResponse: {
+            /** Token */
+            token: string;
+        };
+        /** SessionStatus */
+        SessionStatus: {
+            /** Applied Sequence */
+            applied_sequence: number;
+            /** Close Sequence */
+            close_sequence: number;
+            /** Market Ready */
+            market_ready: boolean;
+            /** Phase */
+            phase: string;
+            /** Report Errors */
+            report_errors: {
+                [key: string]: string;
+            };
+            /** Settled Days */
+            settled_days: string[];
+            /** Trading Day */
+            trading_day: string;
+        };
+        /** SettleInput */
+        SettleInput: {
+            /** Prices */
+            prices: {
+                [key: string]: string;
+            };
+            /** Trading Day */
+            trading_day: string;
+        };
+        /** SettlementDayResponse */
+        SettlementDayResponse: {
+            /** Close Sequence */
+            close_sequence: number;
+            /** Prices */
+            prices: {
+                [key: string]: string;
+            };
+            /** Trading Day */
+            trading_day: string;
+        };
+        /** SettlementLineResponse */
+        SettlementLineResponse: {
+            /** Basis */
+            basis: string;
+            /** Instrument Id */
+            instrument_id: string;
+            /** Lot Id */
+            lot_id: string;
+            /** Pnl */
+            pnl: string;
+            /** Quantity */
+            quantity: number;
+            /** Settlement Price */
+            settlement_price: string;
+            side: components["schemas"]["Side"];
+        };
+        /** SettlementResultResponse */
+        SettlementResultResponse: {
+            /** Account Id */
+            account_id: string;
+            /** Available */
+            available: string;
+            /** Closing Balance */
+            closing_balance: string;
+            /** Fees */
+            fees: string;
+            /** Holding Pnl */
+            holding_pnl: string;
+            /** Lines */
+            lines: components["schemas"]["SettlementLineResponse"][];
+            /** Margin */
+            margin: string;
+            /** Net Pnl */
+            net_pnl: string;
+            /** Opening Balance */
+            opening_balance: string;
+            /** Prices */
+            prices: [
+                string,
+                string
+            ][];
+            /** Realized Pnl */
+            realized_pnl: string;
+            /** Trading Day */
+            trading_day: string;
+        };
         /**
          * Side
          * @enum {string}
          */
         Side: "LONG" | "SHORT";
+        /** SourceResponse */
+        SourceResponse: {
+            /** Connected */
+            connected: boolean;
+            /** Contiguous Sequence */
+            contiguous_sequence: number;
+            /** Head */
+            head: number;
+            /** Reason */
+            reason: string;
+            /** Received Count */
+            received_count: number;
+            /** Source Id */
+            source_id: string;
+        };
+        /** SourcesResponse */
+        SourcesResponse: {
+            /** Applied Sequence */
+            applied_sequence: number;
+            /** Completed */
+            completed: boolean;
+            /** Duplicate Frames */
+            duplicate_frames: number;
+            /** Epoch Ms */
+            epoch_ms: number;
+            /** Expected Sequence */
+            expected_sequence: number;
+            /** Market Ready */
+            market_ready: boolean;
+            /** Reason */
+            reason: string;
+            /** Sources */
+            sources: components["schemas"]["SourceResponse"][];
+        };
         /** SystemResponse */
         SystemResponse: {
             /**
@@ -234,11 +928,24 @@ export interface components {
              * @default foundation
              * @enum {string}
              */
-            stage: "foundation" | "ledger";
+            stage: "foundation" | "ledger" | "trading";
             /** Trading Available */
             trading_available: boolean;
             /** Version */
             version: string;
+        };
+        /** Totals */
+        Totals: {
+            /** Available Funds */
+            available_funds: string | null;
+            /** Equity */
+            equity: string | null;
+            /** Floating Pnl */
+            floating_pnl: string | null;
+            /** Gross Exposure */
+            gross_exposure: string | null;
+            /** Margin */
+            margin: string | null;
         };
         /** TradeResponse */
         TradeResponse: {
@@ -278,6 +985,35 @@ export interface components {
             msg: string;
             /** Error Type */
             type: string;
+        };
+        /** WorkspaceResponse */
+        WorkspaceResponse: {
+            /** Accounts */
+            accounts: components["schemas"]["AccountResponse"][];
+            /** Automatic Settlement */
+            automatic_settlement: boolean;
+            capabilities: components["schemas"]["Capabilities"];
+            /** Instance Id */
+            instance_id: string;
+            /** Instruments */
+            instruments: components["schemas"]["InstrumentResponse"][];
+            market: components["schemas"]["MarketResponse"] | null;
+            /** Positions */
+            positions: components["schemas"]["PositionResponse"][];
+            /** Revision */
+            revision: number;
+            /** Risks */
+            risks: components["schemas"]["RiskResponse"][];
+            /** Run Id */
+            run_id: string | null;
+            /** Server Time Ms */
+            server_time_ms: number;
+            settlement: components["schemas"]["SessionStatus"] | null;
+            /** Settlement Days */
+            settlement_days: components["schemas"]["SettlementDayResponse"][];
+            sources: components["schemas"]["SourcesResponse"] | null;
+            system: components["schemas"]["SystemResponse"];
+            totals: components["schemas"]["Totals"];
         };
     };
     responses: never;
@@ -388,6 +1124,144 @@ export interface operations {
             };
         };
     };
+    getMarketSnapshot: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MarketResponse"];
+                };
+            };
+        };
+    };
+    getMarketSources: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SourcesResponse"];
+                };
+            };
+        };
+    };
+    listOrders: {
+        parameters: {
+            query?: {
+                account_id?: string | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderResponse"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    submitOrder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OrderInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getOrder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                request_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     listPositions: {
         parameters: {
             query?: {
@@ -451,6 +1325,358 @@ export interface operations {
             };
         };
     };
+    listDailyReports: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string[];
+                };
+            };
+        };
+    };
+    getDailyReport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trading_day: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DailyReportResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    downloadDailyReport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trading_day: string;
+                format: "html" | "json";
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    exportDailyReport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                trading_day: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: string;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listAccountRisk: {
+        parameters: {
+            query?: {
+                account_id?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiskResponse"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listRiskEvents: {
+        parameters: {
+            query?: {
+                account_id?: string | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiskEventResponse"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getLocalSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionResponse"];
+                };
+            };
+        };
+    };
+    closeTradingDay: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DayInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DayResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    openNextTradingDay: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DayInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DayResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    settleTradingDay: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SettleInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DayResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getSettlementStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionStatus"];
+                };
+            };
+        };
+    };
+    publishSimulationFrame: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FrameInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FrameResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     getSystemStatus: {
         parameters: {
             query?: never;
@@ -501,6 +1727,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getWorkspace: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkspaceResponse"];
                 };
             };
         };

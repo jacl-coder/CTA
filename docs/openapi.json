@@ -45,6 +45,179 @@
         "title": "AccountResponse",
         "type": "object"
       },
+      "Capabilities": {
+        "properties": {
+          "ledger": {
+            "title": "Ledger",
+            "type": "boolean"
+          },
+          "manual_market": {
+            "title": "Manual Market",
+            "type": "boolean"
+          },
+          "multi_source": {
+            "title": "Multi Source",
+            "type": "boolean"
+          },
+          "settlement": {
+            "title": "Settlement",
+            "type": "boolean"
+          },
+          "trading": {
+            "title": "Trading",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "ledger",
+          "trading",
+          "manual_market",
+          "multi_source",
+          "settlement"
+        ],
+        "title": "Capabilities",
+        "type": "object"
+      },
+      "DailyReportResponse": {
+        "properties": {
+          "accounts": {
+            "items": {
+              "$ref": "#/components/schemas/ReportAccountResponse"
+            },
+            "title": "Accounts",
+            "type": "array"
+          },
+          "close_sequence": {
+            "title": "Close Sequence",
+            "type": "integer"
+          },
+          "config_hash": {
+            "title": "Config Hash",
+            "type": "string"
+          },
+          "policy_hash": {
+            "title": "Policy Hash",
+            "type": "string"
+          },
+          "prices": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Prices",
+            "type": "object"
+          },
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "settlement_plan_hash": {
+            "title": "Settlement Plan Hash",
+            "type": "string"
+          },
+          "totals": {
+            "$ref": "#/components/schemas/ReportTotalsResponse"
+          },
+          "trading_day": {
+            "title": "Trading Day",
+            "type": "string"
+          }
+        },
+        "required": [
+          "run_id",
+          "trading_day",
+          "close_sequence",
+          "config_hash",
+          "policy_hash",
+          "settlement_plan_hash",
+          "prices",
+          "accounts",
+          "totals"
+        ],
+        "title": "DailyReportResponse",
+        "type": "object"
+      },
+      "DayInput": {
+        "additionalProperties": false,
+        "properties": {
+          "trading_day": {
+            "title": "Trading Day",
+            "type": "string"
+          }
+        },
+        "required": [
+          "trading_day"
+        ],
+        "title": "DayInput",
+        "type": "object"
+      },
+      "DayResponse": {
+        "properties": {
+          "duplicate": {
+            "title": "Duplicate",
+            "type": "boolean"
+          },
+          "phase": {
+            "title": "Phase",
+            "type": "string"
+          },
+          "trading_day": {
+            "title": "Trading Day",
+            "type": "string"
+          }
+        },
+        "required": [
+          "trading_day",
+          "phase",
+          "duplicate"
+        ],
+        "title": "DayResponse",
+        "type": "object"
+      },
+      "FrameInput": {
+        "additionalProperties": false,
+        "properties": {
+          "prices": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Prices",
+            "type": "object"
+          },
+          "sequence": {
+            "title": "Sequence",
+            "type": "integer"
+          },
+          "trading_day": {
+            "title": "Trading Day",
+            "type": "string"
+          }
+        },
+        "required": [
+          "sequence",
+          "trading_day",
+          "prices"
+        ],
+        "title": "FrameInput",
+        "type": "object"
+      },
+      "FrameResponse": {
+        "properties": {
+          "duplicate": {
+            "title": "Duplicate",
+            "type": "boolean"
+          },
+          "sequence": {
+            "title": "Sequence",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "sequence",
+          "duplicate"
+        ],
+        "title": "FrameResponse",
+        "type": "object"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -56,6 +229,44 @@
           }
         },
         "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "InstrumentResponse": {
+        "properties": {
+          "fee_per_lot": {
+            "title": "Fee Per Lot",
+            "type": "string"
+          },
+          "instrument_id": {
+            "title": "Instrument Id",
+            "type": "string"
+          },
+          "margin_rate": {
+            "title": "Margin Rate",
+            "type": "string"
+          },
+          "multiplier": {
+            "title": "Multiplier",
+            "type": "integer"
+          },
+          "product_id": {
+            "title": "Product Id",
+            "type": "string"
+          },
+          "tick_size": {
+            "title": "Tick Size",
+            "type": "string"
+          }
+        },
+        "required": [
+          "instrument_id",
+          "product_id",
+          "multiplier",
+          "tick_size",
+          "margin_rate",
+          "fee_per_lot"
+        ],
+        "title": "InstrumentResponse",
         "type": "object"
       },
       "LivenessResponse": {
@@ -77,6 +288,64 @@
         "title": "LivenessResponse",
         "type": "object"
       },
+      "MarketResponse": {
+        "properties": {
+          "market_ready": {
+            "title": "Market Ready",
+            "type": "boolean"
+          },
+          "prices": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Prices",
+            "type": "object"
+          },
+          "sequence": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sequence"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "trading_day": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Trading Day"
+          }
+        },
+        "required": [
+          "sequence",
+          "trading_day",
+          "source",
+          "prices",
+          "market_ready"
+        ],
+        "title": "MarketResponse",
+        "type": "object"
+      },
       "Offset": {
         "enum": [
           "OPEN",
@@ -85,6 +354,144 @@
         ],
         "title": "Offset",
         "type": "string"
+      },
+      "OrderInput": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "instrument_id": {
+            "title": "Instrument Id",
+            "type": "string"
+          },
+          "offset": {
+            "enum": [
+              "OPEN",
+              "CLOSE_TODAY",
+              "CLOSE_YESTERDAY"
+            ],
+            "title": "Offset",
+            "type": "string"
+          },
+          "quantity": {
+            "title": "Quantity",
+            "type": "integer"
+          },
+          "request_id": {
+            "title": "Request Id",
+            "type": "string"
+          },
+          "side": {
+            "enum": [
+              "LONG",
+              "SHORT"
+            ],
+            "title": "Side",
+            "type": "string"
+          },
+          "trading_day": {
+            "title": "Trading Day",
+            "type": "string"
+          }
+        },
+        "required": [
+          "request_id",
+          "account_id",
+          "instrument_id",
+          "trading_day",
+          "side",
+          "offset",
+          "quantity"
+        ],
+        "title": "OrderInput",
+        "type": "object"
+      },
+      "OrderResponse": {
+        "properties": {
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "duplicate": {
+            "title": "Duplicate",
+            "type": "boolean"
+          },
+          "fee": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fee"
+          },
+          "fill_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fill Id"
+          },
+          "frame_sequence": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Frame Sequence"
+          },
+          "price": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "request_id": {
+            "title": "Request Id",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "FILLED",
+              "REJECTED"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "request_id",
+          "account_id",
+          "status",
+          "reason",
+          "frame_sequence",
+          "fill_id",
+          "price",
+          "fee",
+          "duplicate"
+        ],
+        "title": "OrderResponse",
+        "type": "object"
       },
       "PositionAggregateResponse": {
         "properties": {
@@ -165,6 +572,671 @@
         "title": "PositionResponse",
         "type": "object"
       },
+      "ReportAccountResponse": {
+        "properties": {
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "initial_capital": {
+            "title": "Initial Capital",
+            "type": "string"
+          },
+          "risk": {
+            "$ref": "#/components/schemas/ReportRiskResponse"
+          },
+          "risk_event_count": {
+            "title": "Risk Event Count",
+            "type": "integer"
+          },
+          "settlement": {
+            "$ref": "#/components/schemas/SettlementResultResponse"
+          },
+          "valuation": {
+            "$ref": "#/components/schemas/ReportValuationResponse"
+          }
+        },
+        "required": [
+          "account_id",
+          "initial_capital",
+          "settlement",
+          "valuation",
+          "risk",
+          "risk_event_count"
+        ],
+        "title": "ReportAccountResponse",
+        "type": "object"
+      },
+      "ReportPositionResponse": {
+        "properties": {
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "floating_pnl": {
+            "title": "Floating Pnl",
+            "type": "string"
+          },
+          "instrument_id": {
+            "title": "Instrument Id",
+            "type": "string"
+          },
+          "margin": {
+            "title": "Margin",
+            "type": "string"
+          },
+          "notional": {
+            "title": "Notional",
+            "type": "string"
+          },
+          "product_id": {
+            "title": "Product Id",
+            "type": "string"
+          },
+          "quantity": {
+            "title": "Quantity",
+            "type": "integer"
+          },
+          "side": {
+            "$ref": "#/components/schemas/Side"
+          }
+        },
+        "required": [
+          "account_id",
+          "instrument_id",
+          "product_id",
+          "side",
+          "quantity",
+          "notional",
+          "margin",
+          "floating_pnl"
+        ],
+        "title": "ReportPositionResponse",
+        "type": "object"
+      },
+      "ReportRiskResponse": {
+        "properties": {
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "circuit_broken": {
+            "title": "Circuit Broken",
+            "type": "boolean"
+          },
+          "restricted_products": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Restricted Products",
+            "type": "array"
+          },
+          "warning": {
+            "title": "Warning",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "account_id",
+          "warning",
+          "circuit_broken",
+          "restricted_products"
+        ],
+        "title": "ReportRiskResponse",
+        "type": "object"
+      },
+      "ReportTotalsResponse": {
+        "properties": {
+          "available": {
+            "title": "Available",
+            "type": "string"
+          },
+          "closing_balance": {
+            "title": "Closing Balance",
+            "type": "string"
+          },
+          "fees": {
+            "title": "Fees",
+            "type": "string"
+          },
+          "gross_exposure": {
+            "title": "Gross Exposure",
+            "type": "string"
+          },
+          "holding_pnl": {
+            "title": "Holding Pnl",
+            "type": "string"
+          },
+          "margin": {
+            "title": "Margin",
+            "type": "string"
+          },
+          "net_exposure": {
+            "title": "Net Exposure",
+            "type": "string"
+          },
+          "net_pnl": {
+            "title": "Net Pnl",
+            "type": "string"
+          },
+          "opening_balance": {
+            "title": "Opening Balance",
+            "type": "string"
+          },
+          "realized_pnl": {
+            "title": "Realized Pnl",
+            "type": "string"
+          }
+        },
+        "required": [
+          "opening_balance",
+          "realized_pnl",
+          "holding_pnl",
+          "fees",
+          "net_pnl",
+          "closing_balance",
+          "margin",
+          "available",
+          "gross_exposure",
+          "net_exposure"
+        ],
+        "title": "ReportTotalsResponse",
+        "type": "object"
+      },
+      "ReportValuationResponse": {
+        "properties": {
+          "available": {
+            "title": "Available",
+            "type": "string"
+          },
+          "equity": {
+            "title": "Equity",
+            "type": "string"
+          },
+          "floating_pnl": {
+            "title": "Floating Pnl",
+            "type": "string"
+          },
+          "gross_exposure": {
+            "title": "Gross Exposure",
+            "type": "string"
+          },
+          "margin": {
+            "title": "Margin",
+            "type": "string"
+          },
+          "net_exposure": {
+            "title": "Net Exposure",
+            "type": "string"
+          },
+          "positions": {
+            "items": {
+              "$ref": "#/components/schemas/ReportPositionResponse"
+            },
+            "title": "Positions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "positions",
+          "floating_pnl",
+          "equity",
+          "margin",
+          "available",
+          "gross_exposure",
+          "net_exposure"
+        ],
+        "title": "ReportValuationResponse",
+        "type": "object"
+      },
+      "RiskEventResponse": {
+        "properties": {
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "detected_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detected Ms"
+          },
+          "event_id": {
+            "title": "Event Id",
+            "type": "integer"
+          },
+          "frame_sequence": {
+            "title": "Frame Sequence",
+            "type": "integer"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "occurred_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Occurred Ms"
+          },
+          "product_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Product Id"
+          },
+          "recovered": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recovered"
+          },
+          "trading_day": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Trading Day"
+          }
+        },
+        "required": [
+          "event_id",
+          "account_id",
+          "frame_sequence",
+          "kind",
+          "product_id"
+        ],
+        "title": "RiskEventResponse",
+        "type": "object"
+      },
+      "RiskResponse": {
+        "properties": {
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "available_funds": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Available Funds"
+          },
+          "blocking_reasons": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Blocking Reasons",
+            "type": "array"
+          },
+          "circuit_broken": {
+            "title": "Circuit Broken",
+            "type": "boolean"
+          },
+          "equity": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Equity"
+          },
+          "floating_pnl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Floating Pnl"
+          },
+          "frame_sequence": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Frame Sequence"
+          },
+          "gross_exposure": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gross Exposure"
+          },
+          "margin": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Margin"
+          },
+          "market_ready": {
+            "title": "Market Ready",
+            "type": "boolean"
+          },
+          "opening_allowed": {
+            "title": "Opening Allowed",
+            "type": "boolean"
+          },
+          "restricted_products": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Restricted Products",
+            "type": "array"
+          },
+          "trading_day": {
+            "format": "date",
+            "title": "Trading Day",
+            "type": "string"
+          },
+          "warning": {
+            "title": "Warning",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "account_id",
+          "trading_day",
+          "frame_sequence",
+          "market_ready",
+          "warning",
+          "circuit_broken",
+          "restricted_products",
+          "opening_allowed",
+          "blocking_reasons",
+          "floating_pnl",
+          "equity",
+          "margin",
+          "available_funds",
+          "gross_exposure"
+        ],
+        "title": "RiskResponse",
+        "type": "object"
+      },
+      "SessionResponse": {
+        "properties": {
+          "token": {
+            "title": "Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "token"
+        ],
+        "title": "SessionResponse",
+        "type": "object"
+      },
+      "SessionStatus": {
+        "properties": {
+          "applied_sequence": {
+            "title": "Applied Sequence",
+            "type": "integer"
+          },
+          "close_sequence": {
+            "title": "Close Sequence",
+            "type": "integer"
+          },
+          "market_ready": {
+            "title": "Market Ready",
+            "type": "boolean"
+          },
+          "phase": {
+            "title": "Phase",
+            "type": "string"
+          },
+          "report_errors": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Report Errors",
+            "type": "object"
+          },
+          "settled_days": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Settled Days",
+            "type": "array"
+          },
+          "trading_day": {
+            "title": "Trading Day",
+            "type": "string"
+          }
+        },
+        "required": [
+          "trading_day",
+          "phase",
+          "close_sequence",
+          "applied_sequence",
+          "market_ready",
+          "settled_days",
+          "report_errors"
+        ],
+        "title": "SessionStatus",
+        "type": "object"
+      },
+      "SettleInput": {
+        "additionalProperties": false,
+        "properties": {
+          "prices": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Prices",
+            "type": "object"
+          },
+          "trading_day": {
+            "title": "Trading Day",
+            "type": "string"
+          }
+        },
+        "required": [
+          "trading_day",
+          "prices"
+        ],
+        "title": "SettleInput",
+        "type": "object"
+      },
+      "SettlementDayResponse": {
+        "properties": {
+          "close_sequence": {
+            "title": "Close Sequence",
+            "type": "integer"
+          },
+          "prices": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Prices",
+            "type": "object"
+          },
+          "trading_day": {
+            "title": "Trading Day",
+            "type": "string"
+          }
+        },
+        "required": [
+          "trading_day",
+          "close_sequence",
+          "prices"
+        ],
+        "title": "SettlementDayResponse",
+        "type": "object"
+      },
+      "SettlementLineResponse": {
+        "properties": {
+          "basis": {
+            "title": "Basis",
+            "type": "string"
+          },
+          "instrument_id": {
+            "title": "Instrument Id",
+            "type": "string"
+          },
+          "lot_id": {
+            "title": "Lot Id",
+            "type": "string"
+          },
+          "pnl": {
+            "title": "Pnl",
+            "type": "string"
+          },
+          "quantity": {
+            "title": "Quantity",
+            "type": "integer"
+          },
+          "settlement_price": {
+            "title": "Settlement Price",
+            "type": "string"
+          },
+          "side": {
+            "$ref": "#/components/schemas/Side"
+          }
+        },
+        "required": [
+          "lot_id",
+          "instrument_id",
+          "side",
+          "quantity",
+          "basis",
+          "settlement_price",
+          "pnl"
+        ],
+        "title": "SettlementLineResponse",
+        "type": "object"
+      },
+      "SettlementResultResponse": {
+        "properties": {
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "available": {
+            "title": "Available",
+            "type": "string"
+          },
+          "closing_balance": {
+            "title": "Closing Balance",
+            "type": "string"
+          },
+          "fees": {
+            "title": "Fees",
+            "type": "string"
+          },
+          "holding_pnl": {
+            "title": "Holding Pnl",
+            "type": "string"
+          },
+          "lines": {
+            "items": {
+              "$ref": "#/components/schemas/SettlementLineResponse"
+            },
+            "title": "Lines",
+            "type": "array"
+          },
+          "margin": {
+            "title": "Margin",
+            "type": "string"
+          },
+          "net_pnl": {
+            "title": "Net Pnl",
+            "type": "string"
+          },
+          "opening_balance": {
+            "title": "Opening Balance",
+            "type": "string"
+          },
+          "prices": {
+            "items": {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "string"
+                }
+              ],
+              "type": "array"
+            },
+            "title": "Prices",
+            "type": "array"
+          },
+          "realized_pnl": {
+            "title": "Realized Pnl",
+            "type": "string"
+          },
+          "trading_day": {
+            "title": "Trading Day",
+            "type": "string"
+          }
+        },
+        "required": [
+          "opening_balance",
+          "realized_pnl",
+          "holding_pnl",
+          "fees",
+          "net_pnl",
+          "closing_balance",
+          "margin",
+          "available",
+          "account_id",
+          "trading_day",
+          "prices",
+          "lines"
+        ],
+        "title": "SettlementResultResponse",
+        "type": "object"
+      },
       "Side": {
         "enum": [
           "LONG",
@@ -172,6 +1244,95 @@
         ],
         "title": "Side",
         "type": "string"
+      },
+      "SourceResponse": {
+        "properties": {
+          "connected": {
+            "title": "Connected",
+            "type": "boolean"
+          },
+          "contiguous_sequence": {
+            "title": "Contiguous Sequence",
+            "type": "integer"
+          },
+          "head": {
+            "title": "Head",
+            "type": "integer"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "received_count": {
+            "title": "Received Count",
+            "type": "integer"
+          },
+          "source_id": {
+            "title": "Source Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_id",
+          "connected",
+          "head",
+          "contiguous_sequence",
+          "received_count",
+          "reason"
+        ],
+        "title": "SourceResponse",
+        "type": "object"
+      },
+      "SourcesResponse": {
+        "properties": {
+          "applied_sequence": {
+            "title": "Applied Sequence",
+            "type": "integer"
+          },
+          "completed": {
+            "title": "Completed",
+            "type": "boolean"
+          },
+          "duplicate_frames": {
+            "title": "Duplicate Frames",
+            "type": "integer"
+          },
+          "epoch_ms": {
+            "title": "Epoch Ms",
+            "type": "integer"
+          },
+          "expected_sequence": {
+            "title": "Expected Sequence",
+            "type": "integer"
+          },
+          "market_ready": {
+            "title": "Market Ready",
+            "type": "boolean"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/SourceResponse"
+            },
+            "title": "Sources",
+            "type": "array"
+          }
+        },
+        "required": [
+          "epoch_ms",
+          "applied_sequence",
+          "expected_sequence",
+          "market_ready",
+          "completed",
+          "reason",
+          "duplicate_frames",
+          "sources"
+        ],
+        "title": "SourcesResponse",
+        "type": "object"
       },
       "SystemResponse": {
         "properties": {
@@ -191,7 +1352,8 @@
             "default": "foundation",
             "enum": [
               "foundation",
-              "ledger"
+              "ledger",
+              "trading"
             ],
             "title": "Stage",
             "type": "string"
@@ -211,6 +1373,74 @@
           "reasons"
         ],
         "title": "SystemResponse",
+        "type": "object"
+      },
+      "Totals": {
+        "properties": {
+          "available_funds": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Available Funds"
+          },
+          "equity": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Equity"
+          },
+          "floating_pnl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Floating Pnl"
+          },
+          "gross_exposure": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gross Exposure"
+          },
+          "margin": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Margin"
+          }
+        },
+        "required": [
+          "equity",
+          "floating_pnl",
+          "margin",
+          "available_funds",
+          "gross_exposure"
+        ],
+        "title": "Totals",
         "type": "object"
       },
       "TradeResponse": {
@@ -314,6 +1544,137 @@
         ],
         "title": "ValidationError",
         "type": "object"
+      },
+      "WorkspaceResponse": {
+        "properties": {
+          "accounts": {
+            "items": {
+              "$ref": "#/components/schemas/AccountResponse"
+            },
+            "title": "Accounts",
+            "type": "array"
+          },
+          "automatic_settlement": {
+            "title": "Automatic Settlement",
+            "type": "boolean"
+          },
+          "capabilities": {
+            "$ref": "#/components/schemas/Capabilities"
+          },
+          "instance_id": {
+            "title": "Instance Id",
+            "type": "string"
+          },
+          "instruments": {
+            "items": {
+              "$ref": "#/components/schemas/InstrumentResponse"
+            },
+            "title": "Instruments",
+            "type": "array"
+          },
+          "market": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MarketResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "positions": {
+            "items": {
+              "$ref": "#/components/schemas/PositionResponse"
+            },
+            "title": "Positions",
+            "type": "array"
+          },
+          "revision": {
+            "title": "Revision",
+            "type": "integer"
+          },
+          "risks": {
+            "items": {
+              "$ref": "#/components/schemas/RiskResponse"
+            },
+            "title": "Risks",
+            "type": "array"
+          },
+          "run_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Id"
+          },
+          "server_time_ms": {
+            "title": "Server Time Ms",
+            "type": "integer"
+          },
+          "settlement": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SessionStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "settlement_days": {
+            "items": {
+              "$ref": "#/components/schemas/SettlementDayResponse"
+            },
+            "title": "Settlement Days",
+            "type": "array"
+          },
+          "sources": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SourcesResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "system": {
+            "$ref": "#/components/schemas/SystemResponse"
+          },
+          "totals": {
+            "$ref": "#/components/schemas/Totals"
+          }
+        },
+        "required": [
+          "instance_id",
+          "run_id",
+          "revision",
+          "server_time_ms",
+          "system",
+          "accounts",
+          "instruments",
+          "positions",
+          "risks",
+          "market",
+          "sources",
+          "settlement",
+          "settlement_days",
+          "automatic_settlement",
+          "capabilities",
+          "totals"
+        ],
+        "title": "WorkspaceResponse",
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "scheme": "bearer",
+        "type": "http"
       }
     }
   },
@@ -442,6 +1803,219 @@
         ]
       }
     },
+    "/api/market": {
+      "get": {
+        "operationId": "getMarketSnapshot",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarketResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Market",
+        "tags": [
+          "trading"
+        ]
+      }
+    },
+    "/api/market/sources": {
+      "get": {
+        "operationId": "getMarketSources",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourcesResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Sources",
+        "tags": [
+          "market"
+        ]
+      }
+    },
+    "/api/orders": {
+      "get": {
+        "operationId": "listOrders",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "account_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Account Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 1000,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/OrderResponse"
+                  },
+                  "title": "Response Listorders",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Orders",
+        "tags": [
+          "trading"
+        ]
+      },
+      "post": {
+        "operationId": "submitOrder",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Submit Order",
+        "tags": [
+          "trading"
+        ]
+      }
+    },
+    "/api/orders/{account_id}/{request_id}": {
+      "get": {
+        "operationId": "getOrder",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "schema": {
+              "title": "Account Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "request_id",
+            "required": true,
+            "schema": {
+              "title": "Request Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Order",
+        "tags": [
+          "trading"
+        ]
+      }
+    },
     "/api/positions": {
       "get": {
         "operationId": "listPositions",
@@ -564,6 +2138,532 @@
         ]
       }
     },
+    "/api/reports": {
+      "get": {
+        "operationId": "listDailyReports",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "title": "Response Listdailyreports",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Reports",
+        "tags": [
+          "settlement"
+        ]
+      }
+    },
+    "/api/reports/{trading_day}": {
+      "get": {
+        "operationId": "getDailyReport",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "trading_day",
+            "required": true,
+            "schema": {
+              "title": "Trading Day",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyReportResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Report",
+        "tags": [
+          "settlement"
+        ]
+      }
+    },
+    "/api/reports/{trading_day}/download/{format}": {
+      "get": {
+        "operationId": "downloadDailyReport",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "trading_day",
+            "required": true,
+            "schema": {
+              "title": "Trading Day",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "format",
+            "required": true,
+            "schema": {
+              "enum": [
+                "html",
+                "json"
+              ],
+              "title": "Format",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Download",
+        "tags": [
+          "settlement"
+        ]
+      }
+    },
+    "/api/reports/{trading_day}/export": {
+      "post": {
+        "operationId": "exportDailyReport",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "trading_day",
+            "required": true,
+            "schema": {
+              "title": "Trading Day",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Exportdailyreport",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Export",
+        "tags": [
+          "settlement"
+        ]
+      }
+    },
+    "/api/risk": {
+      "get": {
+        "operationId": "listAccountRisk",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "account_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Account Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/RiskResponse"
+                  },
+                  "title": "Response Listaccountrisk",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Risk",
+        "tags": [
+          "trading"
+        ]
+      }
+    },
+    "/api/risk-events": {
+      "get": {
+        "operationId": "listRiskEvents",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "account_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Account Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 1000,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/RiskEventResponse"
+                  },
+                  "title": "Response Listriskevents",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Risk Events",
+        "tags": [
+          "trading"
+        ]
+      }
+    },
+    "/api/session": {
+      "get": {
+        "operationId": "getLocalSession",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Session",
+        "tags": [
+          "trading"
+        ]
+      }
+    },
+    "/api/settlement/close": {
+      "post": {
+        "operationId": "closeTradingDay",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DayInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DayResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Close Day",
+        "tags": [
+          "settlement"
+        ]
+      }
+    },
+    "/api/settlement/open": {
+      "post": {
+        "operationId": "openNextTradingDay",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DayInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DayResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Open Day",
+        "tags": [
+          "settlement"
+        ]
+      }
+    },
+    "/api/settlement/settle": {
+      "post": {
+        "operationId": "settleTradingDay",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SettleInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DayResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Settle",
+        "tags": [
+          "settlement"
+        ]
+      }
+    },
+    "/api/settlement/status": {
+      "get": {
+        "operationId": "getSettlementStatus",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Status",
+        "tags": [
+          "settlement"
+        ]
+      }
+    },
+    "/api/simulation/frames": {
+      "post": {
+        "operationId": "publishSimulationFrame",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FrameInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FrameResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Publish Frame",
+        "tags": [
+          "trading"
+        ]
+      }
+    },
     "/api/system": {
       "get": {
         "operationId": "getSystemStatus",
@@ -674,6 +2774,27 @@
         "summary": "Trades",
         "tags": [
           "ledger"
+        ]
+      }
+    },
+    "/api/workspace": {
+      "get": {
+        "operationId": "getWorkspace",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkspaceResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Workspace",
+        "tags": [
+          "workspace"
         ]
       }
     }

@@ -7,7 +7,9 @@ from datetime import date
 from decimal import Decimal
 from typing import Protocol
 
-from cta_risk.domain.models import Account, AccountBook, Fill, Instrument
+from cta_risk.application.market import EventObservation, StoredMarket
+from cta_risk.domain.market import SourceFrame
+from cta_risk.domain.models import Account, AccountBook, CloseAllocation, Fill, Instrument
 
 
 class LedgerError(RuntimeError):
@@ -82,6 +84,13 @@ class FillResult:
     duplicate: bool
 
 
+@dataclass(frozen=True)
+class JournalEntry:
+    revision: int
+    command_json: str
+    outcome_json: str
+
+
 class LedgerStore(Protocol):
     """所有同步方法均由应用层的专用数据库线程调用。"""
 
@@ -92,3 +101,38 @@ class LedgerStore(Protocol):
     ) -> int: ...
 
     def close(self) -> None: ...
+
+    def initialize_trading(
+        self, run_id: str, policy_json: str | None
+    ) -> tuple[JournalEntry, ...]: ...
+
+    def save_transition(
+        self,
+        run_id: str,
+        entry: JournalEntry,
+        record: RecordedFill | None,
+        book: AccountBook | None,
+        expected_revision: int | None,
+        market_sequence: int | None = None,
+        observations: tuple[EventObservation, ...] = (),
+    ) -> None: ...
+
+    def initialize_market(
+        self, run_id: str, plan_json: str | None, epoch_ms: int
+    ) -> StoredMarket | None: ...
+
+    def save_source_frames(self, run_id: str, frames: tuple[SourceFrame, ...]) -> None: ...
+
+    def initialize_settlement(self, run_id: str, config_json: str | None) -> tuple[str, ...]: ...
+
+    def save_day_transition(
+        self,
+        run_id: str,
+        entry: JournalEntry,
+        accounts: tuple[StoredAccount, ...],
+        report_json: str | None,
+    ) -> None: ...
+
+    def verify_allocations(
+        self, run_id: str, allocations: tuple[tuple[str, CloseAllocation], ...]
+    ) -> None: ...

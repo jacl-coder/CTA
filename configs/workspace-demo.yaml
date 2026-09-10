@@ -1,0 +1,101 @@
+# 手工工作台演示：每日日内推进三帧，手动封账和结转。
+# 双源接入验收使用 market-demo.yaml / settlement-demo.yaml。
+server:
+  host: 127.0.0.1
+  port: 8004
+ledger:
+  database: ../var/workspace-demo/ledger.sqlite3
+  run_id: workspace-demo-20260909
+  trading_day: '2026-09-09'
+  queue_capacity: 256
+  accounts:
+  - account_id: A
+    initial_capital: '100000.00'
+  - account_id: B
+    initial_capital: '200000.00'
+  - account_id: C
+    initial_capital: '1000000.00'
+  instruments:
+  - instrument_id: SHFE.rb2610
+    product: rb
+    exchange: SHFE
+    multiplier: 10
+    tick_size: '1'
+    margin_rate: '0.10'
+    fee_per_lot: '2'
+  - instrument_id: DCE.i2701
+    product: i
+    exchange: DCE
+    multiplier: 100
+    tick_size: '0.5'
+    margin_rate: '0.12'
+    fee_per_lot: '3'
+  - instrument_id: CFFEX.IF2609
+    product: IF
+    exchange: CFFEX
+    multiplier: 300
+    tick_size: '0.2'
+    margin_rate: '0.12'
+    fee_per_lot: '5'
+  initial_fills:
+  - fill_id: A-open-1
+    account_id: A
+    instrument_id: SHFE.rb2610
+    sequence: 1
+    side: LONG
+    offset: OPEN
+    quantity: 3
+    price: '3500'
+    source: bootstrap-demo
+  - fill_id: A-close-2
+    account_id: A
+    instrument_id: SHFE.rb2610
+    sequence: 2
+    side: LONG
+    offset: CLOSE_TODAY
+    quantity: 1
+    price: '3510'
+    source: bootstrap-demo
+  - fill_id: B-open-1
+    account_id: B
+    instrument_id: DCE.i2701
+    sequence: 1
+    side: SHORT
+    offset: OPEN
+    quantity: 2
+    price: '800'
+    source: bootstrap-demo
+  - fill_id: C-open-1
+    account_id: C
+    instrument_id: CFFEX.IF2609
+    sequence: 1
+    side: LONG
+    offset: OPEN
+    quantity: 1
+    price: '4000'
+    source: bootstrap-demo
+trading:
+  warning_ratio: '0.02'
+  loss_ratio: '0.03'
+  default_product_limit: '2000000'
+  product_limits:
+  - account_id: A
+    product_id: SHFE.rb
+    amount: '140000'
+  max_price_age_seconds: 30
+settlement:
+  auto_settle: false
+  report_dir: ../var/workspace-demo/reports
+  days:
+  - trading_day: '2026-09-09'
+    close_sequence: 3
+    prices:
+      SHFE.rb2610: '3510'
+      DCE.i2701: '810'
+      CFFEX.IF2609: '4005'
+  - trading_day: '2026-09-10'
+    close_sequence: 6
+    prices:
+      SHFE.rb2610: '3490'
+      DCE.i2701: '800'
+      CFFEX.IF2609: '4010'

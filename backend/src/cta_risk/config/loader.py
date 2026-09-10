@@ -44,6 +44,11 @@ def load_settings(path: Path) -> Settings:
             if not isinstance(database, str) or not database.strip() or database == ":memory:":
                 raise ConfigurationError("ledger.database 必须是持久化文件路径")
             raw["ledger"]["database"] = (path.resolve().parent / database).resolve()
+        if isinstance(raw.get("settlement"), dict) and "report_dir" in raw["settlement"]:
+            directory = raw["settlement"]["report_dir"]
+            if not isinstance(directory, str) or not directory.strip():
+                raise ConfigurationError("settlement.report_dir 必须是非空路径字符串")
+            raw["settlement"]["report_dir"] = (path.resolve().parent / directory).resolve()
         return Settings.model_validate(raw)
     except (OSError, yaml.YAMLError, ValidationError) as exc:
         raise ConfigurationError(f"无法加载配置 {path}: {exc}") from exc

@@ -1,1 +1,5 @@
-"""从已冻结日结生成独立报表；待清算阶段实现。"""
+"""从已冻结日结生成独立报表。"""
+
+from cta_risk.report.exporter import export_report
+
+__all__ = ["export_report"]

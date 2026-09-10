@@ -12,6 +12,7 @@ dependencies = [
   "uvicorn>=0.34,<1",
   "pydantic>=2.10,<3",
   "pyyaml>=6.0,<7",
+  "httpx>=0.28,<1",
 ]
 
 [project.scripts]
@@ -19,7 +20,6 @@ cta-risk = "cta_risk.cli:main"
 
 [dependency-groups]
 dev = [
-  "httpx>=0.28,<1",
   "pytest>=8.3,<10",
   "pytest-asyncio>=0.25,<2",
   "ruff>=0.11,<1",

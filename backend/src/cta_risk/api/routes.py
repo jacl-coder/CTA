@@ -19,6 +19,22 @@ def system_status(request: Request) -> SystemResponse:
     status = get_system_status()
     service = request.app.state.ledger
     available = isinstance(service, LedgerService) and service.available
+    if isinstance(service, LedgerService) and available and service.trading_enabled:
+        return SystemResponse(
+            version=__version__,
+            stage="trading",
+            ledger_available=True,
+            trading_available=service.trading_available,
+            reasons=[]
+            if service.trading_available
+            else [
+                f"交易日 {service.trading_state().trading_day} 已封账或清算，当前不能交易。"
+                if service.trading_state().phase != "OPEN"
+                else str(service.source_status()["reason"])
+                if service.market_plan is not None
+                else "等待完整且有效的模拟行情；价格缺失、过期或进度异常时暂停交易。"
+            ],
+        )
     return SystemResponse(
         version=__version__,
         trading_available=status.trading_available,
