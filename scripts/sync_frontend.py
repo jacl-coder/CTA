@@ -7,7 +7,7 @@ root = Path(__file__).resolve().parents[1]
 source = root / "frontend" / "dist"
 target = root / "backend" / "src" / "cta_risk" / "static"
 if not (source / "index.html").is_file():
-    raise SystemExit("前端尚未构建，请先运行 make build-web")
+    raise SystemExit("前端尚未构建，请先运行 make build")
 # This path contains generated frontend assets only; never remove runtime data.
 if target.exists():
     shutil.rmtree(target)

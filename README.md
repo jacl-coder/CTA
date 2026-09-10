@@ -22,80 +22,71 @@
 - [前端工作台接入与页面演示](docs/前端工作台接入.md)
 - [测试方案与需求进度](docs/测试方案.md)
 
-## 本地开发
+## 启动项目
 
 需要 Python 3.12、uv、Node.js 22.12 或更高版本及 npm。在仓库根目录运行：
 
 ```bash
-make install
-make dev-backend
+make install  # 首次安装依赖
+make run
 ```
 
-另开终端，在仓库根目录启动页面：
+访问 [工作台](http://127.0.0.1:8004) 或 [API 文档](http://127.0.0.1:8004/api/docs)。`make run` 自动构建页面并启动后端，默认使用 `configs/workspace-demo.yaml`，支持手工行情、模拟交易与日结。停止服务按 `Ctrl+C`。操作步骤见[前端工作台接入](docs/前端工作台接入.md)。
+
+切换场景只需指定配置，例如启动双源自动日结：
 
 ```bash
-make dev-frontend
+make run CONFIG=configs/settlement-demo.yaml
 ```
 
-访问 [工作台](http://127.0.0.1:5173) 或 [API 文档](http://127.0.0.1:8000/api/docs)。Vite 将 `/api` 请求代理至后端。页面按后端能力显示账本、交易和日结内容，未启用的能力明确提示。
+该场景访问 8003，行情源使用 8201/8202。不同场景的端口、数据库和运行标识由配置决定，重启会恢复已有数据。
 
-不使用 Make 时，对应命令如下：
+修改前端需要热更新时，保持后端运行，另开终端：
 
 ```bash
-uv sync --project backend --all-groups --locked
-npm --prefix frontend ci
-uv run --project backend --locked cta-risk serve --config configs/demo.yaml
-# 另开终端
-npm --prefix frontend run dev
+CTA_API_TARGET=http://127.0.0.1:8004 npm --prefix frontend run dev
 ```
 
-配置通过 `--config` 显式指定，资源路径相对配置文件解析。`configs/demo.yaml` 包含服务参数、3 个账户、3 个合约及 4 条标注 `bootstrap-demo` 来源的初始化成交。首次启动创建 `var/demo/ledger.sqlite3`，后续启动恢复已有账本，不重复导入。金额、价格和交易日必须用带引号的字符串填写。校验命令只检查配置，不创建数据库：
+访问 5173。Vite 将 `/api` 代理到指定后端，默认代理为 8000。只修改后端、不需要重新构建页面时，可以直接使用 `uv run --project backend --locked cta-risk serve --config configs/workspace-demo.yaml`。
+
+配置路径通过 `--config` 指定，数据库和报告目录相对配置文件解析。金额、价格和交易日使用带引号的字符串。修改已有运行的初始资金、规则或初始化成交时，使用新的数据库路径与运行标识；同一运行跨日时保持配置首日不变。只检查配置而不创建数据库：
 
 ```bash
-uv run --project backend --locked cta-risk check-config --config configs/demo.yaml
+uv run --project backend --locked cta-risk check-config --config configs/workspace-demo.yaml
 ```
 
-同一数据库的运行标识、初始化首日与业务配置需要保持一致；修改初始资金、合约规则或初始化成交时，指定新的数据库路径和运行标识。启用日结配置后，同一运行可按显式会话计划跨日持久化；账本配置中的首日不随结转修改。
-
-## 页面操作入口
-
-```bash
-make build-web
-make dev-workspace
-```
-
-访问 [业务工作台](http://127.0.0.1:8004)，手工提交行情、模拟交易、封账清算和下载日报。使用热更新时另开终端运行 `CTA_API_TARGET=http://127.0.0.1:8004 make dev-frontend`，访问 5173。完整演示步骤和金额核对见[前端工作台接入](docs/前端工作台接入.md)。
+Makefile 保留 `install`、`run`、`api`、`check`、`test`、`build`、`package`、`verify` 八个入口，执行 `make` 查看说明。专项演示使用下方脚本。
 
 ## 模拟交易与熔断演示
 
 ```bash
-make demo-risk
+uv run --project backend --locked python scripts/demo_risk.py
 ```
 
 脚本在独立临时数据库中启动真实 HTTP 服务，依次验证浮亏 2980 元、达到 3000 元熔断、拒绝开仓、反弹保持熔断、允许平仓、多账户独立运行及强制退出后的恢复，完成后退出并清理临时数据。
 
-手动演示使用 `make dev-trading`，加载 `configs/trading-demo.yaml`，访问 [8001 端口的 API 文档](http://127.0.0.1:8001/api/docs)。先通过 `/api/session` 取得本次运行令牌，再调用 `/api/simulation/frames` 提交完整模拟价格，最后通过 `/api/orders` 下单。价格有效期默认 30 秒，恢复或过期后需要新帧。具体字段、规则和操作步骤见[闭环说明](docs/交易与风控闭环.md)。
+手动演示使用 `make run CONFIG=configs/trading-demo.yaml`，加载 `configs/trading-demo.yaml`，访问 [8001 端口的 API 文档](http://127.0.0.1:8001/api/docs)。先通过 `/api/session` 取得本次运行令牌，再调用 `/api/simulation/frames` 提交完整模拟价格，最后通过 `/api/orders` 下单。价格有效期默认 30 秒，恢复或过期后需要新帧。具体字段、规则和操作步骤见[闭环说明](docs/交易与风控闭环.md)。
 
 此配置与默认账本模式使用不同的运行、数据库和端口；Vite 默认代理仍指向 8000。3% 为可配置演示阈值，两个独立行情源使用下面的自动行情配置。
 
 ## 双源行情与恢复演示
 
 ```bash
-make demo-market
+uv run --project backend --locked python scripts/demo_market.py
 # 手动运行固定场景：后端 8002，行情源 8101/8102
-make dev-market
+make run CONFIG=configs/market-demo.yaml
 ```
 
-`make demo-market` 使用临时数据库和空闲端口，实际启动后端与两个行情服务，对比连续接入和中断补全结果。覆盖中断时暂停开平仓、后端强制结束后恢复、行情源单独退出后自动重启，以及中断期间越过阈值又反弹后的正确熔断。
+`uv run --project backend --locked python scripts/demo_market.py` 使用临时数据库和空闲端口，实际启动后端与两个行情服务，对比连续接入和中断补全结果。覆盖中断时暂停开平仓、后端强制结束后恢复、行情源单独退出后自动重启，以及中断期间越过阈值又反弹后的正确熔断。
 
-`make dev-market` 读取 `configs/market-demo.yaml`，访问 [双源 API 文档](http://127.0.0.1:8002/api/docs)。场景共 64 帧、约 16 秒，结束后保留结果并停止交易；重启沿用数据库中的旧进度。重复演示优先用 `make demo-market`，手动运行新场景需要新的数据库和运行标识。双源模式禁用手工价格注入，详细协议、接口与限制见[双源行情与恢复](docs/双源行情与恢复.md)。
+`make run CONFIG=configs/market-demo.yaml` 读取 `configs/market-demo.yaml`，访问 [双源 API 文档](http://127.0.0.1:8002/api/docs)。场景共 64 帧、约 16 秒，结束后保留结果并停止交易；重启沿用数据库中的旧进度。重复演示优先用 `uv run --project backend --locked python scripts/demo_market.py`，手动运行新场景需要新的数据库和运行标识。双源模式禁用手工价格注入，详细协议、接口与限制见[双源行情与恢复](docs/双源行情与恢复.md)。
 
 ## 两日日结与日报
 
 ```bash
-make demo-settlement
+uv run --project backend --locked python scripts/demo_settlement.py
 # 固定两日场景：后端 8003，行情源 8201/8202
-make dev-settlement
+make run CONFIG=configs/settlement-demo.yaml
 ```
 
 验收脚本使用临时数据库验证自动封账、独立结算价清算、次日平昨、重复日结、跨日成交后的强制重启，以及日报文件与冻结快照一致。固定场景约 24 秒，生成 `var/settlement-demo/reports/risk-YYYY-MM-DD.html` 和 `.json`，可以离线打开。固定场景本身不自动下单；平昨订单由验收脚本提交。
@@ -128,19 +119,18 @@ make api
 ## 前端构建与可执行目录
 
 ```bash
-make build-web
-make dev-backend
+make run CONFIG=configs/demo.yaml
 ```
 
 构建后直接访问 [后端托管的工作台](http://127.0.0.1:8000)，无需运行 Vite。
 
 ```bash
 make package
-make smoke-package
+make verify
 ./dist/cta-risk/cta-risk serve --config configs/demo.yaml
 ```
 
-PyInstaller 采用 `onedir`，必须分发整个 `dist/cta-risk` 目录及需要的配置，不能只复制其中的启动文件。当前打包范围包括后端、React 页面与 SQL 迁移文件。`make smoke-package` 在临时目录、无 Python/Node 搜索路径的环境下验证初始化、查询、实际熔断拒单、双源中断补全、两日日结日报及强制退出后的恢复；发布程序用自身子命令启动两个独立行情服务。
+PyInstaller 采用 `onedir`，必须分发整个 `dist/cta-risk` 目录及需要的配置，不能只复制其中的启动文件。当前打包范围包括后端、React 页面与 SQL 迁移文件。`make verify` 在临时目录、无 Python/Node 搜索路径的环境下验证初始化、查询、实际熔断拒单、双源中断补全、两日日结日报及强制退出后的恢复；发布程序用自身子命令启动两个独立行情服务。
 
 首个构建目标为 Linux amd64，发布包需在兼容操作系统运行。源码启动、打包启动与最终完整机试验收是三个不同的完成条件。
 

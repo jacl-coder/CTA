@@ -189,7 +189,7 @@ def main() -> None:
             )
             assert request(base, "/api/trades") == trades
             print("强制退出后重启：账本、风险事件和熔断恢复；重试不重复成交，新增开仓仍被拒绝")
-    print("模拟交易熔断闭环演示通过；双源行情与中断补全另见 make demo-market。")
+    print("模拟交易熔断闭环演示通过；双源行情与中断补全见 scripts/demo_market.py。")
 
 
 if __name__ == "__main__":
