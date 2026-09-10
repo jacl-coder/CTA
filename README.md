@@ -10,6 +10,9 @@
 
 - [机试原题](docs/机试题目-多品种期货交易风控系统.md)
 - [项目进度与后续计划](docs/项目进度.md)
+- [交付与原题验收](docs/交付与原题验收.md)
+- [现场演示与答辩](docs/现场演示与答辩.md)
+- [代码展示](docs/代码展示.md)
 - [需求基线](docs/需求基线.md)
 - [技术选型与项目结构](docs/技术选型与项目结构.md)
 - [目录与开发约定](docs/项目结构与开发约定.md)
@@ -31,9 +34,11 @@ make install  # 首次安装依赖
 make run
 ```
 
-访问 [工作台](http://127.0.0.1:8004) 或 [API 文档](http://127.0.0.1:8004/api/docs)。`make run` 自动构建页面并启动后端，默认使用 `configs/workspace-demo.yaml`，支持手工行情、模拟交易与日结。停止服务按 `Ctrl+C`。操作步骤见[前端工作台接入](docs/前端工作台接入.md)。
+访问 [工作台](http://127.0.0.1:8004) 或 [API 文档](http://127.0.0.1:8004/api/docs)。`make run` 自动构建页面并启动后端，默认使用 `configs/live-demo.yaml`，自动启动两个独立模拟行情源（8301/8302）。每秒更新完整行情，连接就绪后即可在“模拟交易”开平仓，不需要手工输入价格。每 30 分钟完成一个模拟交易日，自动清算、导出日报并进入下一日，行情不会在固定帧数后结束。停止服务按 `Ctrl+C`。操作步骤见[前端工作台接入](docs/前端工作台接入.md)。
 
-切换场景只需指定配置，例如启动双源自动日结：
+交易仍受账户熔断、敞口和保证金规则约束；收盘或断线补数期间会暂停，补齐并进入可交易状态后恢复。模拟日期按连续日期推进，合约和结算价使用演示模板，不代表真实交易所日历或结算规则。重启保留成交、报告和行情进度，需先补齐停机期间的数据。
+
+需要逐步手工演示时，使用 `make run CONFIG=configs/workspace-demo.yaml`。切换固定双源日结验收场景：
 
 ```bash
 make run CONFIG=configs/settlement-demo.yaml
@@ -47,12 +52,12 @@ make run CONFIG=configs/settlement-demo.yaml
 CTA_API_TARGET=http://127.0.0.1:8004 npm --prefix frontend run dev
 ```
 
-访问 5173。Vite 将 `/api` 代理到指定后端，默认代理为 8000。只修改后端、不需要重新构建页面时，可以直接使用 `uv run --project backend --locked cta-risk serve --config configs/workspace-demo.yaml`。
+访问 5173。Vite 将 `/api` 代理到指定后端，默认代理为 8000。只修改后端、不需要重新构建页面时，可以直接使用 `uv run --project backend --locked cta-risk serve --config configs/live-demo.yaml`。
 
 配置路径通过 `--config` 指定，数据库和报告目录相对配置文件解析。金额、价格和交易日使用带引号的字符串。修改已有运行的初始资金、规则或初始化成交时，使用新的数据库路径与运行标识；同一运行跨日时保持配置首日不变。只检查配置而不创建数据库：
 
 ```bash
-uv run --project backend --locked cta-risk check-config --config configs/workspace-demo.yaml
+uv run --project backend --locked cta-risk check-config --config configs/live-demo.yaml
 ```
 
 Makefile 保留 `install`、`run`、`api`、`check`、`test`、`build`、`package`、`verify` 八个入口，执行 `make` 查看说明。专项演示使用下方脚本。
@@ -116,27 +121,28 @@ make api
 - `/api/settlement/status`、`/api/reports`：当前日结阶段、已结算日期、文件错误和冻结日报。
 - 未实现的 `/api/*` 和缺失静态资源返回 404，不回退成成功页面。
 
-## 前端构建与可执行目录
-
-```bash
-make run CONFIG=configs/demo.yaml
-```
-
-构建后直接访问 [后端托管的工作台](http://127.0.0.1:8000)，无需运行 Vite。
+## 完整交付包
 
 ```bash
 make package
 make verify
-./dist/cta-risk/cta-risk serve --config configs/demo.yaml
 ```
 
-PyInstaller 采用 `onedir`，必须分发整个 `dist/cta-risk` 目录及需要的配置，不能只复制其中的启动文件。当前打包范围包括后端、React 页面与 SQL 迁移文件。`make verify` 在临时目录、无 Python/Node 搜索路径的环境下验证初始化、查询、实际熔断拒单、双源中断补全、两日日结日报及强制退出后的恢复；发布程序用自身子命令启动两个独立行情服务。
+`make package` 构建程序并生成 `dist/cta-risk-delivery-linux-x86_64.tar.gz` 和 `.sha256`，包含源码、测试、配置、文档、代码展示图及 `dist/cta-risk/` 可执行目录。`make verify` 解压这个归档，核对文件摘要和可执行权限，再用解压后的程序验证账本恢复、实际熔断拒单、双源恢复和两日日结。日志和归档摘要绑定记录位于 `dist/delivery-verification/`。
 
-首个构建目标为 Linux amd64，发布包需在兼容操作系统运行。源码启动、打包启动与最终完整机试验收是三个不同的完成条件。
+评审解压后，在 `cta-risk-delivery` 目录执行：
+
+```bash
+./dist/cta-risk/cta-risk serve --config configs/live-demo.yaml
+```
+
+访问 8004，无需 Python、Node 或前端开发服务。源代码修改与自动化验证脚本仍需要开发依赖。可执行程序必须与 `_internal` 等运行文件一起分发。
+
+首个构建与验证环境为 Ubuntu 24.04.4、Linux x86_64、glibc 2.39。其他目标环境需独立验证。交付清单、校验和使用方法见[交付与原题验收](docs/交付与原题验收.md)。
 
 ## 下一阶段
 
-前端业务工作台、实时指标和多账户对比已完成本阶段接入。下一步实现独立历史回放验证，并核对最终使用说明、目标环境可执行包、演示截图和问答材料，具体顺序见项目进度文档。
+前端业务工作台、实时指标和多账户对比已完成本阶段接入。本次补齐完整交付包、原题验收清单、现场演示与答辩、代码展示材料。剩余独立历史回放附加项与机试方实际目标环境验证，具体顺序见项目进度文档。
 
 只运行核算基础测试：
 
@@ -144,4 +150,4 @@ PyInstaller 采用 `onedir`，必须分发整个 `dist/cta-risk` 目录及需要
 uv run --project backend --locked pytest backend/tests/unit/test_accounting.py -v
 ```
 
-当前核算测试 26 项，后端合计 170 项，前端 18 项。测试中的需求编号表示已覆盖的行为，不等于完整系统验收完成。
+当前核算测试 26 项，后端合计 189 项，前端 18 项。测试中的需求编号表示已覆盖的行为，不等于完整系统验收完成。

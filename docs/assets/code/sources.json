@@ -1,0 +1,34 @@
+[
+  {
+    "image": "01-risk.png",
+    "source": "backend/src/cta_risk/risk/rules.py",
+    "first_line": 28,
+    "last_line": 42,
+    "source_sha256": "1dab52939633658d1b3ca9ee6d00dc2432e73be62cfc1085ee6c544283df4ea9",
+    "kind": "source-rendering"
+  },
+  {
+    "image": "02-market.png",
+    "source": "backend/src/cta_risk/application/market.py",
+    "first_line": 72,
+    "last_line": 81,
+    "source_sha256": "299bdaa0263c88ea62db9a239b2a675d85dbbba80ca0fc933466ba5c853401a5",
+    "kind": "source-rendering"
+  },
+  {
+    "image": "03-commit.png",
+    "source": "backend/src/cta_risk/application/ledger.py",
+    "first_line": 537,
+    "last_line": 565,
+    "source_sha256": "5758386b10e17123fc2d64350ab2037a2c724c22445189ffb57bfcad1cc169d0",
+    "kind": "source-rendering"
+  },
+  {
+    "image": "04-settlement.png",
+    "source": "backend/src/cta_risk/settlement/calculator.py",
+    "first_line": 14,
+    "last_line": 59,
+    "source_sha256": "67ea9d90adc3376acaedee419b8bef3ea00149e47de60b1ee4a51d44a7560ad8",
+    "kind": "source-rendering"
+  }
+]
