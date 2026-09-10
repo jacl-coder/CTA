@@ -36,8 +36,14 @@ class Settings(StrictModel):
             if self.trading is None or self.ledger is None:
                 raise ValueError("启用日结必须配置账本与交易")
             plan = self.settlement.plan(self.ledger)
+            if self.settlement.repeat_daily and (
+                self.market is None or not self.market.continuous or not self.settlement.auto_settle
+            ):
+                raise ValueError("持续日结需要持续行情并开启自动清算")
             if self.market is not None:
                 market = self.market.plan(self.ledger)
+                if market.continuous != self.settlement.repeat_daily:
+                    raise ValueError("持续行情必须配套持续日结")
                 sessions = market.sessions or (
                     TradingSession(market.trading_day, market.frame_count),
                 )
@@ -45,7 +51,7 @@ class Settings(StrictModel):
                     raise ValueError("日结会话必须与行情会话边界完全一致")
             elif self.settlement.auto_settle:
                 raise ValueError("自动收盘清算需要行情逻辑时钟，手动模式需关闭 auto_settle")
-        elif self.market is not None and self.market.sessions:
+        elif self.market is not None and (self.market.sessions or self.market.continuous):
             raise ValueError("多交易日行情必须配置日结流程")
         if self.market is not None:
             if self.trading is None or self.ledger is None:

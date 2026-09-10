@@ -154,6 +154,7 @@ class LedgerService:
             else ()
         )
         self._duplicate_frames = 0
+        self._source_received_counts: dict[str, int] = {}
         self._trading: TradingState | None = None
         self._frame_received_at: float | None = None
         self._market_live = False
@@ -264,8 +265,13 @@ class LedgerService:
             )
             if market is not None and self.market_plan is not None:
                 try:
+                    by_sequence: dict[int, list[SourceFrame]] = {}
                     for frame in market.frames:
                         validate_frame(self.market_plan, market.epoch_ms, frame)
+                        by_sequence.setdefault(frame.sequence, []).append(frame)
+                        self._source_received_counts[frame.source_id] = (
+                            self._source_received_counts.get(frame.source_id, 0) + 1
+                        )
                     if (
                         self._trading is None
                         or len(self._trading.frames) != market.applied_sequence
@@ -273,7 +279,14 @@ class LedgerService:
                         raise StorageError("行情应用游标与交易日志不一致")
                     for applied_frame in self._trading.frames:
                         if (
-                            assemble(self.market_plan, market, applied_frame.sequence)
+                            assemble(
+                                self.market_plan,
+                                replace(
+                                    market,
+                                    frames=tuple(by_sequence.get(applied_frame.sequence, ())),
+                                ),
+                                applied_frame.sequence,
+                            )
                             != applied_frame
                         ):
                             raise StorageError("原始行情与已应用帧不一致")
@@ -292,7 +305,7 @@ class LedgerService:
                             raise StorageError("行情风险事件追踪信息不一致")
                 except (ValueError, TypeError, KeyError) as exc:
                     raise StorageError("原始行情恢复校验失败") from exc
-                self._market = market
+                self._market = self._trim_applied_sources(market)
             self._accounts = MappingProxyType(
                 {item.book.account.account_id: item for item in stored.accounts}
             )
@@ -607,10 +620,10 @@ class LedgerService:
                     "source_id": item.source_id,
                     "connected": item.connected,
                     "head": item.head,
-                    "contiguous_sequence": contiguous(stored.frames, item.source_id),
-                    "received_count": sum(
-                        frame.source_id == item.source_id for frame in stored.frames
+                    "contiguous_sequence": contiguous(
+                        stored.frames, item.source_id, stored.applied_sequence
                     ),
+                    "received_count": self._source_received_counts.get(item.source_id, 0),
                     "reason": item.reason,
                 }
                 for item in self._source_status
@@ -653,7 +666,10 @@ class LedgerService:
                 ):
                     raise AccountingError("拒绝尚未发生的未来行情")
                 key = frame.source_id, frame.sequence
-                if key in previous:
+                if self.market_plan.continuous and frame.sequence <= stored.applied_sequence:
+                    # Already validated against the immutable generator and committed prefix.
+                    duplicate += 1
+                elif key in previous:
                     if previous[key] != frame:
                         raise AccountingError("同源同序号行情内容冲突")
                     duplicate += 1
@@ -670,6 +686,10 @@ class LedgerService:
                         sorted(previous.values(), key=lambda item: (item.source_id, item.sequence))
                     ),
                 )
+                for frame in added:
+                    self._source_received_counts[frame.source_id] = (
+                        self._source_received_counts.get(frame.source_id, 0) + 1
+                    )
             self._duplicate_frames += duplicate
         else:
             self._market_synced = False
@@ -689,11 +709,23 @@ class LedgerService:
                 for event in transition.state.events[len(self._trading.events) :]
             )
             await self._commit_trading(transition, self._clock(), combined.sequence, observations)
-            self._market = replace(
-                stored,
-                applied_sequence=combined.sequence,
-                observations=(*stored.observations, *observations),
+            self._market = self._trim_applied_sources(
+                replace(
+                    stored,
+                    applied_sequence=combined.sequence,
+                    observations=(*stored.observations, *observations),
+                )
             )
+
+    def _trim_applied_sources(self, stored: StoredMarket) -> StoredMarket:
+        if self.market_plan is None or not self.market_plan.continuous:
+            return stored
+        # Full raw history remains in SQLite for audit/recovery. Keep the last committed
+        # frame and pending frames in the live source buffer, avoiding a scan of all history
+        # on every poll in the default continuous mode.
+        return replace(
+            stored, frames=tuple(f for f in stored.frames if f.sequence >= stored.applied_sequence)
+        )
 
     def _day_tradable(self) -> bool:
         state = self._trading
@@ -705,11 +737,7 @@ class LedgerService:
 
     def session_has_closed(self) -> bool:
         if self.settlement_plan and self.market_plan and self._market and self._trading:
-            session = next(
-                item.session
-                for item in self.settlement_plan.days
-                if item.session.trading_day == self._trading.trading_day
-            )
+            session = self.settlement_plan.day(self._trading.trading_day).session
             return self._wall_clock() >= self._market.epoch_ms + (
                 session.close_sequence * self.market_plan.interval_ms
             )
@@ -719,22 +747,14 @@ class LedgerService:
         if self.settlement_plan is None:
             return True
         state = self.trading_state()
-        session = next(
-            item.session
-            for item in self.settlement_plan.days
-            if item.session.trading_day == state.trading_day
-        )
+        session = self.settlement_plan.day(state.trading_day).session
         return state.phase != "SETTLED" and sequence <= session.close_sequence
 
     def session_status(self) -> dict[str, object]:
         state = self.trading_state()
         if self.settlement_plan is None:
             raise LedgerUnavailable("未启用日结流程")
-        day = next(
-            item
-            for item in self.settlement_plan.days
-            if item.session.trading_day == state.trading_day
-        )
+        day = self.settlement_plan.day(state.trading_day)
         return {
             "trading_day": str(state.trading_day),
             "phase": state.phase,
@@ -764,15 +784,8 @@ class LedgerService:
             raise LedgerUnavailable("交易服务不可用")
         assert self.settlement_plan is not None
         if command.action == "settle" and self.market_plan is not None:
-            day = next(
-                (
-                    item
-                    for item in self.settlement_plan.days
-                    if item.session.trading_day == command.trading_day
-                ),
-                None,
-            )
-            if day and self.source_state().applied_sequence < day.session.close_sequence:
+            day = self.settlement_plan.day(command.trading_day)
+            if self.source_state().applied_sequence < day.session.close_sequence:
                 raise AccountingError("行情尚未补齐收盘帧，不能清算")
         transition = advance_day(
             self._trading, command, self.definition, self.policy, self.settlement_plan

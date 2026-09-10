@@ -50,6 +50,9 @@ class MarketSettings(LedgerModel):
     batch_size: int = Field(default=64, ge=1, le=256)
     managed_sources: bool = True
     sessions: tuple[SessionSettings, ...] = ()
+    continuous: bool = False
+    seed: int = 1
+    amplitude_ticks: int = Field(default=20, ge=1, le=1000)
 
     @field_validator("sources", "sessions", mode="before")
     @classmethod
@@ -85,6 +88,12 @@ class MarketSettings(LedgerModel):
             self.interval_ms,
             self.frame_count,
             tuple(item.to_domain() for item in self.sessions),
+            self.continuous,
+            self.seed,
+            self.amplitude_ticks,
+            tuple(sorted((item.instrument_id, item.tick_size) for item in definition.instruments))
+            if self.continuous
+            else (),
         )
         instruments = {item.instrument_id: item for item in definition.instruments}
         provided = {key for source in plan.sources for key in source.instruments}

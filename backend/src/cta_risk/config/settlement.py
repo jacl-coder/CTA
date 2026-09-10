@@ -19,6 +19,7 @@ class SettlementSettings(LedgerModel):
     days: tuple[SettlementDaySettings, ...]
     auto_settle: bool = True
     report_dir: Path
+    repeat_daily: bool = False
 
     @field_validator("days", mode="before")
     @classmethod
@@ -29,6 +30,8 @@ class SettlementSettings(LedgerModel):
         definition = ledger.definition()
         sessions = tuple(item.to_domain() for item in self.days)
         validate_sessions(sessions, definition.trading_day)
+        if self.repeat_daily and len(self.days) != 1:
+            raise ValueError("持续日结只接受一个交易日模板，结算价按模板重复")
         instruments = {item.instrument_id: item for item in definition.instruments}
         days = []
         for item in self.days:
@@ -40,4 +43,4 @@ class SettlementSettings(LedgerModel):
             for key, price in prices:
                 instruments[key].validate_price(price)
             days.append(SettlementDay(item.to_domain(), prices))
-        return SettlementPlan(tuple(days))
+        return SettlementPlan(tuple(days), self.repeat_daily)

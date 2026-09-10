@@ -49,11 +49,7 @@ class SettlementScheduler:
         assert service.settlement_plan is not None
         if self.settings.auto_settle:
             assert service.market_plan is not None
-            days = service.settlement_plan.days
-            index = next(
-                i for i, day in enumerate(days) if day.session.trading_day == state.trading_day
-            )
-            day = days[index]
+            day = service.settlement_plan.day(state.trading_day)
             # The same injected market clock protects orders at the exact boundary.
             if service.session_has_closed():
                 if state.phase == "OPEN":
@@ -63,10 +59,9 @@ class SettlementScheduler:
                     and len(service.trading_state().frames) == day.session.close_sequence
                 ):
                     await service.day_command(DayCommand("settle", state.trading_day, day.prices))
-                if service.trading_state().phase == "SETTLED" and index + 1 < len(days):
-                    await service.day_command(
-                        DayCommand("open_day", days[index + 1].session.trading_day)
-                    )
+                upcoming = service.settlement_plan.next_day(state.trading_day)
+                if service.trading_state().phase == "SETTLED" and upcoming is not None:
+                    await service.day_command(DayCommand("open_day", upcoming.session.trading_day))
         for payload in service.trading_state().reports:
             day_key = json.loads(payload)["trading_day"]
             if day_key not in self._exports:

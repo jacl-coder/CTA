@@ -1,0 +1,125 @@
+# 默认持续工作台：两个独立 HTTP 源，每秒一帧，无需手工输入行情。
+# 每 1800 帧（30 分钟）为一个模拟交易日，连续模拟日期不代表真实交易所日历。
+# 固定故障验收仍使用 market-demo.yaml / settlement-demo.yaml。
+server:
+  host: 127.0.0.1
+  port: 8004
+ledger:
+  database: ../var/live-demo/ledger.sqlite3
+  run_id: live-demo-20260909
+  trading_day: '2026-09-09'
+  queue_capacity: 256
+  accounts:
+  - account_id: A
+    initial_capital: '100000.00'
+  - account_id: B
+    initial_capital: '200000.00'
+  - account_id: C
+    initial_capital: '1000000.00'
+  instruments:
+  - instrument_id: SHFE.rb2610
+    product: rb
+    exchange: SHFE
+    multiplier: 10
+    tick_size: '1'
+    margin_rate: '0.10'
+    fee_per_lot: '2'
+  - instrument_id: DCE.i2701
+    product: i
+    exchange: DCE
+    multiplier: 100
+    tick_size: '0.5'
+    margin_rate: '0.12'
+    fee_per_lot: '3'
+  - instrument_id: CFFEX.IF2609
+    product: IF
+    exchange: CFFEX
+    multiplier: 300
+    tick_size: '0.2'
+    margin_rate: '0.12'
+    fee_per_lot: '5'
+  initial_fills:
+  - fill_id: A-open-1
+    account_id: A
+    instrument_id: SHFE.rb2610
+    sequence: 1
+    side: LONG
+    offset: OPEN
+    quantity: 3
+    price: '3500'
+    source: bootstrap-demo
+  - fill_id: A-close-2
+    account_id: A
+    instrument_id: SHFE.rb2610
+    sequence: 2
+    side: LONG
+    offset: CLOSE_TODAY
+    quantity: 1
+    price: '3510'
+    source: bootstrap-demo
+  - fill_id: B-open-1
+    account_id: B
+    instrument_id: DCE.i2701
+    sequence: 1
+    side: SHORT
+    offset: OPEN
+    quantity: 2
+    price: '800'
+    source: bootstrap-demo
+  - fill_id: C-open-1
+    account_id: C
+    instrument_id: CFFEX.IF2609
+    sequence: 1
+    side: LONG
+    offset: OPEN
+    quantity: 1
+    price: '4000'
+    source: bootstrap-demo
+trading:
+  warning_ratio: '0.02'
+  loss_ratio: '0.03'
+  default_product_limit: '2000000'
+  product_limits:
+  - account_id: A
+    product_id: SHFE.rb
+    amount: '140000'
+  max_price_age_seconds: 30
+market:
+  continuous: true
+  seed: 20260909
+  amplitude_ticks: 20
+  interval_ms: 1000
+  # 持续模式下 frame_count 是每个模拟交易日的帧数，不是运行总帧数。
+  frame_count: 1800
+  poll_ms: 50
+  sessions:
+  - trading_day: '2026-09-09'
+    close_sequence: 1800
+  sources:
+  - source_id: source-A
+    port: 8301
+    instruments: [SHFE.rb2610]
+    points:
+    - sequence: 1
+      prices:
+        SHFE.rb2610: '3500'
+  - source_id: source-B
+    port: 8302
+    instruments: [DCE.i2701, CFFEX.IF2609]
+    points:
+    - sequence: 1
+      prices:
+        DCE.i2701: '800'
+        CFFEX.IF2609: '4000'
+settlement:
+  auto_settle: true
+  repeat_daily: true
+  report_dir: ../var/live-demo/reports
+  # 显式模拟结算价模板，每日重复；不冒充交易所结算价，不取末笔行情替代。
+  days:
+  - trading_day: '2026-09-09'
+    close_sequence: 1800
+    prices:
+      SHFE.rb2610: '3500'
+      DCE.i2701: '800'
+      CFFEX.IF2609: '4000'

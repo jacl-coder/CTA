@@ -31,11 +31,7 @@ def advance_day(
     policy: RiskPolicy,
     plan: SettlementPlan,
 ) -> DayTransition:
-    day = next(
-        (item for item in plan.days if item.session.trading_day == command.trading_day), None
-    )
-    if day is None:
-        raise AccountingError("交易日不在冻结清算计划中")
+    day = plan.day(command.trading_day)
     reports = [json.loads(item) for item in state.reports]
     existing = next(
         (item for item in reports if item["trading_day"] == str(command.trading_day)), None
@@ -61,10 +57,7 @@ def advance_day(
         return DayTransition(state, "", "", DayResult(command.trading_day, "OPEN", True))
     report_json = None
     if command.action == "open_day":
-        index = next(
-            i for i, item in enumerate(plan.days) if item.session.trading_day == state.trading_day
-        )
-        if state.phase != "SETTLED" or index + 1 >= len(plan.days) or plan.days[index + 1] != day:
+        if state.phase != "SETTLED" or plan.next_day(state.trading_day) != day:
             raise AccountingError("必须完成前日清算，且只能结转到计划中的下一交易日")
         accounts = tuple(
             StoredAccount(start_next_day(item.book, command.trading_day), item.revision + 1)

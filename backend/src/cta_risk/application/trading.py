@@ -27,7 +27,10 @@ from cta_risk.valuation.calculator import value_account
 def encode(value: object) -> str:
     def default(item: object) -> object:
         if is_dataclass(item) and not isinstance(item, type):
-            return asdict(item)
+            raw = asdict(item)
+            if isinstance(item, SettlementPlan) and not item.repeat_daily:
+                raw.pop("repeat_daily")  # Preserve existing finite-run journal/report hashes.
+            return raw
         if isinstance(item, (Decimal, date)):
             return str(item)
         raise TypeError(f"无法序列化 {type(item).__name__}")
@@ -170,11 +173,7 @@ def advance(
         if command.trading_day != state.trading_day or state.phase == "SETTLED":
             raise AccountingError("行情交易日与当前未结算交易日不一致")
         if settlement_plan is not None:
-            session = next(
-                day.session
-                for day in settlement_plan.days
-                if day.session.trading_day == state.trading_day
-            )
+            session = settlement_plan.day(state.trading_day).session
             if command.sequence > session.close_sequence:
                 raise AccountingError("行情超过当日收盘帧，需先清算并结转")
         instruments = {item.instrument_id: item for item in definition.instruments}

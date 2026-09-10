@@ -72,7 +72,7 @@ class MarketFeed:
             ),
             default=0,
         )
-        if not previous <= head.sequence <= plan.frame_count:
+        if head.sequence < previous or (not plan.continuous and head.sequence > plan.frame_count):
             raise AccountingError("源进度回退或超出场景范围")
         if (head.sequence == 0) != (head.latest is None):
             raise AccountingError("源进度与最新帧缺失状态矛盾")
@@ -140,13 +140,13 @@ class MarketFeed:
             if head.latest is not None:
                 await self.service.market_command(SourceBatch((head.latest.to_domain(),)))
         for source in self.config.sources:
-            cursor = contiguous(self.service.source_state().frames, source.source_id)
+            cursor = contiguous(self.service.source_state().frames, source.source_id, applied)
             if cursor < target:
                 # One overlapping frame deliberately verifies retries against immutable stored data.
                 start = max(1, cursor) if self.config.batch_size > 1 else cursor + 1
                 await self._history(source, start, target)
         available = min(
-            contiguous(self.service.source_state().frames, item.source_id)
+            contiguous(self.service.source_state().frames, item.source_id, applied)
             for item in self.config.sources
         )
         for _ in range(min(self.config.batch_size, available - applied)):

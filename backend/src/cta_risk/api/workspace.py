@@ -158,7 +158,9 @@ async def workspace(request: Request) -> WorkspaceResponse:
                     close_sequence=item.session.close_sequence,
                     prices={key: str(value) for key, value in item.prices},
                 )
-                for item in service.settlement_plan.days
+                for item in service.settlement_plan.visible_days(
+                    service.trading_state().trading_day
+                )
             ]
         return result
     except LedgerUnavailable:

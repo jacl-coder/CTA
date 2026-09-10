@@ -61,9 +61,9 @@ def validate_frame(plan: MarketPlan, epoch_ms: int, frame: SourceFrame) -> None:
         raise AccountingError("行情与冻结场景不一致（运行、交易日、时间或价格错误）")
 
 
-def contiguous(frames: tuple[SourceFrame, ...], source_id: str) -> int:
+def contiguous(frames: tuple[SourceFrame, ...], source_id: str, applied: int = 0) -> int:
     sequences = {item.sequence for item in frames if item.source_id == source_id}
-    cursor = 0
+    cursor = applied  # Committed complete frames already form a verified contiguous prefix.
     while cursor + 1 in sequences:
         cursor += 1
     return cursor
