@@ -12,15 +12,15 @@
     "source": "backend/src/cta_risk/application/market.py",
     "first_line": 72,
     "last_line": 81,
-    "source_sha256": "299bdaa0263c88ea62db9a239b2a675d85dbbba80ca0fc933466ba5c853401a5",
+    "source_sha256": "63b02d941cb0257ccc13a56baef375ec6e03a70453f049b9b5b17bdc9d075c1c",
     "kind": "source-rendering"
   },
   {
     "image": "03-commit.png",
     "source": "backend/src/cta_risk/application/ledger.py",
-    "first_line": 537,
-    "last_line": 565,
-    "source_sha256": "5758386b10e17123fc2d64350ab2037a2c724c22445189ffb57bfcad1cc169d0",
+    "first_line": 550,
+    "last_line": 578,
+    "source_sha256": "338ed84156aa7ad0615a33fbc0f9e3b01fe875bfd00a46f39fb4bc03a704595b",
     "kind": "source-rendering"
   },
   {

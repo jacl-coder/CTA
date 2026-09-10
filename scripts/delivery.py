@@ -183,6 +183,7 @@ def verify(archive: Path = ARCHIVE) -> None:
                 ("demo_risk", ["--packaged"]),
                 ("demo_market", ["--packaged"]),
                 ("demo_settlement", ["--packaged"]),
+                ("demo_live", ["--packaged"]),
             ):
                 print(f"验证解压包：{name}", flush=True)
                 command = [sys.executable, str(root / "scripts" / f"{name}.py"), *arguments]

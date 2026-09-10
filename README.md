@@ -128,7 +128,7 @@ make package
 make verify
 ```
 
-`make package` 构建程序并生成 `dist/cta-risk-delivery-linux-x86_64.tar.gz` 和 `.sha256`，包含源码、测试、配置、文档、代码展示图及 `dist/cta-risk/` 可执行目录。`make verify` 解压这个归档，核对文件摘要和可执行权限，再用解压后的程序验证账本恢复、实际熔断拒单、双源恢复和两日日结。日志和归档摘要绑定记录位于 `dist/delivery-verification/`。
+`make package` 构建程序并生成 `dist/cta-risk-delivery-linux-x86_64.tar.gz` 和 `.sha256`，包含源码、测试、配置、文档、代码展示图及 `dist/cta-risk/` 可执行目录。`make verify` 解压这个归档，核对文件摘要和可执行权限，再用解压后的程序验证账本恢复、实际熔断拒单、双源恢复、两日日结，以及持续行情工作台的跨日交易与重启。日志和归档摘要绑定记录位于 `dist/delivery-verification/`。
 
 评审解压后，在 `cta-risk-delivery` 目录执行：
 
