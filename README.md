@@ -38,10 +38,10 @@ make run
 
 交易仍受账户熔断、敞口和保证金规则约束；收盘或断线补数期间会暂停，补齐并进入可交易状态后恢复。模拟日期按连续日期推进，合约和结算价使用演示模板，不代表真实交易所日历或结算规则。重启保留成交、报告和行情进度，需先补齐停机期间的数据。
 
-需要逐步手工演示时，使用 `make run CONFIG=configs/workspace-demo.yaml`。切换固定双源日结验收场景：
+需要逐步手工演示时，使用 `make run-workspace`。切换固定双源日结验收场景：
 
 ```bash
-make run CONFIG=configs/settlement-demo.yaml
+make run-settlement
 ```
 
 该场景访问 8003，行情源使用 8201/8202。不同场景的端口、数据库和运行标识由配置决定，重启会恢复已有数据。
@@ -60,12 +60,32 @@ CTA_API_TARGET=http://127.0.0.1:8004 npm --prefix frontend run dev
 uv run --project backend --locked cta-risk check-config --config configs/live-demo.yaml
 ```
 
-Makefile 保留 `install`、`run`、`api`、`check`、`test`、`build`、`package`、`verify` 八个入口，执行 `make` 查看说明。专项演示使用下方脚本。
+执行 `make` 查看全部命令。展示时先在终端启动对应服务，保持终端运行，再打开页面：
+
+```bash
+make run             # 持续行情与模拟交易：http://127.0.0.1:8004
+make run-market      # 固定断线与补数：http://127.0.0.1:8002
+make run-settlement  # 两日自动清算：http://127.0.0.1:8003
+make run-workspace   # 手工报价、交易与日结：http://127.0.0.1:8004
+```
+
+按需选择一条命令。`make run` 和所有 `run-*` 会先正常停止本项目中占用相同端口或数据库的旧服务，等待后端及其行情子进程退出后再启动，保留历史数据。`run-workspace` 与默认 `run` 共用 8004，直接运行命令即可切换。如果端口属于其他程序，启动会报错，不会终止它；旧服务无法正常退出时也会取消启动，提示检查日志。这套源码启动检查使用 Linux `/proc`，适用于当前演示电脑。
+
+`run-market` 的行情源端口是 8101/8102，`run-settlement` 为 8201/8202；它们与默认工作台使用不同数据库和端口，可以同时运行。固定场景约 16/24 秒后结束，服务仍保留页面供查看结果；重启恢复旧进度，不会重新播放或清空数据。已有自定义配置仍使用 `make run CONFIG=配置路径`。
+
+要每次从头自动演示并核对结果，使用以下命令。它们使用临时数据库和空闲端口，执行完退出，结果显示在终端，不会长期提供固定端口页面：
+
+```bash
+make demo-risk        # 熔断、拒单、反弹保持与恢复
+make demo-market      # 双源故障、补齐行情与进程恢复
+make demo-settlement  # 两日日结、实际平昨与冻结日报
+make demo-live        # 持续行情、跨日交易与恢复
+```
 
 ## 模拟交易与熔断演示
 
 ```bash
-uv run --project backend --locked python scripts/demo_risk.py
+make demo-risk
 ```
 
 脚本在独立临时数据库中启动真实 HTTP 服务，依次验证浮亏 2980 元、达到 3000 元熔断、拒绝开仓、反弹保持熔断、允许平仓、多账户独立运行及强制退出后的恢复，完成后退出并清理临时数据。
@@ -77,21 +97,21 @@ uv run --project backend --locked python scripts/demo_risk.py
 ## 双源行情与恢复演示
 
 ```bash
-uv run --project backend --locked python scripts/demo_market.py
+make demo-market
 # 手动运行固定场景：后端 8002，行情源 8101/8102
-make run CONFIG=configs/market-demo.yaml
+make run-market
 ```
 
-`uv run --project backend --locked python scripts/demo_market.py` 使用临时数据库和空闲端口，实际启动后端与两个行情服务，对比连续接入和中断补全结果。覆盖中断时暂停开平仓、后端强制结束后恢复、行情源单独退出后自动重启，以及中断期间越过阈值又反弹后的正确熔断。
+`make demo-market` 使用临时数据库和空闲端口，实际启动后端与两个行情服务，对比连续接入和中断补全结果。覆盖中断时暂停开平仓、后端强制结束后恢复、行情源单独退出后自动重启，以及中断期间越过阈值又反弹后的正确熔断。
 
-`make run CONFIG=configs/market-demo.yaml` 读取 `configs/market-demo.yaml`，访问 [双源 API 文档](http://127.0.0.1:8002/api/docs)。场景共 64 帧、约 16 秒，结束后保留结果并停止交易；重启沿用数据库中的旧进度。重复演示优先用 `uv run --project backend --locked python scripts/demo_market.py`，手动运行新场景需要新的数据库和运行标识。双源模式禁用手工价格注入，详细协议、接口与限制见[双源行情与恢复](docs/双源行情与恢复.md)。
+`make run-market` 读取 `configs/market-demo.yaml`，访问 [双源 API 文档](http://127.0.0.1:8002/api/docs)。场景共 64 帧、约 16 秒，结束后保留结果并停止交易；重启沿用数据库中的旧进度。重复演示优先用 `make demo-market`，手动运行新场景需要新的数据库和运行标识。双源模式禁用手工价格注入，详细协议、接口与限制见[双源行情与恢复](docs/双源行情与恢复.md)。
 
 ## 两日日结与日报
 
 ```bash
-uv run --project backend --locked python scripts/demo_settlement.py
+make demo-settlement
 # 固定两日场景：后端 8003，行情源 8201/8202
-make run CONFIG=configs/settlement-demo.yaml
+make run-settlement
 ```
 
 验收脚本使用临时数据库验证自动封账、独立结算价清算、次日平昨、重复日结、跨日成交后的强制重启，以及日报文件与冻结快照一致。固定场景约 24 秒，生成 `var/settlement-demo/reports/risk-YYYY-MM-DD.html` 和 `.json`，可以离线打开。固定场景本身不自动下单；平昨订单由验收脚本提交。
