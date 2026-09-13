@@ -45,8 +45,9 @@ function WorkspaceLayout() {
       <main id="main-content" className="content">
         <div className="workspace-toolbar"><div className="toolbar"><label htmlFor="account-filter">查看账户</label>
           <Select id="account-filter" aria-label="策略账户筛选" value={account ?? ''} style={{ minWidth: 145 }} onChange={value => selectAccount(value || undefined)} options={[{ value: '', label: '全部账户' }, ...(data?.accounts ?? []).map(item => ({ value: item.account_id, label: `账户 ${item.account_id}` }))]} />
+          <span className="simulation-day">模拟交易日 <b>{day ?? '—'}</b></span>
           <span className={`status-pill ${ready ? 'success' : 'pending'}`}><span className="status-dot" />{ready ? '行情就绪' : '交易暂停'}</span>
-        </div><div className="toolbar sync-toolbar"><span className="muted"><Icon name="clock" size={14} /> {timeLabel(updatedAt || null)} 更新</span><Button aria-label="刷新数据" icon={<Icon name="refresh" size={15} />} onClick={refresh} loading={loading && !data}>刷新</Button></div></div>
+        </div><div className="toolbar sync-toolbar"><span className="muted"><Icon name="clock" size={14} /> 页面更新 {timeLabel(updatedAt || null)}</span><Button aria-label="刷新数据" icon={<Icon name="refresh" size={15} />} onClick={refresh} loading={loading && !data}>刷新</Button></div></div>
         {!fresh && !loading && <Alert className="connection-alert" showIcon type="error" message="连接中断，交易操作已暂停" description={`${error ?? '数据更新超时'}。${data ? '当前保留上次数据，恢复连接后自动更新。' : '请确认后端已启动。'}`} />}
         {fresh && data && !data.system.trading_available && <Alert className="connection-alert" showIcon type="info" message="正在等待可交易状态" description={data.system.reasons.join(' ')} />}
         <div key={data?.run_id ?? 'loading'} className="page-content"><Routes>

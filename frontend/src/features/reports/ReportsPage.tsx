@@ -45,9 +45,9 @@ export function ReportsPage() {
   return <><PageHeading title="日结与风控日报" description="查看一天结束后的盈亏、资金与保证金，下载可核对的风控日报。" />
     <ModeGate capability="settlement">
       <PageGuide>日结按结算价计算当日盈亏，剩余持仓结转到下一日。已生成的日报固定保存，不随后续行情变化。</PageGuide>
-      <Panel title="交易日进度" extra={<Tag>{state?.trading_day}</Tag>}>
+      <Panel title="模拟交易日进度" extra={<Tag>模拟交易日 {state?.trading_day}</Tag>}>
         <Steps className="settlement-steps" size="small" current={state?.phase === 'OPEN' ? 0 : state?.phase === 'CLOSING' ? 1 : 2} items={[{ title: '盘中交易' }, { title: '封账并补齐行情' }, { title: '清算完成' }]} />
-        <div className="facts inline-facts"><div><span>当前阶段</span><b>{phaseLabel(state?.phase)}</b></div><div><span>日结方式</span><b>{data?.automatic_settlement ? '自动清算' : '手工清算'}</b></div><div><span>已生成日报</span><b>{days.length} 份</b></div><div><span>下一交易日</span><b>{nextDay?.trading_day ?? '本场景最后一日'}</b></div></div>
+        <div className="facts inline-facts"><div><span>当前阶段</span><b>{phaseLabel(state?.phase)}</b></div><div><span>日结方式</span><b>{data?.automatic_settlement ? '自动清算' : '手工清算'}</b></div><div><span>已生成日报</span><b>{days.length} 份</b></div><div><span>下一模拟交易日</span><b>{nextDay?.trading_day ?? '本场景最后一日'}</b></div></div>
         <p className="description">{data?.automatic_settlement ? '自动日结已开启，你无需手工操作。收盘后系统会依次封账、补齐行情、生成日报并结转。' : '当前使用手工日结。封账会立即停止本日新增交易，清算需等待收盘帧完整。'}</p>
         <details className="details" open={!data?.automatic_settlement}><summary>{data?.automatic_settlement ? '手工日结操作（按需展开）' : '执行手工日结'}</summary><div className="toolbar section-action">
           <Button disabled={!fresh || busy || state?.phase !== 'OPEN'} onClick={() => void mutate('/settlement/close', { trading_day: state?.trading_day }, '封账已提交，新开平仓已暂停。')}>封账并停止交易</Button>
@@ -60,7 +60,7 @@ export function ReportsPage() {
       </Panel>
       {notice && <Alert className="inline-alert" showIcon type={notice.success ? 'success' : 'warning'} message={notice.message} role="status" />}
       {state && Object.entries(state.report_errors).map(([day, error]) => <Alert className="inline-alert" key={day} type="warning" showIcon message={`${day} 日报文件未导出`} description={`${error}。账本清算已保留，可以重试导出。`} />)}
-      <Panel title="冻结风控日报" extra={<Select aria-label="日报交易日" placeholder="等待首份日报" value={selectedDay} onChange={setSelected} style={{ width: 165 }} options={days.map(day => ({ value: day, label: day }))} />}>
+      <Panel title="冻结风控日报" extra={<Select aria-label="日报所属模拟交易日" placeholder="等待首份日报" value={selectedDay} onChange={setSelected} style={{ width: 165 }} options={days.map(day => ({ value: day, label: day }))} />}>
         {!selectedDay ? <div className="report-empty"><Icon name="report" size={35} /><h3>尚无已提交日报，完成首日日结后在此查看</h3><p>{data?.automatic_settlement ? '首日日结完成后，日报会自动出现在这里。' : '请先完成上方的封账和清算操作。'}<br />日报包含账户盈亏、保证金和风险敞口，支持下载 HTML / JSON。</p></div> : <>
           <div className="toolbar report-actions"><Button onClick={() => void download('html')} disabled={!fresh || busy}>下载 HTML</Button><Button onClick={() => void download('json')} disabled={!fresh || busy}>下载 JSON</Button><Button loading={busy} disabled={!fresh} onClick={() => void mutate(`/reports/${encodeURIComponent(selectedDay)}/export`, {}, '日报文件已重新导出，清算未重复入账。')}>重新导出</Button></div>
           {report.error && <Alert className="inline-alert" type="error" showIcon message="日报读取失败" description={report.error} />}
@@ -73,7 +73,7 @@ export function ReportsPage() {
 function ReportBody({ report, account }: { report: DailyReport; account?: string }) {
   const rows = report.accounts.filter(item => !account || item.account_id === account);
   return <>
-    <Descriptions size="small" className="report-meta" column={{ xs: 1, sm: 2, lg: 3 }} items={[{ key: 'run', label: '运行', children: report.run_id }, { key: 'day', label: '交易日', children: report.trading_day }, { key: 'frame', label: '收盘帧', children: report.close_sequence }]} />
+    <Descriptions size="small" className="report-meta" column={{ xs: 1, sm: 2, lg: 3 }} items={[{ key: 'run', label: '运行', children: report.run_id }, { key: 'day', label: '所属模拟交易日', children: report.trading_day }, { key: 'frame', label: '收盘帧', children: report.close_sequence }]} />
     <div className="kpi-grid compact">
       {([['全账户净盈亏', report.totals.net_pnl], ['期末结算余额', report.totals.closing_balance], ['结算保证金', report.totals.margin], ['总名义敞口', report.totals.gross_exposure]] as const).map(([label, value]) => <div className="metric" key={label}><span>{label}</span><strong><Amount value={value} /></strong></div>)}
     </div>

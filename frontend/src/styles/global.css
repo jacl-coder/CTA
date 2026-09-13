@@ -43,6 +43,8 @@ a:focus-visible, summary:focus-visible { outline: 3px solid #9ecfc2; outline-off
 .status-pill { display: inline-flex; align-items: center; gap: 7px; padding: 6px 10px; border-radius: 5px; font-size: 11px; background: #f7f1e5; color: #a77729; white-space: nowrap; }
 .status-pill.success { background: #eaf5f0; color: #22836b; }
 .status-pill.success .status-dot { background: #329b7d; }
+.simulation-day { color: #78899b; font-size: 11px; white-space: nowrap; }
+.simulation-day b { color: #526a80; font-weight: 500; }
 .connection-alert { margin-bottom: 22px; }
 .page-heading { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin: 0 0 25px; }
 h1 { font-size: 27px; line-height: 1.4; font-weight: 650; margin: 0 0 8px; letter-spacing: -.8px; color: #17283f; }

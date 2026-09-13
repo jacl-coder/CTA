@@ -67,7 +67,7 @@ function TradingDesk({ run }: { run: string }) {
   };
   return <>
     <PageGuide>开仓是新增持仓；平今关闭今天的持仓，平昨关闭前日持仓。所有订单使用模拟资金。</PageGuide>
-    <div className="two-columns trade-columns"><Panel title="提交模拟订单" extra={<Tag>{data?.accounts[0]?.trading_day}</Tag>}>
+    <div className="two-columns trade-columns"><Panel title="提交模拟订单" extra={<Tag>模拟交易日 {data?.accounts[0]?.trading_day}</Tag>}>
       {attempt && <Alert className="inline-alert" showIcon type="warning" message="有一笔订单需要核对" description={<><p>账户 {attempt.account_id} · {attempt.instrument_id} · {sideLabel(attempt.side)}{offsetLabel(attempt.offset)} {attempt.quantity} 手</p><p className="mono">请求编号 {attempt.request_id}</p><div className="toolbar"><Button onClick={() => void lookup()} loading={busy}>核对订单结果</Button><Button onClick={() => void send(attempt)} disabled={busy || !fresh}>重试原订单</Button></div></>} />}
       {error && <Alert role="alert" className="inline-alert" showIcon type="warning" message={error} />}
       {result && <Alert role="status" className="inline-alert" showIcon type={result.status === 'FILLED' ? 'success' : 'warning'} message={result.status === 'FILLED' ? '模拟成交成功' : '订单已拒绝，未产生成交'} description={<>{reasonLabel(result.reason)}{result.price && <> · 成交价 <Amount value={result.price} /> · 手续费 <Amount value={result.fee} /></>}{result.duplicate && ' · 已返回原订单结果'}</>} />}
@@ -91,10 +91,10 @@ function TradingDesk({ run }: { run: string }) {
     </Panel></div>
     {data?.capabilities.manual_market && <ManualPrices />}
     <Panel title="订单结果">
-      <p className="table-note">处理时间为服务端实际处理订单的北京时间，精确到毫秒；成交与拒单均记录，重试沿用原时间。历史订单未记录时间的显示“未记录”。</p>
+      <p className="table-note">实际处理时间记录服务端处理订单的北京时间，精确到毫秒；成交与拒单均记录，重试沿用原时间。历史订单未记录时间的显示“未记录”。</p>
       {history.error && <Alert type="error" showIcon message="订单记录更新失败" description={history.error} className="inline-alert" />}
       <Table rowKey={row => `${row.account_id}:${row.request_id}`} size="small" pagination={false} loading={history.loading} scroll={{ x: 1120 }} dataSource={history.data?.slice(0, 20)} columns={[
-        { title: '处理时间（北京时间）', dataIndex: 'processed_at_ms', width: 170, render: (value?: number | null) => <RecordTime value={value} /> },
+        { title: '实际处理时间（北京时间）', dataIndex: 'processed_at_ms', width: 190, render: (value?: number | null) => <RecordTime value={value} /> },
         { title: '账户', dataIndex: 'account_id' },
         { title: '结果', dataIndex: 'status', render: (value: string) => <Tag color={value === 'FILLED' ? 'green' : 'orange'}>{value === 'FILLED' ? '已成交' : '已拒绝'}</Tag> },
         { title: '原因', dataIndex: 'reason', render: reasonLabel },

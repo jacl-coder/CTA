@@ -13,9 +13,9 @@ const eventColumns: TableColumnsType<RiskEvent> = [
   { title: '事件', dataIndex: 'kind', width: 180, render: (kind: string) => <Tag
     color={kind.endsWith('_EXIT') ? 'green' : kind === 'CIRCUIT_BREAK' ? 'red' : 'orange'}>{reasonLabel(kind)}</Tag> },
   { title: '品种', dataIndex: 'product_id', render: value => value ?? '—', width: 130 },
-  { title: '交易日', dataIndex: 'trading_day', render: value => value ?? '—', width: 120 },
-  { title: '发生时间（北京时间）', dataIndex: 'occurred_ms', render: (value?: number | null) => <RecordTime value={value} />, width: 170 },
-  { title: '发现时间（北京时间）', dataIndex: 'detected_ms', render: (value?: number | null) => <RecordTime value={value} />, width: 170 },
+  { title: '所属模拟交易日', dataIndex: 'trading_day', render: value => value ?? '—', width: 140 },
+  { title: '实际发生时间（北京时间）', dataIndex: 'occurred_ms', render: (value?: number | null) => <RecordTime value={value} />, width: 190 },
+  { title: '实际发现时间（北京时间）', dataIndex: 'detected_ms', render: (value?: number | null) => <RecordTime value={value} />, width: 190 },
   { title: '是否补数发现', dataIndex: 'recovered', width: 140, render: (value?: boolean | null) =>
     value == null ? '—' : <Tag color={value ? 'gold' : 'default'}>{value ? '补数发现' : '正常发现'}</Tag> },
   { title: '源发生帧', dataIndex: 'frame_sequence', width: 110 },

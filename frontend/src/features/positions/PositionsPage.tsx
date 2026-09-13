@@ -19,8 +19,8 @@ const positionColumns = [
   { title: '昨仓（手）', dataIndex: 'yesterday_quantity', align: 'right', width: 100 },
 ] satisfies TableColumnsType<Summary>;
 const tradeColumns: TableColumnsType<Trade> = [
-  { title: '成交时间（北京时间）', dataIndex: 'executed_at_ms', width: 170, render: (value?: number | null) => <RecordTime value={value} /> },
-  { title: '交易日', dataIndex: 'trading_day', width: 120 },
+  { title: '实际成交时间（北京时间）', dataIndex: 'executed_at_ms', width: 170, render: (value?: number | null) => <RecordTime value={value} /> },
+  { title: '所属模拟交易日', dataIndex: 'trading_day', width: 140 },
   { title: '成交编号', dataIndex: 'fill_id', width: 190 },
   { title: '账户', dataIndex: 'account_id', width: 150 },
   { title: '合约', dataIndex: 'instrument_id', width: 150 },
@@ -74,7 +74,7 @@ function TradeHistory({ account, product }: { account?: string; product?: string
   if (product !== undefined) params.set('product_id', product);
   const resource = useHistory<Trade[]>(`/trades?${params}`);
   return <Panel title="成交记录">
-    <p className="table-note">成交时间为实际模拟成交的北京时间；交易日为所属模拟交易日，两者日期可能不同。初始化成交及历史数据没有可靠时间的显示“未记录”。</p>
+    <p className="table-note">实际成交时间记录服务端处理时刻；所属模拟交易日用于持仓、风控和清算，两者日期可能不同。初始化成交及历史数据没有可靠时间的显示“未记录”。</p>
     <HistoryStatus {...resource} hasData={resource.data !== undefined} />
     {(!resource.error || resource.data !== undefined) && <Table<Trade> columns={tradeColumns}
       rowKey={row => JSON.stringify([row.account_id, row.fill_id])} dataSource={resource.data?.slice(0, PAGE_SIZE)}
