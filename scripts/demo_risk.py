@@ -85,7 +85,9 @@ def main() -> None:
     base = f"http://127.0.0.1:{port}"
     with tempfile.TemporaryDirectory(prefix="cta-risk-demo-") as folder:
         directory = Path(folder)
-        raw = yaml.safe_load((root / "configs/trading-demo.yaml").read_text(encoding="utf-8"))
+        raw = yaml.safe_load((root / "configs/presentation.yaml").read_text(encoding="utf-8"))
+        # 熔断恢复验收需要继续发布第 4 帧，不进入手工展示的三帧日结边界。
+        raw.pop("settlement")
         raw["server"]["port"] = port
         raw["ledger"]["database"] = "ledger.sqlite3"
         config = directory / "demo.yaml"

@@ -1,11 +1,11 @@
 # 手工工作台演示：每日日内推进三帧，手动封账和结转。
-# 双源接入验收使用 market-demo.yaml / settlement-demo.yaml。
+# 双源中断与日结展示使用 settlement-demo.yaml。
 server:
   host: 127.0.0.1
   port: 8004
 ledger:
-  database: ../var/workspace-demo/ledger.sqlite3
-  run_id: workspace-demo-20260909
+  database: ../var/presentation/ledger.sqlite3
+  run_id: presentation-20260913
   trading_day: '2026-09-09'
   queue_capacity: 256
   accounts:
@@ -82,10 +82,10 @@ trading:
   - account_id: A
     product_id: SHFE.rb
     amount: '140000'
-  max_price_age_seconds: 30
+  max_price_age_seconds: 300
 settlement:
   auto_settle: false
-  report_dir: ../var/workspace-demo/reports
+  report_dir: ../var/presentation/reports
   days:
   - trading_day: '2026-09-09'
     close_sequence: 3
