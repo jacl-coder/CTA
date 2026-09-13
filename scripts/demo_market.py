@@ -61,7 +61,7 @@ def run(root: Path, directory: Path, packaged: bool, interrupted: bool) -> dict[
     directory.mkdir()
     ports = free_ports()
     base = f"http://127.0.0.1:{ports[0]}"
-    raw = yaml.safe_load((root / "configs/market-demo.yaml").read_text(encoding="utf-8"))
+    raw = yaml.safe_load((root / "testdata/configs/market-demo.yaml").read_text(encoding="utf-8"))
     raw["server"]["port"] = ports[0]
     raw["ledger"]["database"] = "ledger.sqlite3"
     raw["market"]["interval_ms"] = 200

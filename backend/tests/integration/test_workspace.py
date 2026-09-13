@@ -95,7 +95,7 @@ async def test_workspace_modes_and_no_suspension(
     if settings is None:
         root = Path(__file__).resolve().parents[3]
         config = "settlement-demo.yaml" if mode == "automatic" else "market-demo.yaml"
-        raw = yaml.safe_load((root / "configs" / config).read_text())
+        raw = yaml.safe_load((root / "testdata/configs" / config).read_text())
         raw["ledger"]["database"] = "workspace.sqlite3"
         raw["market"]["managed_sources"] = False
         for source in raw["market"]["sources"]:
@@ -377,5 +377,7 @@ async def test_openapi_exposes_named_typed_read_contracts() -> None:
         "title": "Closing Balance",
     }
     for name in ("WorkspaceResponse", "Capabilities", "Totals"):
-        assert set(schemas[name]["required"]) == set(schemas[name]["properties"])
+        # Scene controls are optional for legacy/specialized acceptance configurations.
+        optional = {"demo"} if name == "WorkspaceResponse" else set()
+        assert set(schemas[name]["required"]) == set(schemas[name]["properties"]) - optional
     assert "JsonValue" not in json.dumps(schemas["DailyReportResponse"])

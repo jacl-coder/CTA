@@ -1,14 +1,12 @@
 .DEFAULT_GOAL := help
-CONFIG ?= configs/presentation.yaml
+CONFIG ?= configs/default.yaml
 
-.PHONY: help install run new-demo run-sources \
+.PHONY: help install run \
 	demo-risk demo-market demo-settlement demo-live api check test build package verify
 
 help:
 	@echo "install  安装依赖"
-	@echo "run      启动手工演示工作台（8004）"
-	@echo "new-demo 创建新的演示数据并启动工作台（8004）"
-	@echo "run-sources 启动双源中断恢复展示（8003）"
+	@echo "run      启动工作台（8004，页面选择演示场景）"
 	@echo "test     运行自动化测试"
 	@echo "package  构建交付压缩包"
 	@echo "verify   运行完整验收"
@@ -21,12 +19,6 @@ install:
 
 run: build
 	uv run --project backend --locked python scripts/run_server.py --config "$(CONFIG)"
-
-new-demo: build
-	uv run --project backend --locked python scripts/new_presentation.py
-
-run-sources: build
-	uv run --project backend --locked python scripts/new_presentation.py --sources
 
 demo-risk:
 	uv run --project backend --locked python scripts/demo_risk.py

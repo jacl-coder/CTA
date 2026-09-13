@@ -1,0 +1,224 @@
+# 唯一日常启动配置：默认持续双源行情，在页面选择手工或故障演示。
+# 每次切换创建独立账本；重启恢复 var/workspace/active.json 指向的运行。
+server:
+  host: 127.0.0.1
+  port: 8004
+ledger:
+  database: ../var/workspace/ledger.sqlite3
+  run_id: workspace
+  trading_day: '2026-09-09'
+  queue_capacity: 256
+  accounts:
+  - account_id: A
+    initial_capital: '100000.00'
+  - account_id: B
+    initial_capital: '200000.00'
+  - account_id: C
+    initial_capital: '1000000.00'
+  instruments:
+  - instrument_id: SHFE.rb2610
+    product: rb
+    exchange: SHFE
+    multiplier: 10
+    tick_size: '1'
+    margin_rate: '0.10'
+    fee_per_lot: '2'
+  - instrument_id: DCE.i2701
+    product: i
+    exchange: DCE
+    multiplier: 100
+    tick_size: '0.5'
+    margin_rate: '0.12'
+    fee_per_lot: '3'
+  - instrument_id: CFFEX.IF2609
+    product: IF
+    exchange: CFFEX
+    multiplier: 300
+    tick_size: '0.2'
+    margin_rate: '0.12'
+    fee_per_lot: '5'
+  initial_fills:
+  - fill_id: A-open-1
+    account_id: A
+    instrument_id: SHFE.rb2610
+    sequence: 1
+    side: LONG
+    offset: OPEN
+    quantity: 3
+    price: '3500'
+    source: bootstrap-demo
+  - fill_id: A-close-2
+    account_id: A
+    instrument_id: SHFE.rb2610
+    sequence: 2
+    side: LONG
+    offset: CLOSE_TODAY
+    quantity: 1
+    price: '3510'
+    source: bootstrap-demo
+  - fill_id: B-open-1
+    account_id: B
+    instrument_id: DCE.i2701
+    sequence: 1
+    side: SHORT
+    offset: OPEN
+    quantity: 2
+    price: '800'
+    source: bootstrap-demo
+  - fill_id: C-open-1
+    account_id: C
+    instrument_id: CFFEX.IF2609
+    sequence: 1
+    side: LONG
+    offset: OPEN
+    quantity: 1
+    price: '4000'
+    source: bootstrap-demo
+trading:
+  warning_ratio: '0.02'
+  loss_ratio: '0.03'
+  default_product_limit: '2000000'
+  product_limits:
+  - account_id: A
+    product_id: SHFE.rb
+    amount: '140000'
+  max_price_age_seconds: 30
+market:
+  continuous: true
+  seed: 20260909
+  amplitude_ticks: 20
+  interval_ms: 1000
+  frame_count: 1800
+  poll_ms: 50
+  sessions:
+  - trading_day: '2026-09-09'
+    close_sequence: 1800
+  sources:
+  - source_id: source-A
+    port: 8301
+    instruments:
+    - SHFE.rb2610
+    points:
+    - sequence: 1
+      prices:
+        SHFE.rb2610: '3500'
+  - source_id: source-B
+    port: 8302
+    instruments:
+    - DCE.i2701
+    - CFFEX.IF2609
+    points:
+    - sequence: 1
+      prices:
+        DCE.i2701: '800'
+        CFFEX.IF2609: '4000'
+settlement:
+  auto_settle: true
+  repeat_daily: true
+  report_dir: ../var/workspace/reports
+  days:
+  - trading_day: '2026-09-09'
+    close_sequence: 1800
+    prices:
+      SHFE.rb2610: '3500'
+      DCE.i2701: '800'
+      CFFEX.IF2609: '4000'
+demo:
+  directory: ../var/workspace
+  manual_settlement:
+    auto_settle: false
+    report_dir: ../var/workspace/reports
+    days:
+    - trading_day: '2026-09-09'
+      close_sequence: 3
+      prices:
+        SHFE.rb2610: '3510'
+        DCE.i2701: '810'
+        CFFEX.IF2609: '4005'
+    - trading_day: '2026-09-10'
+      close_sequence: 6
+      prices:
+        SHFE.rb2610: '3490'
+        DCE.i2701: '800'
+        CFFEX.IF2609: '4010'
+  fault_market:
+    managed_sources: true
+    interval_ms: 1000
+    frame_count: 96
+    poll_ms: 50
+    timeout_ms: 500
+    batch_size: 16
+    sources:
+    - source_id: source-A
+      port: 8301
+      instruments:
+      - SHFE.rb2610
+      points:
+      - sequence: 1
+        prices:
+          SHFE.rb2610: '3500'
+      - sequence: 10
+        prices:
+          SHFE.rb2610: '3300'
+      - sequence: 15
+        prices:
+          SHFE.rb2610: '3500'
+      - sequence: 65
+        prices:
+          SHFE.rb2610: '3520'
+      - sequence: 80
+        prices:
+          SHFE.rb2610: '3480'
+      outages:
+      - start: 8
+        end: 20
+    - source_id: source-B
+      port: 8302
+      instruments:
+      - DCE.i2701
+      - CFFEX.IF2609
+      points:
+      - sequence: 1
+        prices:
+          DCE.i2701: '800'
+          CFFEX.IF2609: '4000'
+      - sequence: 32
+        prices:
+          DCE.i2701: '840'
+          CFFEX.IF2609: '4000'
+      - sequence: 36
+        prices:
+          DCE.i2701: '800'
+          CFFEX.IF2609: '4000'
+      - sequence: 65
+        prices:
+          DCE.i2701: '805'
+          CFFEX.IF2609: '4010'
+      - sequence: 80
+        prices:
+          DCE.i2701: '795'
+          CFFEX.IF2609: '4020'
+      outages:
+      - start: 30
+        end: 40
+    sessions:
+    - trading_day: '2026-09-09'
+      close_sequence: 64
+    - trading_day: '2026-09-10'
+      close_sequence: 96
+  fault_settlement:
+    auto_settle: true
+    report_dir: ../var/workspace/reports
+    days:
+    - trading_day: '2026-09-09'
+      close_sequence: 64
+      prices:
+        SHFE.rb2610: '3510'
+        DCE.i2701: '810'
+        CFFEX.IF2609: '4005'
+    - trading_day: '2026-09-10'
+      close_sequence: 96
+      prices:
+        SHFE.rb2610: '3490'
+        DCE.i2701: '800'
+        CFFEX.IF2609: '4010'

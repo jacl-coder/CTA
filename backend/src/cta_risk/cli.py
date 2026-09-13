@@ -16,7 +16,9 @@ def main() -> None:
     commands = parser.add_subparsers(dest="command", required=True)
     for name, help_text in (("serve", "启动 HTTP 服务"), ("check-config", "检查配置")):
         command = commands.add_parser(name, help=help_text)
-        command.add_argument("--config", type=Path, required=True, help="YAML 配置路径")
+        command.add_argument(
+            "--config", type=Path, default=Path("configs/default.yaml"), help="YAML 配置路径"
+        )
     source_command = commands.add_parser("market-source", help="运行独立只读模拟行情源")
     source_command.add_argument("--config", type=Path, required=True)
     source_command.add_argument("--source-id", required=True)

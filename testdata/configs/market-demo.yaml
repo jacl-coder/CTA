@@ -3,7 +3,7 @@ server:
   host: 127.0.0.1
   port: 8002
 ledger:
-  database: ../var/market-demo/ledger.sqlite3
+  database: ../../var/market-demo/ledger.sqlite3
   run_id: market-demo-20260909
   trading_day: "2026-09-09"
   queue_capacity: 256

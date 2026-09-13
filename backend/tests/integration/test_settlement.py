@@ -67,7 +67,9 @@ TOTALS = {
 @pytest.fixture
 def settlement_settings(tmp_path: Path) -> Settings:
     root = Path(__file__).resolve().parents[3]
-    raw = yaml.safe_load((root / "configs/settlement-demo.yaml").read_text(encoding="utf-8"))
+    raw = yaml.safe_load(
+        (root / "testdata/configs/settlement-demo.yaml").read_text(encoding="utf-8")
+    )
     raw.pop("market")
     raw["settlement"]["auto_settle"] = False
     raw["ledger"]["database"] = tmp_path / "ledger.sqlite3"

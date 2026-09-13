@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { WorkspaceContext } from './workspaceContext';
 import { usePolling } from '../hooks/usePolling';
+import { bindRun } from '../api/client';
 import type { Workspace } from '../api/types';
 
 export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const resource = usePolling<Workspace>('/workspace', 500);
+  useEffect(() => { bindRun(resource.data?.demo ? resource.data.run_id ?? undefined : undefined); }, [resource.data]);
   const [refreshVersion, setRefreshVersion] = useState(0);
   const refreshWorkspace = resource.refresh;
   const refresh = useCallback(() => {

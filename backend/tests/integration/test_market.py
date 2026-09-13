@@ -30,7 +30,7 @@ EPOCH = 1_000_000
 @pytest.fixture
 def market_settings(tmp_path: Path) -> Settings:
     root = Path(__file__).resolve().parents[3]
-    raw = yaml.safe_load((root / "configs/market-demo.yaml").read_text())
+    raw = yaml.safe_load((root / "testdata/configs/market-demo.yaml").read_text())
     raw["ledger"]["database"] = "ledger.sqlite3"
     raw["market"]["managed_sources"] = False
     raw["market"]["batch_size"] = 4
@@ -406,7 +406,7 @@ async def test_invalid_market_config_rejected_without_database(
     tmp_path: Path, mutation: str
 ) -> None:
     root = Path(__file__).resolve().parents[3]
-    raw = yaml.safe_load((root / "configs/market-demo.yaml").read_text())
+    raw = yaml.safe_load((root / "testdata/configs/market-demo.yaml").read_text())
     raw["ledger"]["database"] = "never-created.sqlite3"
     sources = raw["market"]["sources"]
     if mutation == "overlap":

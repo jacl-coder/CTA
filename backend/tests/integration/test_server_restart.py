@@ -27,7 +27,7 @@ def free_ports(count: int) -> list[int]:
 
 def config_file(directory: Path, ports: list[int], database: str, managed: bool = False) -> Path:
     template = "live-demo.yaml" if managed else "presentation.yaml"
-    raw = yaml.safe_load((ROOT / "configs" / template).read_text())
+    raw = yaml.safe_load((ROOT / "testdata/configs" / template).read_text())
     raw["server"]["port"] = ports[0]
     raw["ledger"]["database"] = str(directory / database)
     raw["settlement"]["report_dir"] = str(directory / "reports")

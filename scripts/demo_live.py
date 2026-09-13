@@ -54,7 +54,7 @@ def main() -> None:
         directory = Path(folder)
         ports = free_ports()
         base = f"http://127.0.0.1:{ports[0]}"
-        raw = yaml.safe_load((root / "configs/live-demo.yaml").read_text())
+        raw = yaml.safe_load((root / "testdata/configs/live-demo.yaml").read_text())
         raw["server"]["port"] = ports[0]
         raw["ledger"]["database"] = "ledger.sqlite3"
         raw["settlement"]["report_dir"] = "reports"

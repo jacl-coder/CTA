@@ -1,7 +1,7 @@
 import { Alert, Button, Descriptions, Select, Steps, Table, Tag } from 'antd';
 import { useRef, useState } from 'react';
 import { useWorkspace } from '../../app/workspaceContext';
-import { messageOf, writeApi } from '../../api/client';
+import { messageOf, runHeaders, writeApi } from '../../api/client';
 import type { DailyReport } from '../../api/types';
 import { Amount, ModeGate, PageGuide, PageHeading, Panel, RiskTags } from '../../components/Shared';
 import { Icon } from '../../components/Icon';
@@ -33,7 +33,7 @@ export function ReportsPage() {
     if (!selectedDay || locked.current) return;
     locked.current = true; setBusy(true);
     try {
-      const response = await fetch(`/api/reports/${encodeURIComponent(selectedDay)}/download/${format}`, { signal: AbortSignal.timeout(5000) });
+      const response = await fetch(`/api/reports/${encodeURIComponent(selectedDay)}/download/${format}`, { headers: runHeaders(), signal: AbortSignal.timeout(5000) });
       if (!response.ok) { const failure = await response.json() as { detail?: string }; throw new Error(failure.detail ?? '文件暂不可用，请重新导出'); }
       const url = URL.createObjectURL(await response.blob());
       const anchor = document.createElement('a'); anchor.href = url; anchor.download = `risk-${selectedDay}.${format}`; anchor.click();

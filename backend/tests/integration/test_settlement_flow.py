@@ -23,7 +23,7 @@ EPOCH = 1_000_000
 
 def settings_for(tmp_path: Path, manual=False):
     root = Path(__file__).resolve().parents[3]
-    raw = yaml.safe_load((root / "configs/settlement-demo.yaml").read_text())
+    raw = yaml.safe_load((root / "testdata/configs/settlement-demo.yaml").read_text())
     raw["ledger"]["database"] = "ledger.sqlite3"
     raw["settlement"]["report_dir"] = "reports"
     raw["market"]["managed_sources"] = False

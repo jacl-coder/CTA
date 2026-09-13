@@ -14,6 +14,7 @@ from cta_risk.api.settlement import SessionStatus, status
 from cta_risk.api.trading import MarketResponse, RiskResponse, market, risk
 from cta_risk.application.contracts import LedgerUnavailable
 from cta_risk.application.ledger import LedgerService
+from cta_risk.demonstration import DemoController, DemoStatus
 from cta_risk.domain.numbers import total
 from cta_risk.settlement.scheduler import SettlementScheduler
 
@@ -65,6 +66,7 @@ class Totals(BaseModel):
 
 
 class WorkspaceResponse(BaseModel):
+    demo: DemoStatus | None = None
     instance_id: str
     run_id: str | None
     revision: int
@@ -162,6 +164,9 @@ async def workspace(request: Request) -> WorkspaceResponse:
                     service.trading_state().trading_day
                 )
             ]
+        controller = getattr(request.app.state, "demo", None)
+        if isinstance(controller, DemoController):
+            result.demo = controller.status()
         return result
     except LedgerUnavailable:
         unavailable = system.model_copy(

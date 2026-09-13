@@ -173,6 +173,32 @@
         "title": "DayResponse",
         "type": "object"
       },
+      "DemoStatus": {
+        "properties": {
+          "initial_prices": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Initial Prices",
+            "type": "object"
+          },
+          "mode": {
+            "enum": [
+              "continuous",
+              "manual",
+              "fault"
+            ],
+            "title": "Mode",
+            "type": "string"
+          }
+        },
+        "required": [
+          "mode",
+          "initial_prices"
+        ],
+        "title": "DemoStatus",
+        "type": "object"
+      },
       "FrameInput": {
         "additionalProperties": false,
         "properties": {
@@ -1345,6 +1371,25 @@
         "title": "SourcesResponse",
         "type": "object"
       },
+      "SwitchInput": {
+        "additionalProperties": false,
+        "properties": {
+          "mode": {
+            "enum": [
+              "continuous",
+              "manual",
+              "fault"
+            ],
+            "title": "Mode",
+            "type": "string"
+          }
+        },
+        "required": [
+          "mode"
+        ],
+        "title": "SwitchInput",
+        "type": "object"
+      },
       "SystemResponse": {
         "properties": {
           "ledger_available": {
@@ -1583,6 +1628,16 @@
           "capabilities": {
             "$ref": "#/components/schemas/Capabilities"
           },
+          "demo": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DemoStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "instance_id": {
             "title": "Instance Id",
             "type": "string"
@@ -1770,6 +1825,52 @@
         "summary": "Account",
         "tags": [
           "ledger"
+        ]
+      }
+    },
+    "/api/demo/switch": {
+      "post": {
+        "operationId": "switchDemo",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SwitchInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DemoStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Switch",
+        "tags": [
+          "demo"
         ]
       }
     },

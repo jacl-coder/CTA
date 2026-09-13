@@ -1,12 +1,11 @@
-# 默认持续工作台：两个独立 HTTP 源，每秒一帧，无需手工输入行情。
-# 每 1800 帧（30 分钟）为一个模拟交易日，连续模拟日期不代表真实交易所日历。
-# 固定故障验收仍使用 market-demo.yaml / settlement-demo.yaml。
+# 手工工作台演示：每日日内推进三帧，手动封账和结转。
+# 双源中断与日结展示使用 settlement-demo.yaml。
 server:
   host: 127.0.0.1
   port: 8004
 ledger:
-  database: ../var/live-demo/ledger.sqlite3
-  run_id: live-demo-20260909
+  database: ../../var/presentation/ledger.sqlite3
+  run_id: presentation-20260913
   trading_day: '2026-09-09'
   queue_capacity: 256
   accounts:
@@ -83,43 +82,20 @@ trading:
   - account_id: A
     product_id: SHFE.rb
     amount: '140000'
-  max_price_age_seconds: 30
-market:
-  continuous: true
-  seed: 20260909
-  amplitude_ticks: 20
-  interval_ms: 1000
-  # 持续模式下 frame_count 是每个模拟交易日的帧数，不是运行总帧数。
-  frame_count: 1800
-  poll_ms: 50
-  sessions:
-  - trading_day: '2026-09-09'
-    close_sequence: 1800
-  sources:
-  - source_id: source-A
-    port: 8301
-    instruments: [SHFE.rb2610]
-    points:
-    - sequence: 1
-      prices:
-        SHFE.rb2610: '3500'
-  - source_id: source-B
-    port: 8302
-    instruments: [DCE.i2701, CFFEX.IF2609]
-    points:
-    - sequence: 1
-      prices:
-        DCE.i2701: '800'
-        CFFEX.IF2609: '4000'
+  max_price_age_seconds: 300
 settlement:
-  auto_settle: true
-  repeat_daily: true
-  report_dir: ../var/live-demo/reports
-  # 显式模拟结算价模板，每日重复；不冒充交易所结算价，不取末笔行情替代。
+  auto_settle: false
+  report_dir: ../../var/presentation/reports
   days:
   - trading_day: '2026-09-09'
-    close_sequence: 1800
+    close_sequence: 3
     prices:
-      SHFE.rb2610: '3500'
+      SHFE.rb2610: '3510'
+      DCE.i2701: '810'
+      CFFEX.IF2609: '4005'
+  - trading_day: '2026-09-10'
+    close_sequence: 6
+    prices:
+      SHFE.rb2610: '3490'
       DCE.i2701: '800'
-      CFFEX.IF2609: '4000'
+      CFFEX.IF2609: '4010'

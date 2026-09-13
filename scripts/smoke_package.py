@@ -26,7 +26,9 @@ def main() -> None:
     with tempfile.TemporaryDirectory(prefix="cta-package-check-") as folder:
         directory = Path(folder)
         config = directory / "demo.yaml"
-        raw = yaml.safe_load((root / "configs/presentation.yaml").read_text(encoding="utf-8"))
+        raw = yaml.safe_load(
+            (root / "testdata/configs/presentation.yaml").read_text(encoding="utf-8")
+        )
         # 基础启动验收只启用账本；交易与清算由独立验收脚本覆盖。
         raw.pop("trading")
         raw.pop("settlement")

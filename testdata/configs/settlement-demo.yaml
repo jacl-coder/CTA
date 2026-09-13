@@ -3,7 +3,7 @@ server:
   host: 127.0.0.1
   port: 8003
 ledger:
-  database: ../var/settlement-demo/ledger.sqlite3
+  database: ../../var/settlement-demo/ledger.sqlite3
   run_id: settlement-demo-20260909
   trading_day: '2026-09-09'
   queue_capacity: 256
@@ -149,7 +149,7 @@ market:
     close_sequence: 96
 settlement:
   auto_settle: true
-  report_dir: ../var/settlement-demo/reports
+  report_dir: ../../var/settlement-demo/reports
   days:
   - trading_day: '2026-09-09'
     close_sequence: 64

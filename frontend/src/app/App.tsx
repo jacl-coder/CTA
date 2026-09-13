@@ -2,6 +2,7 @@ import { Button, Select, Alert } from 'antd';
 import { useEffect } from 'react';
 import { Link, NavLink, Route, Routes, useLocation } from 'react-router';
 import { OverviewPage } from '../features/overview/OverviewPage';
+import { DemoSelector } from './DemoSelector';
 import { WorkspaceProvider } from './WorkspaceProvider';
 import { useWorkspace } from './workspaceContext';
 import { phaseLabel, timeLabel } from '../components/format';
@@ -43,6 +44,7 @@ function WorkspaceLayout() {
         <div className="topbar-status"><span className={`status-dot ${fresh ? 'live' : ''}`} /><span>{fresh ? '实时连接' : loading ? '正在连接' : '连接中断'}</span><span className="environment">本地模拟</span></div>
       </header>
       <main id="main-content" className="content">
+        <DemoSelector />
         <div className="workspace-toolbar"><div className="toolbar"><label htmlFor="account-filter">查看账户</label>
           <Select id="account-filter" aria-label="策略账户筛选" value={account ?? ''} style={{ minWidth: 145 }} onChange={value => selectAccount(value || undefined)} options={[{ value: '', label: '全部账户' }, ...(data?.accounts ?? []).map(item => ({ value: item.account_id, label: `账户 ${item.account_id}` }))]} />
           <span className="simulation-day">模拟交易日 <b>{day ?? '—'}</b></span>

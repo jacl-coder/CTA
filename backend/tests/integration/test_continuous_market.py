@@ -33,7 +33,7 @@ pytestmark = pytest.mark.requirement("MD-01", "MD-02", "MD-03", "SET-01", "SET-0
 
 
 def raw_settings(tmp_path: Path) -> dict:
-    raw = yaml.safe_load((ROOT / "configs/live-demo.yaml").read_text())
+    raw = yaml.safe_load((ROOT / "testdata/configs/live-demo.yaml").read_text())
     raw["ledger"]["database"] = tmp_path / "ledger.sqlite3"
     raw["settlement"]["report_dir"] = tmp_path / "reports"
     raw["market"]["managed_sources"] = False
@@ -299,7 +299,7 @@ def test_invalid_continuous_config_is_rejected(tmp_path: Path, mutation: str) ->
 
 
 def test_finite_plan_serialization_stays_compatible(tmp_path: Path) -> None:
-    raw = yaml.safe_load((ROOT / "configs/settlement-demo.yaml").read_text())
+    raw = yaml.safe_load((ROOT / "testdata/configs/settlement-demo.yaml").read_text())
     raw["ledger"]["database"] = tmp_path / "ledger.sqlite3"
     raw["settlement"]["report_dir"] = tmp_path / "reports"
     settings = Settings.model_validate(raw)

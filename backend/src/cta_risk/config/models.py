@@ -5,6 +5,7 @@ from typing import Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from cta_risk.config.demo import DemoSettings
 from cta_risk.config.ledger import LedgerSettings
 from cta_risk.config.market import MarketSettings
 from cta_risk.config.settlement import SettlementSettings
@@ -29,6 +30,8 @@ class Settings(StrictModel):
     trading: TradingSettings | None = None
     market: MarketSettings | None = None
     settlement: SettlementSettings | None = None
+
+    demo: DemoSettings | None = None
 
     @model_validator(mode="after")
     def trading_requires_ledger(self) -> Self:
@@ -68,4 +71,22 @@ class Settings(StrictModel):
             for limit in self.trading.policy().product_limits:
                 if limit.account_id not in accounts or limit.product_id not in products:
                     raise ValueError("敞口限额引用未知账户或品种")
+        if self.demo is not None:
+            if not (self.ledger and self.trading and self.market and self.market.continuous):
+                raise ValueError("场景选择需要持续行情、账户和交易配置")
+            for preset_market, preset_settlement in (
+                (None, self.demo.manual_settlement),
+                (self.demo.fault_market, self.demo.fault_settlement),
+            ):
+                Settings(
+                    server=self.server,
+                    ledger=self.ledger,
+                    trading=self.trading,
+                    market=preset_market,
+                    settlement=preset_settlement,
+                )
+            if self.demo.manual_settlement.auto_settle:
+                raise ValueError("手工演示必须使用手工清算")
+            if self.demo.fault_market.continuous or not self.demo.fault_settlement.auto_settle:
+                raise ValueError("故障演示必须使用有限行情和自动清算")
         return self

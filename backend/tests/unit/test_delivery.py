@@ -27,7 +27,7 @@ def test_assemble_and_unpack_without_git_preserves_sources_and_executable(tmp_pa
     root = tmp_path / "source"
     write(root, "README.md", "使用说明")
     write(root, "backend/src/demo.py", "print('hello')")
-    write(root, "configs/presentation.yaml", "server: {}")
+    write(root, "testdata/configs/presentation.yaml", "server: {}")
     write(root, "frontend/node_modules/secret.txt")
     write(root, "backend/.venv/secret.txt")
     write(root, "backend/src/cta_risk/static/old.js")
@@ -43,7 +43,7 @@ def test_assemble_and_unpack_without_git_preserves_sources_and_executable(tmp_pa
     assert set(manifest["files"]) == {
         "README.md",
         "backend/src/demo.py",
-        "configs/presentation.yaml",
+        "testdata/configs/presentation.yaml",
         "dist/cta-risk/cta-risk",
     }
     assert manifest["base_commit"] is None

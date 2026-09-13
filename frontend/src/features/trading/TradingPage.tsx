@@ -66,6 +66,7 @@ function TradingDesk({ run }: { run: string }) {
     finally { locked.current = false; setBusy(false); }
   };
   return <>
+    {data?.capabilities.manual_market && <ManualPrices />}
     <PageGuide>开仓是新增持仓；平今关闭今天的持仓，平昨关闭前日持仓。所有订单使用模拟资金。</PageGuide>
     <div className="two-columns trade-columns"><Panel title="提交模拟订单" extra={<Tag>模拟交易日 {data?.accounts[0]?.trading_day}</Tag>}>
       {attempt && <Alert className="inline-alert" showIcon type="warning" message="有一笔订单需要核对" description={<><p>账户 {attempt.account_id} · {attempt.instrument_id} · {sideLabel(attempt.side)}{offsetLabel(attempt.offset)} {attempt.quantity} 手</p><p className="mono">请求编号 {attempt.request_id}</p><div className="toolbar"><Button onClick={() => void lookup()} loading={busy}>核对订单结果</Button><Button onClick={() => void send(attempt)} disabled={busy || !fresh}>重试原订单</Button></div></>} />}
@@ -89,7 +90,6 @@ function TradingDesk({ run }: { run: string }) {
       <div className="facts"><div><span>权益</span><Amount value={risk?.equity} /></div><div><span>可用资金</span><Amount value={risk?.available_funds} /></div><div><span>持仓浮盈亏</span><Amount value={risk?.floating_pnl} /></div><div><span>总名义敞口</span><Amount value={risk?.gross_exposure} /></div><div><span>该方向今仓 / 昨仓</span><b>{position?.today_quantity ?? 0} / {position?.yesterday_quantity ?? 0} 手</b></div><div><span>每手手续费</span><Amount value={instrument?.fee_per_lot} /></div></div>
       <Alert showIcon type={risk?.circuit_broken ? 'warning' : 'info'} message={risk?.circuit_broken ? '当日熔断已生效' : '下单前将再次核对风险'} description={risk?.circuit_broken ? '价格反弹不会解除当日熔断；有效行情下仍可提交合法平仓。' : '最新报价仅供参考。成交时会再次检查行情、账户限制及可用保证金，以订单结果为准。'} />
     </Panel></div>
-    {data?.capabilities.manual_market && <ManualPrices />}
     <Panel title="订单结果">
       <p className="table-note">实际处理时间记录服务端处理订单的北京时间，精确到毫秒；成交与拒单均记录，重试沿用原时间。历史订单未记录时间的显示“未记录”。</p>
       {history.error && <Alert type="error" showIcon message="订单记录更新失败" description={history.error} className="inline-alert" />}
@@ -124,8 +124,12 @@ function ManualPrices() {
   return <Panel title="手工模拟行情" extra={<Tag>仅手工模式可用</Tag>}>
     <p className="description">填写全部合约价格并提交下一帧。输入十进制价格，行情将直接触发风险计算。</p>
     {notice && <Alert className="inline-alert" showIcon type="info" message={notice} />}
+    {data?.demo && <div className="toolbar section-action">
+      <Button onClick={() => form.setFieldsValue({ prices: data.demo!.initial_prices })}>填入初始行情</Button>
+      <span className="muted">首次已填好全部价格，提交后为 A 开多 1 手；再将螺纹钢改为 3400，提交即可观察熔断。</span>
+    </div>}
     <Form form={form} layout="vertical" onFinish={values => void publish(values)}><div className="price-inputs">
-      {data?.instruments.map(item => <Form.Item key={item.instrument_id} name={['prices', item.instrument_id]} label={item.instrument_id} initialValue={data.market?.prices[item.instrument_id]}
+      {data?.instruments.map(item => <Form.Item key={item.instrument_id} name={['prices', item.instrument_id]} label={item.instrument_id} initialValue={data.market?.prices[item.instrument_id] ?? data.demo?.initial_prices[item.instrument_id]}
         rules={[{ required: true, message: '请输入价格' }, { pattern: /^\d+(\.\d+)?$/, message: '请输入十进制价格' }]}><Input inputMode="decimal" placeholder={`最小变动 ${item.tick_size}`} /></Form.Item>)}
     </div><Button htmlType="submit" loading={busy} disabled={!fresh || data?.settlement?.phase === 'SETTLED'}>提交完整价格帧</Button></Form>
   </Panel>;
