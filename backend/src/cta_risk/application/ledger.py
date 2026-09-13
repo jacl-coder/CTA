@@ -810,6 +810,18 @@ class LedgerService:
             self._market_live = False
         return transition.result
 
+    async def history(self, maximum: int) -> tuple[TradingState, tuple[JournalEntry, ...]]:
+        """冻结已提交版本，再按该版本读取历史；之后到达的行情不会混入导出。"""
+        state = self.trading_state()
+        if not 0 < state.revision <= maximum:
+            raise AccountingError(f"需有 1 至 {maximum} 步历史；长时间运行请使用较短的独立场景")
+        entries = await self._database(
+            lambda: self._store.read_journal(self.definition.run_id, state.revision)
+        )
+        if tuple(item.revision for item in entries) != tuple(range(1, state.revision + 1)):
+            raise StorageError("历史日志不完整，拒绝导出")
+        return state, entries
+
     async def close(self) -> None:
         if self._closed:
             return

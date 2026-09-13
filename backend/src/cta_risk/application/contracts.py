@@ -106,6 +106,8 @@ class LedgerStore(Protocol):
         self, run_id: str, policy_json: str | None
     ) -> tuple[JournalEntry, ...]: ...
 
+    def read_journal(self, run_id: str, revision: int) -> tuple[JournalEntry, ...]: ...
+
     def save_transition(
         self,
         run_id: str,

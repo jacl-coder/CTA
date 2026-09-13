@@ -11,6 +11,7 @@ import { PositionsPage } from '../features/positions/PositionsPage';
 import { MarketPage } from '../features/market/MarketPage';
 import { EventsPage } from '../features/events/EventsPage';
 import { TradingPage } from '../features/trading/TradingPage';
+import { ReplayPage } from '../features/replay/ReplayPage';
 import { ReportsPage } from '../features/reports/ReportsPage';
 
 const pages: { path: string; label: string; icon: IconName; group: string }[] = [
@@ -19,6 +20,7 @@ const pages: { path: string; label: string; icon: IconName; group: string }[] = 
   { path: '/trading', label: '模拟交易', icon: 'trade', group: '交易工作台' },
   { path: '/market', label: '行情监控', icon: 'market', group: '风控与清算' },
   { path: '/events', label: '风险事件', icon: 'risk', group: '风控与清算' },
+  { path: '/replay', label: '历史回放', icon: 'market', group: '风控与清算' },
   { path: '/reports', label: '日结与日报', icon: 'report', group: '风控与清算' },
 ];
 export function App() {
@@ -28,6 +30,7 @@ function WorkspaceLayout() {
   const { data, fresh, error, loading, updatedAt, refresh, account, selectAccount } = useWorkspace();
   const location = useLocation();
   useEffect(() => { window.scrollTo(0, 0); }, [location.pathname]);
+  const isReplay = location.pathname === '/replay';
   const active = pages.find(page => page.path === location.pathname);
   const ready = fresh && !!data?.system.trading_available;
   const day = data?.settlement?.trading_day ?? data?.accounts[0]?.trading_day;
@@ -44,21 +47,22 @@ function WorkspaceLayout() {
         <div className="topbar-status"><span className={`status-dot ${fresh ? 'live' : ''}`} /><span>{fresh ? '实时连接' : loading ? '正在连接' : '连接中断'}</span><span className="environment">本地模拟</span></div>
       </header>
       <main id="main-content" className="content">
-        <DemoSelector />
-        <div className="workspace-toolbar"><div className="toolbar"><label htmlFor="account-filter">查看账户</label>
+        {!isReplay && <DemoSelector />}
+        {!isReplay && <div className="workspace-toolbar"><div className="toolbar"><label htmlFor="account-filter">查看账户</label>
           <Select id="account-filter" aria-label="策略账户筛选" value={account ?? ''} style={{ minWidth: 145 }} onChange={value => selectAccount(value || undefined)} options={[{ value: '', label: '全部账户' }, ...(data?.accounts ?? []).map(item => ({ value: item.account_id, label: `账户 ${item.account_id}` }))]} />
           <span className="simulation-day">模拟交易日 <b>{day ?? '—'}</b></span>
           <span className={`status-pill ${ready ? 'success' : 'pending'}`}><span className="status-dot" />{ready ? '行情就绪' : '交易暂停'}</span>
-        </div><div className="toolbar sync-toolbar"><span className="muted"><Icon name="clock" size={14} /> 页面更新 {timeLabel(updatedAt || null)}</span><Button aria-label="刷新数据" icon={<Icon name="refresh" size={15} />} onClick={refresh} loading={loading && !data}>刷新</Button></div></div>
+        </div><div className="toolbar sync-toolbar"><span className="muted"><Icon name="clock" size={14} /> 页面更新 {timeLabel(updatedAt || null)}</span><Button aria-label="刷新数据" icon={<Icon name="refresh" size={15} />} onClick={refresh} loading={loading && !data}>刷新</Button></div></div>}
         {!fresh && !loading && <Alert className="connection-alert" showIcon type="error" message="连接中断，交易操作已暂停" description={`${error ?? '数据更新超时'}。${data ? '当前保留上次数据，恢复连接后自动更新。' : '请确认后端已启动。'}`} />}
-        {fresh && data && !data.system.trading_available && <Alert className="connection-alert" showIcon type="info" message="正在等待可交易状态" description={data.system.reasons.join(' ')} />}
-        <div key={data?.run_id ?? 'loading'} className="page-content"><Routes>
+        {!isReplay && fresh && data && !data.system.trading_available && <Alert className="connection-alert" showIcon type="info" message="正在等待可交易状态" description={data.system.reasons.join(' ')} />}
+        <div key={isReplay ? 'independent-replay' : data?.run_id ?? 'loading'} className="page-content"><Routes>
           <Route path="/" element={<OverviewPage />} /><Route path="/positions" element={<PositionsPage />} />
           <Route path="/market" element={<MarketPage />} /><Route path="/events" element={<EventsPage />} />
           <Route path="/trading" element={<TradingPage />} /><Route path="/reports" element={<ReportsPage />} />
+          <Route path="/replay" element={<ReplayPage />} />
           <Route path="*" element={<><h1>页面不存在</h1><Link to="/">返回工作台</Link></>} />
         </Routes></div>
-        <footer className="workspace-footer"><span>模拟交易日 {day ?? '—'} · {phaseLabel(data?.settlement?.phase)}</span><span>金额单位：人民币元 <details className="run-details"><summary>运行信息</summary><code>{data?.run_id ?? '等待运行'}</code></details></span></footer>
+        <footer className="workspace-footer"><span>{isReplay ? '历史回放 · 业务日期以所选历史为准' : <>模拟交易日 {day ?? '—'} · {phaseLabel(data?.settlement?.phase)}</>}</span><span>金额单位：人民币元 <details className="run-details"><summary>运行信息</summary><code>{data?.run_id ?? '等待运行'}</code></details></span></footer>
       </main>
     </div>
   </div>;

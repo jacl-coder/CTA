@@ -1,0 +1,1772 @@
+{
+  "name": "两日历史样例：浮亏熔断、反弹与平昨",
+  "dataset_digest": "332035dac50b7d08123704b352aed49c9a7cd57e3c1a78bfbb43bbb96b925c94",
+  "baseline": {
+    "policy": {
+      "warning_ratio": "0.02",
+      "loss_ratio": "0.03",
+      "default_product_limit": "2000000",
+      "product_limits": [
+        {
+          "account_id": "A",
+          "product_id": "SHFE.rb",
+          "amount": "140000"
+        }
+      ],
+      "max_price_age_seconds": 30
+    },
+    "points": [
+      {
+        "step": 1,
+        "kind": "frame",
+        "trading_day": "2026-09-09",
+        "frame_sequence": 1,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "100092.00",
+            "floating_pnl": "0.00",
+            "margin": "7000.00",
+            "available_funds": "93092.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "0.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "C",
+            "equity": "999995.00",
+            "floating_pnl": "0.00",
+            "margin": "144000.00",
+            "available_funds": "855995.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          }
+        ],
+        "order": null
+      },
+      {
+        "step": 2,
+        "kind": "order",
+        "trading_day": "2026-09-09",
+        "frame_sequence": 1,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "100090.00",
+            "floating_pnl": "0.00",
+            "margin": "10500.00",
+            "available_funds": "89590.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "0.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "C",
+            "equity": "999995.00",
+            "floating_pnl": "0.00",
+            "margin": "144000.00",
+            "available_funds": "855995.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          }
+        ],
+        "order": {
+          "account_id": "A",
+          "request_id": "open-before-loss",
+          "status": "FILLED",
+          "reason": "EXECUTED",
+          "price": "3500",
+          "fee": "2.00",
+          "duplicate": false
+        }
+      },
+      {
+        "step": 3,
+        "kind": "frame",
+        "trading_day": "2026-09-09",
+        "frame_sequence": 2,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3400"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "97090.00",
+            "floating_pnl": "-3000.00",
+            "margin": "10200.00",
+            "available_funds": "86890.00",
+            "loss_percent": "3.00",
+            "settled_balance": null,
+            "circuit_broken": true,
+            "warning": true,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "0.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "C",
+            "equity": "999995.00",
+            "floating_pnl": "0.00",
+            "margin": "144000.00",
+            "available_funds": "855995.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          }
+        ],
+        "order": null
+      },
+      {
+        "step": 4,
+        "kind": "order",
+        "trading_day": "2026-09-09",
+        "frame_sequence": 2,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3400"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "97090.00",
+            "floating_pnl": "-3000.00",
+            "margin": "10200.00",
+            "available_funds": "86890.00",
+            "loss_percent": "3.00",
+            "settled_balance": null,
+            "circuit_broken": true,
+            "warning": true,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "0.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "C",
+            "equity": "999995.00",
+            "floating_pnl": "0.00",
+            "margin": "144000.00",
+            "available_funds": "855995.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          }
+        ],
+        "order": {
+          "account_id": "A",
+          "request_id": "try-open-at-loss",
+          "status": "REJECTED",
+          "reason": "CIRCUIT_BROKEN",
+          "price": null,
+          "fee": null,
+          "duplicate": false
+        }
+      },
+      {
+        "step": 5,
+        "kind": "frame",
+        "trading_day": "2026-09-09",
+        "frame_sequence": 3,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "100090.00",
+            "floating_pnl": "0.00",
+            "margin": "10500.00",
+            "available_funds": "89590.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": true,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "0.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "C",
+            "equity": "999995.00",
+            "floating_pnl": "0.00",
+            "margin": "144000.00",
+            "available_funds": "855995.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          }
+        ],
+        "order": null
+      },
+      {
+        "step": 6,
+        "kind": "order",
+        "trading_day": "2026-09-09",
+        "frame_sequence": 3,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "100090.00",
+            "floating_pnl": "0.00",
+            "margin": "10500.00",
+            "available_funds": "89590.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": true,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "0.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "C",
+            "equity": "999995.00",
+            "floating_pnl": "0.00",
+            "margin": "144000.00",
+            "available_funds": "855995.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          }
+        ],
+        "order": {
+          "account_id": "A",
+          "request_id": "try-open-after-rebound",
+          "status": "REJECTED",
+          "reason": "CIRCUIT_BROKEN",
+          "price": null,
+          "fee": null,
+          "duplicate": false
+        }
+      },
+      {
+        "step": 7,
+        "kind": "close",
+        "trading_day": "2026-09-09",
+        "frame_sequence": 3,
+        "phase": "CLOSING",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "100090.00",
+            "floating_pnl": "0.00",
+            "margin": "10500.00",
+            "available_funds": "89590.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": true,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "0.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "C",
+            "equity": "999995.00",
+            "floating_pnl": "0.00",
+            "margin": "144000.00",
+            "available_funds": "855995.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          }
+        ],
+        "order": null
+      },
+      {
+        "step": 8,
+        "kind": "settle",
+        "trading_day": "2026-09-09",
+        "frame_sequence": 3,
+        "phase": "SETTLED",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "100090.00",
+            "floating_pnl": "0.00",
+            "margin": "10500.00",
+            "available_funds": "89590.00",
+            "loss_percent": "0.00",
+            "settled_balance": "100390.00",
+            "circuit_broken": true,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "0.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": "197994.00",
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "C",
+            "equity": "999995.00",
+            "floating_pnl": "0.00",
+            "margin": "144000.00",
+            "available_funds": "855995.00",
+            "loss_percent": "0.00",
+            "settled_balance": "1001495.00",
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          }
+        ],
+        "order": null
+      },
+      {
+        "step": 9,
+        "kind": "open_day",
+        "trading_day": "2026-09-10",
+        "frame_sequence": 3,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": null,
+            "floating_pnl": null,
+            "margin": null,
+            "available_funds": null,
+            "loss_percent": null,
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "B",
+            "equity": null,
+            "floating_pnl": null,
+            "margin": null,
+            "available_funds": null,
+            "loss_percent": null,
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "C",
+            "equity": null,
+            "floating_pnl": null,
+            "margin": null,
+            "available_funds": null,
+            "loss_percent": null,
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          }
+        ],
+        "order": null
+      },
+      {
+        "step": 10,
+        "kind": "frame",
+        "trading_day": "2026-09-10",
+        "frame_sequence": 4,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "100090.00",
+            "floating_pnl": "-300.00",
+            "margin": "10500.00",
+            "available_funds": "89590.00",
+            "loss_percent": "0.30",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "2000.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "C",
+            "equity": "999995.00",
+            "floating_pnl": "-1500.00",
+            "margin": "144000.00",
+            "available_funds": "855995.00",
+            "loss_percent": "0.15",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          }
+        ],
+        "order": null
+      },
+      {
+        "step": 11,
+        "kind": "order",
+        "trading_day": "2026-09-10",
+        "frame_sequence": 4,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "100088.00",
+            "floating_pnl": "-200.00",
+            "margin": "7000.00",
+            "available_funds": "93088.00",
+            "loss_percent": "0.20",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "2000.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "C",
+            "equity": "999995.00",
+            "floating_pnl": "-1500.00",
+            "margin": "144000.00",
+            "available_funds": "855995.00",
+            "loss_percent": "0.15",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          }
+        ],
+        "order": {
+          "account_id": "A",
+          "request_id": "close-yesterday",
+          "status": "FILLED",
+          "reason": "EXECUTED",
+          "price": "3500",
+          "fee": "2.00",
+          "duplicate": false
+        }
+      },
+      {
+        "step": 12,
+        "kind": "frame",
+        "trading_day": "2026-09-10",
+        "frame_sequence": 5,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4005",
+          "DCE.i2701": "810",
+          "SHFE.rb2610": "3490"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "99888.00",
+            "floating_pnl": "-400.00",
+            "margin": "6980.00",
+            "available_funds": "92908.00",
+            "loss_percent": "0.40",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "B",
+            "equity": "197994.00",
+            "floating_pnl": "0.00",
+            "margin": "19440.00",
+            "available_funds": "178554.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "C",
+            "equity": "1001495.00",
+            "floating_pnl": "0.00",
+            "margin": "144180.00",
+            "available_funds": "857315.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          }
+        ],
+        "order": null
+      },
+      {
+        "step": 13,
+        "kind": "frame",
+        "trading_day": "2026-09-10",
+        "frame_sequence": 6,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4010",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "100088.00",
+            "floating_pnl": "-200.00",
+            "margin": "7000.00",
+            "available_funds": "93088.00",
+            "loss_percent": "0.20",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "2000.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "C",
+            "equity": "1002995.00",
+            "floating_pnl": "1500.00",
+            "margin": "144360.00",
+            "available_funds": "858635.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          }
+        ],
+        "order": null
+      },
+      {
+        "step": 14,
+        "kind": "close",
+        "trading_day": "2026-09-10",
+        "frame_sequence": 6,
+        "phase": "CLOSING",
+        "prices": {
+          "CFFEX.IF2609": "4010",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "100088.00",
+            "floating_pnl": "-200.00",
+            "margin": "7000.00",
+            "available_funds": "93088.00",
+            "loss_percent": "0.20",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "2000.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "C",
+            "equity": "1002995.00",
+            "floating_pnl": "1500.00",
+            "margin": "144360.00",
+            "available_funds": "858635.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          }
+        ],
+        "order": null
+      },
+      {
+        "step": 15,
+        "kind": "settle",
+        "trading_day": "2026-09-10",
+        "frame_sequence": 6,
+        "phase": "SETTLED",
+        "prices": {
+          "CFFEX.IF2609": "4010",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "100088.00",
+            "floating_pnl": "-200.00",
+            "margin": "7000.00",
+            "available_funds": "93088.00",
+            "loss_percent": "0.20",
+            "settled_balance": "99888.00",
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "2000.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": "199994.00",
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "C",
+            "equity": "1002995.00",
+            "floating_pnl": "1500.00",
+            "margin": "144360.00",
+            "available_funds": "858635.00",
+            "loss_percent": "0.00",
+            "settled_balance": "1002995.00",
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          }
+        ],
+        "order": null
+      }
+    ],
+    "events": [
+      {
+        "step": 3,
+        "trading_day": "2026-09-09",
+        "account_id": "A",
+        "frame_sequence": 2,
+        "kind": "LOSS_WARNING_ENTER",
+        "product_id": null
+      },
+      {
+        "step": 3,
+        "trading_day": "2026-09-09",
+        "account_id": "A",
+        "frame_sequence": 2,
+        "kind": "CIRCUIT_BREAK",
+        "product_id": null
+      },
+      {
+        "step": 5,
+        "trading_day": "2026-09-09",
+        "account_id": "A",
+        "frame_sequence": 3,
+        "kind": "LOSS_WARNING_EXIT",
+        "product_id": null
+      }
+    ],
+    "report_count": 2,
+    "state_digest": "0128aed4864a9813ce2bc5970e4f285b7e4a1fd0d81dc8c22ef6bad86799c991",
+    "matches_recording": null
+  },
+  "candidate": {
+    "policy": {
+      "warning_ratio": "0.02",
+      "loss_ratio": "0.05",
+      "default_product_limit": "2000000",
+      "product_limits": [
+        {
+          "account_id": "A",
+          "product_id": "SHFE.rb",
+          "amount": "140000"
+        }
+      ],
+      "max_price_age_seconds": 30
+    },
+    "points": [
+      {
+        "step": 1,
+        "kind": "frame",
+        "trading_day": "2026-09-09",
+        "frame_sequence": 1,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "100092.00",
+            "floating_pnl": "0.00",
+            "margin": "7000.00",
+            "available_funds": "93092.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "0.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "C",
+            "equity": "999995.00",
+            "floating_pnl": "0.00",
+            "margin": "144000.00",
+            "available_funds": "855995.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          }
+        ],
+        "order": null
+      },
+      {
+        "step": 2,
+        "kind": "order",
+        "trading_day": "2026-09-09",
+        "frame_sequence": 1,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "100090.00",
+            "floating_pnl": "0.00",
+            "margin": "10500.00",
+            "available_funds": "89590.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "0.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "C",
+            "equity": "999995.00",
+            "floating_pnl": "0.00",
+            "margin": "144000.00",
+            "available_funds": "855995.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          }
+        ],
+        "order": {
+          "account_id": "A",
+          "request_id": "open-before-loss",
+          "status": "FILLED",
+          "reason": "EXECUTED",
+          "price": "3500",
+          "fee": "2.00",
+          "duplicate": false
+        }
+      },
+      {
+        "step": 3,
+        "kind": "frame",
+        "trading_day": "2026-09-09",
+        "frame_sequence": 2,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3400"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "97090.00",
+            "floating_pnl": "-3000.00",
+            "margin": "10200.00",
+            "available_funds": "86890.00",
+            "loss_percent": "3.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": true,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "0.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "C",
+            "equity": "999995.00",
+            "floating_pnl": "0.00",
+            "margin": "144000.00",
+            "available_funds": "855995.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          }
+        ],
+        "order": null
+      },
+      {
+        "step": 4,
+        "kind": "order",
+        "trading_day": "2026-09-09",
+        "frame_sequence": 2,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3400"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "97088.00",
+            "floating_pnl": "-3000.00",
+            "margin": "13600.00",
+            "available_funds": "83488.00",
+            "loss_percent": "3.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": true,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "0.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "C",
+            "equity": "999995.00",
+            "floating_pnl": "0.00",
+            "margin": "144000.00",
+            "available_funds": "855995.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          }
+        ],
+        "order": {
+          "account_id": "A",
+          "request_id": "try-open-at-loss",
+          "status": "FILLED",
+          "reason": "EXECUTED",
+          "price": "3400",
+          "fee": "2.00",
+          "duplicate": false
+        }
+      },
+      {
+        "step": 5,
+        "kind": "frame",
+        "trading_day": "2026-09-09",
+        "frame_sequence": 3,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "101088.00",
+            "floating_pnl": "1000.00",
+            "margin": "14000.00",
+            "available_funds": "87088.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "0.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "C",
+            "equity": "999995.00",
+            "floating_pnl": "0.00",
+            "margin": "144000.00",
+            "available_funds": "855995.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          }
+        ],
+        "order": null
+      },
+      {
+        "step": 6,
+        "kind": "order",
+        "trading_day": "2026-09-09",
+        "frame_sequence": 3,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "101088.00",
+            "floating_pnl": "1000.00",
+            "margin": "14000.00",
+            "available_funds": "87088.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "0.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "C",
+            "equity": "999995.00",
+            "floating_pnl": "0.00",
+            "margin": "144000.00",
+            "available_funds": "855995.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          }
+        ],
+        "order": {
+          "account_id": "A",
+          "request_id": "try-open-after-rebound",
+          "status": "REJECTED",
+          "reason": "PROJECTED_EXPOSURE_LIMIT",
+          "price": null,
+          "fee": null,
+          "duplicate": false
+        }
+      },
+      {
+        "step": 7,
+        "kind": "close",
+        "trading_day": "2026-09-09",
+        "frame_sequence": 3,
+        "phase": "CLOSING",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "101088.00",
+            "floating_pnl": "1000.00",
+            "margin": "14000.00",
+            "available_funds": "87088.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "0.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "C",
+            "equity": "999995.00",
+            "floating_pnl": "0.00",
+            "margin": "144000.00",
+            "available_funds": "855995.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          }
+        ],
+        "order": null
+      },
+      {
+        "step": 8,
+        "kind": "settle",
+        "trading_day": "2026-09-09",
+        "frame_sequence": 3,
+        "phase": "SETTLED",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "101088.00",
+            "floating_pnl": "1000.00",
+            "margin": "14000.00",
+            "available_funds": "87088.00",
+            "loss_percent": "0.00",
+            "settled_balance": "101488.00",
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "0.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": "197994.00",
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "C",
+            "equity": "999995.00",
+            "floating_pnl": "0.00",
+            "margin": "144000.00",
+            "available_funds": "855995.00",
+            "loss_percent": "0.00",
+            "settled_balance": "1001495.00",
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          }
+        ],
+        "order": null
+      },
+      {
+        "step": 9,
+        "kind": "open_day",
+        "trading_day": "2026-09-10",
+        "frame_sequence": 3,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": null,
+            "floating_pnl": null,
+            "margin": null,
+            "available_funds": null,
+            "loss_percent": null,
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "B",
+            "equity": null,
+            "floating_pnl": null,
+            "margin": null,
+            "available_funds": null,
+            "loss_percent": null,
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "C",
+            "equity": null,
+            "floating_pnl": null,
+            "margin": null,
+            "available_funds": null,
+            "loss_percent": null,
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          }
+        ],
+        "order": null
+      },
+      {
+        "step": 10,
+        "kind": "frame",
+        "trading_day": "2026-09-10",
+        "frame_sequence": 4,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "101088.00",
+            "floating_pnl": "-400.00",
+            "margin": "14000.00",
+            "available_funds": "87088.00",
+            "loss_percent": "0.40",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "2000.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "C",
+            "equity": "999995.00",
+            "floating_pnl": "-1500.00",
+            "margin": "144000.00",
+            "available_funds": "855995.00",
+            "loss_percent": "0.15",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          }
+        ],
+        "order": null
+      },
+      {
+        "step": 11,
+        "kind": "order",
+        "trading_day": "2026-09-10",
+        "frame_sequence": 4,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4000",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "101086.00",
+            "floating_pnl": "-300.00",
+            "margin": "10500.00",
+            "available_funds": "90586.00",
+            "loss_percent": "0.30",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "2000.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "C",
+            "equity": "999995.00",
+            "floating_pnl": "-1500.00",
+            "margin": "144000.00",
+            "available_funds": "855995.00",
+            "loss_percent": "0.15",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          }
+        ],
+        "order": {
+          "account_id": "A",
+          "request_id": "close-yesterday",
+          "status": "FILLED",
+          "reason": "EXECUTED",
+          "price": "3500",
+          "fee": "2.00",
+          "duplicate": false
+        }
+      },
+      {
+        "step": 12,
+        "kind": "frame",
+        "trading_day": "2026-09-10",
+        "frame_sequence": 5,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4005",
+          "DCE.i2701": "810",
+          "SHFE.rb2610": "3490"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "100786.00",
+            "floating_pnl": "-600.00",
+            "margin": "10470.00",
+            "available_funds": "90316.00",
+            "loss_percent": "0.60",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "B",
+            "equity": "197994.00",
+            "floating_pnl": "0.00",
+            "margin": "19440.00",
+            "available_funds": "178554.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "C",
+            "equity": "1001495.00",
+            "floating_pnl": "0.00",
+            "margin": "144180.00",
+            "available_funds": "857315.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          }
+        ],
+        "order": null
+      },
+      {
+        "step": 13,
+        "kind": "frame",
+        "trading_day": "2026-09-10",
+        "frame_sequence": 6,
+        "phase": "OPEN",
+        "prices": {
+          "CFFEX.IF2609": "4010",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "101086.00",
+            "floating_pnl": "-300.00",
+            "margin": "10500.00",
+            "available_funds": "90586.00",
+            "loss_percent": "0.30",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "2000.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          },
+          {
+            "account_id": "C",
+            "equity": "1002995.00",
+            "floating_pnl": "1500.00",
+            "margin": "144360.00",
+            "available_funds": "858635.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": true
+          }
+        ],
+        "order": null
+      },
+      {
+        "step": 14,
+        "kind": "close",
+        "trading_day": "2026-09-10",
+        "frame_sequence": 6,
+        "phase": "CLOSING",
+        "prices": {
+          "CFFEX.IF2609": "4010",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "101086.00",
+            "floating_pnl": "-300.00",
+            "margin": "10500.00",
+            "available_funds": "90586.00",
+            "loss_percent": "0.30",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "2000.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "C",
+            "equity": "1002995.00",
+            "floating_pnl": "1500.00",
+            "margin": "144360.00",
+            "available_funds": "858635.00",
+            "loss_percent": "0.00",
+            "settled_balance": null,
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          }
+        ],
+        "order": null
+      },
+      {
+        "step": 15,
+        "kind": "settle",
+        "trading_day": "2026-09-10",
+        "frame_sequence": 6,
+        "phase": "SETTLED",
+        "prices": {
+          "CFFEX.IF2609": "4010",
+          "DCE.i2701": "800",
+          "SHFE.rb2610": "3500"
+        },
+        "accounts": [
+          {
+            "account_id": "A",
+            "equity": "101086.00",
+            "floating_pnl": "-300.00",
+            "margin": "10500.00",
+            "available_funds": "90586.00",
+            "loss_percent": "0.30",
+            "settled_balance": "100786.00",
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "B",
+            "equity": "199994.00",
+            "floating_pnl": "2000.00",
+            "margin": "19200.00",
+            "available_funds": "180794.00",
+            "loss_percent": "0.00",
+            "settled_balance": "199994.00",
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          },
+          {
+            "account_id": "C",
+            "equity": "1002995.00",
+            "floating_pnl": "1500.00",
+            "margin": "144360.00",
+            "available_funds": "858635.00",
+            "loss_percent": "0.00",
+            "settled_balance": "1002995.00",
+            "circuit_broken": false,
+            "warning": false,
+            "restricted_products": [],
+            "opening_allowed": false
+          }
+        ],
+        "order": null
+      }
+    ],
+    "events": [
+      {
+        "step": 3,
+        "trading_day": "2026-09-09",
+        "account_id": "A",
+        "frame_sequence": 2,
+        "kind": "LOSS_WARNING_ENTER",
+        "product_id": null
+      },
+      {
+        "step": 5,
+        "trading_day": "2026-09-09",
+        "account_id": "A",
+        "frame_sequence": 3,
+        "kind": "LOSS_WARNING_EXIT",
+        "product_id": null
+      }
+    ],
+    "report_count": 2,
+    "state_digest": "14a8eaec815e2069ec9ac7a716d49bdd34aeb77caf211b71f3f8a0d82485597c",
+    "matches_recording": null
+  }
+}

@@ -192,6 +192,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/replay/current": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Current */
+        get: operations["exportReplayHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/replay/example": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Example */
+        get: operations["getReplayExample"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/replay/run": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Replay */
+        post: operations["runReplay"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/replay/validate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Validate */
+        post: operations["validateReplayDataset"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/reports": {
         parameters: {
             query?: never;
@@ -451,6 +519,30 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AccountComparison */
+        AccountComparison: {
+            /** Account Id */
+            account_id: string;
+            /** Breaker Percent */
+            breaker_percent: string;
+            /** Exposures */
+            exposures: components["schemas"]["ExposureUsage"][];
+            /** Loss Limit */
+            loss_limit: string;
+            /** Loss Percent */
+            loss_percent: string | null;
+            /** Margin Percent */
+            margin_percent: string | null;
+            /** Warning Percent */
+            warning_percent: string;
+        };
+        /** AccountConfig */
+        AccountConfig: {
+            /** Account Id */
+            account_id: string;
+            /** Initial Capital */
+            initial_capital: string;
+        };
         /** AccountResponse */
         AccountResponse: {
             /** Account Id */
@@ -520,6 +612,20 @@ export interface components {
             /** Trading Day */
             trading_day: string;
         };
+        /** DayStep */
+        DayStep: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "close" | "open_day" | "settle";
+            /** Prices */
+            prices?: {
+                [key: string]: string;
+            };
+            /** Trading Day */
+            trading_day: string;
+        };
         /** DemoStatus */
         DemoStatus: {
             /** Initial Prices */
@@ -531,6 +637,17 @@ export interface components {
              * @enum {string}
              */
             mode: "continuous" | "manual" | "fault";
+        };
+        /** ExposureUsage */
+        ExposureUsage: {
+            /** Gross Exposure */
+            gross_exposure: string;
+            /** Limit */
+            limit: string;
+            /** Product Id */
+            product_id: string;
+            /** Usage Percent */
+            usage_percent: string | null;
         };
         /** FrameInput */
         FrameInput: {
@@ -550,10 +667,78 @@ export interface components {
             /** Sequence */
             sequence: number;
         };
+        /** FrameStep */
+        FrameStep: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "frame";
+            /** Prices */
+            prices: {
+                [key: string]: string;
+            };
+            /** Sequence */
+            sequence: number;
+            /**
+             * Source
+             * @default historical-replay
+             */
+            source: string;
+            /** Trading Day */
+            trading_day: string;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** InitialFillConfig */
+        InitialFillConfig: {
+            /** Account Id */
+            account_id: string;
+            /** Fill Id */
+            fill_id: string;
+            /** Instrument Id */
+            instrument_id: string;
+            /**
+             * Offset
+             * @enum {string}
+             */
+            offset: "OPEN" | "CLOSE_TODAY" | "CLOSE_YESTERDAY";
+            /** Price */
+            price: string;
+            /** Quantity */
+            quantity: number;
+            /** Sequence */
+            sequence: number;
+            /**
+             * Side
+             * @enum {string}
+             */
+            side: "LONG" | "SHORT";
+            /** Source */
+            source: string;
+        };
+        /** InstrumentConfig */
+        InstrumentConfig: {
+            /**
+             * Exchange
+             * @enum {string}
+             */
+            exchange: "SHFE" | "DCE" | "CFFEX";
+            /** Fee Per Lot */
+            fee_per_lot: string;
+            /** Instrument Id */
+            instrument_id: string;
+            /** Margin Rate */
+            margin_rate: string;
+            /** Multiplier */
+            multiplier: number;
+            /** Product */
+            product: string;
+            /** Tick Size */
+            tick_size: string;
         };
         /** InstrumentResponse */
         InstrumentResponse: {
@@ -650,6 +835,19 @@ export interface components {
              */
             status: "FILLED" | "REJECTED";
         };
+        /** OrderStep */
+        OrderStep: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "order";
+            /** Market Ready */
+            market_ready: boolean;
+            order: components["schemas"]["ReplayOrder"];
+            /** Processed At Ms */
+            processed_at_ms?: number | null;
+        };
         /** PositionAggregateResponse */
         PositionAggregateResponse: {
             /** Instrument Id */
@@ -679,6 +877,180 @@ export interface components {
             today_quantity: number;
             /** Yesterday Quantity */
             yesterday_quantity: number;
+        };
+        /** ProductLimitConfig */
+        ProductLimitConfig: {
+            /** Account Id */
+            account_id: string;
+            /** Amount */
+            amount: string;
+            /** Product Id */
+            product_id: string;
+        };
+        /** ReplayAccount */
+        ReplayAccount: {
+            /** Account Id */
+            account_id: string;
+            /** Available Funds */
+            available_funds: string | null;
+            /** Circuit Broken */
+            circuit_broken: boolean;
+            /** Equity */
+            equity: string | null;
+            /** Floating Pnl */
+            floating_pnl: string | null;
+            /** Loss Percent */
+            loss_percent: string | null;
+            /** Margin */
+            margin: string | null;
+            /** Opening Allowed */
+            opening_allowed: boolean;
+            /** Restricted Products */
+            restricted_products: string[];
+            /** Settled Balance */
+            settled_balance: string | null;
+            /** Warning */
+            warning: boolean;
+        };
+        /** ReplayComparison */
+        ReplayComparison: {
+            baseline: components["schemas"]["ReplayResult"];
+            candidate: components["schemas"]["ReplayResult"];
+            /** Dataset Digest */
+            dataset_digest: string;
+            /** Name */
+            name: string;
+        };
+        /** ReplayDataset */
+        ReplayDataset: {
+            /** Expected Digest */
+            expected_digest?: string | null;
+            /**
+             * Format Version
+             * @default 1
+             * @constant
+             */
+            format_version: 1;
+            /** Name */
+            name: string;
+            policy: components["schemas"]["TradingSettings"];
+            /**
+             * Repeat Daily
+             * @default false
+             */
+            repeat_daily: boolean;
+            seed: components["schemas"]["ReplaySeed"];
+            /** Settlement Days */
+            settlement_days?: components["schemas"]["SettlementDaySettings"][];
+            /** Steps */
+            steps: (components["schemas"]["FrameStep"] | components["schemas"]["OrderStep"] | components["schemas"]["DayStep"])[];
+        };
+        /** ReplayEvent */
+        ReplayEvent: {
+            /** Account Id */
+            account_id: string;
+            /** Frame Sequence */
+            frame_sequence: number;
+            /** Kind */
+            kind: string;
+            /** Product Id */
+            product_id: string | null;
+            /** Step */
+            step: number;
+            /** Trading Day */
+            trading_day: string;
+        };
+        /** ReplayOrder */
+        ReplayOrder: {
+            /** Account Id */
+            account_id: string;
+            /** Instrument Id */
+            instrument_id: string;
+            /**
+             * Offset
+             * @enum {string}
+             */
+            offset: "OPEN" | "CLOSE_TODAY" | "CLOSE_YESTERDAY";
+            /** Quantity */
+            quantity: number;
+            /** Request Id */
+            request_id: string;
+            /**
+             * Side
+             * @enum {string}
+             */
+            side: "LONG" | "SHORT";
+            /** Trading Day */
+            trading_day: string;
+        };
+        /** ReplayOrderResult */
+        ReplayOrderResult: {
+            /** Account Id */
+            account_id: string;
+            /** Duplicate */
+            duplicate: boolean;
+            /** Fee */
+            fee: string | null;
+            /** Price */
+            price: string | null;
+            /** Reason */
+            reason: string;
+            /** Request Id */
+            request_id: string;
+            /** Status */
+            status: string;
+        };
+        /** ReplayPoint */
+        ReplayPoint: {
+            /** Accounts */
+            accounts: components["schemas"]["ReplayAccount"][];
+            /** Frame Sequence */
+            frame_sequence: number | null;
+            /** Kind */
+            kind: string;
+            order: components["schemas"]["ReplayOrderResult"] | null;
+            /** Phase */
+            phase: string;
+            /** Prices */
+            prices: {
+                [key: string]: string;
+            };
+            /** Step */
+            step: number;
+            /** Trading Day */
+            trading_day: string;
+        };
+        /** ReplayRequest */
+        ReplayRequest: {
+            candidate_policy?: components["schemas"]["TradingSettings"] | null;
+            dataset: components["schemas"]["ReplayDataset"];
+        };
+        /** ReplayResult */
+        ReplayResult: {
+            /** Events */
+            events: components["schemas"]["ReplayEvent"][];
+            /** Matches Recording */
+            matches_recording: boolean | null;
+            /** Points */
+            points: components["schemas"]["ReplayPoint"][];
+            policy: components["schemas"]["TradingSettings"];
+            /** Report Count */
+            report_count: number;
+            /** State Digest */
+            state_digest: string;
+        };
+        /** ReplaySeed */
+        ReplaySeed: {
+            /** Accounts */
+            accounts: components["schemas"]["AccountConfig"][];
+            /** Initial Fills */
+            initial_fills?: components["schemas"]["InitialFillConfig"][];
+            /** Instruments */
+            instruments: components["schemas"]["InstrumentConfig"][];
+            /** Run Id */
+            run_id: string;
+            /** Trading Day */
+            trading_day: string;
         };
         /** ReportAccountResponse */
         ReportAccountResponse: {
@@ -860,6 +1232,17 @@ export interface components {
             /** Trading Day */
             trading_day: string;
         };
+        /** SettlementDaySettings */
+        SettlementDaySettings: {
+            /** Close Sequence */
+            close_sequence: number;
+            /** Prices */
+            prices: {
+                [key: string]: string;
+            };
+            /** Trading Day */
+            trading_day: string;
+        };
         /** SettlementLineResponse */
         SettlementLineResponse: {
             /** Basis */
@@ -1014,6 +1397,34 @@ export interface components {
              */
             trading_day: string;
         };
+        /** TradingSettings */
+        TradingSettings: {
+            /**
+             * Default Product Limit
+             * @default 1000000
+             */
+            default_product_limit: string;
+            /**
+             * Loss Ratio
+             * @default 0.03
+             */
+            loss_ratio: string;
+            /**
+             * Max Price Age Seconds
+             * @default 30
+             */
+            max_price_age_seconds: number;
+            /**
+             * Product Limits
+             * @default []
+             */
+            product_limits: components["schemas"]["ProductLimitConfig"][];
+            /**
+             * Warning Ratio
+             * @default 0.02
+             */
+            warning_ratio: string;
+        };
         /** ValidationError */
         ValidationError: {
             /** Context */
@@ -1040,10 +1451,13 @@ export interface components {
             /** Instruments */
             instruments: components["schemas"]["InstrumentResponse"][];
             market: components["schemas"]["MarketResponse"] | null;
+            policy?: components["schemas"]["TradingSettings"] | null;
             /** Positions */
             positions: components["schemas"]["PositionResponse"][];
             /** Revision */
             revision: number;
+            /** Risk Comparison */
+            risk_comparison?: components["schemas"]["AccountComparison"][];
             /** Risks */
             risks: components["schemas"]["RiskResponse"][];
             /** Run Id */
@@ -1387,6 +1801,112 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PositionAggregateResponse"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    exportReplayHistory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReplayDataset"];
+                };
+            };
+        };
+    };
+    getReplayExample: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReplayDataset"];
+                };
+            };
+        };
+    };
+    runReplay: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReplayRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReplayComparison"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    validateReplayDataset: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReplayDataset"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReplayDataset"];
                 };
             };
             /** @description Validation Error */

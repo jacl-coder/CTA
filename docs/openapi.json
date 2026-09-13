@@ -1,6 +1,85 @@
 {
   "components": {
     "schemas": {
+      "AccountComparison": {
+        "properties": {
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "breaker_percent": {
+            "title": "Breaker Percent",
+            "type": "string"
+          },
+          "exposures": {
+            "items": {
+              "$ref": "#/components/schemas/ExposureUsage"
+            },
+            "title": "Exposures",
+            "type": "array"
+          },
+          "loss_limit": {
+            "title": "Loss Limit",
+            "type": "string"
+          },
+          "loss_percent": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Loss Percent"
+          },
+          "margin_percent": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Margin Percent"
+          },
+          "warning_percent": {
+            "title": "Warning Percent",
+            "type": "string"
+          }
+        },
+        "required": [
+          "account_id",
+          "loss_percent",
+          "loss_limit",
+          "warning_percent",
+          "breaker_percent",
+          "margin_percent",
+          "exposures"
+        ],
+        "title": "AccountComparison",
+        "type": "object"
+      },
+      "AccountConfig": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "initial_capital": {
+            "title": "Initial Capital",
+            "type": "string"
+          }
+        },
+        "required": [
+          "account_id",
+          "initial_capital"
+        ],
+        "title": "AccountConfig",
+        "type": "object"
+      },
       "AccountResponse": {
         "properties": {
           "account_id": {
@@ -173,6 +252,37 @@
         "title": "DayResponse",
         "type": "object"
       },
+      "DayStep": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "enum": [
+              "close",
+              "settle",
+              "open_day"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "prices": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Prices",
+            "type": "object"
+          },
+          "trading_day": {
+            "title": "Trading Day",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "trading_day"
+        ],
+        "title": "DayStep",
+        "type": "object"
+      },
       "DemoStatus": {
         "properties": {
           "initial_prices": {
@@ -197,6 +307,41 @@
           "initial_prices"
         ],
         "title": "DemoStatus",
+        "type": "object"
+      },
+      "ExposureUsage": {
+        "properties": {
+          "gross_exposure": {
+            "title": "Gross Exposure",
+            "type": "string"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "string"
+          },
+          "product_id": {
+            "title": "Product Id",
+            "type": "string"
+          },
+          "usage_percent": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Usage Percent"
+          }
+        },
+        "required": [
+          "product_id",
+          "gross_exposure",
+          "limit",
+          "usage_percent"
+        ],
+        "title": "ExposureUsage",
         "type": "object"
       },
       "FrameInput": {
@@ -244,6 +389,44 @@
         "title": "FrameResponse",
         "type": "object"
       },
+      "FrameStep": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "frame",
+            "title": "Kind",
+            "type": "string"
+          },
+          "prices": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Prices",
+            "type": "object"
+          },
+          "sequence": {
+            "title": "Sequence",
+            "type": "integer"
+          },
+          "source": {
+            "default": "historical-replay",
+            "title": "Source",
+            "type": "string"
+          },
+          "trading_day": {
+            "title": "Trading Day",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "sequence",
+          "trading_day",
+          "prices"
+        ],
+        "title": "FrameStep",
+        "type": "object"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -255,6 +438,118 @@
           }
         },
         "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "InitialFillConfig": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "fill_id": {
+            "title": "Fill Id",
+            "type": "string"
+          },
+          "instrument_id": {
+            "title": "Instrument Id",
+            "type": "string"
+          },
+          "offset": {
+            "enum": [
+              "OPEN",
+              "CLOSE_TODAY",
+              "CLOSE_YESTERDAY"
+            ],
+            "title": "Offset",
+            "type": "string"
+          },
+          "price": {
+            "title": "Price",
+            "type": "string"
+          },
+          "quantity": {
+            "title": "Quantity",
+            "type": "integer"
+          },
+          "sequence": {
+            "title": "Sequence",
+            "type": "integer"
+          },
+          "side": {
+            "enum": [
+              "LONG",
+              "SHORT"
+            ],
+            "title": "Side",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "fill_id",
+          "account_id",
+          "instrument_id",
+          "sequence",
+          "side",
+          "offset",
+          "quantity",
+          "price",
+          "source"
+        ],
+        "title": "InitialFillConfig",
+        "type": "object"
+      },
+      "InstrumentConfig": {
+        "additionalProperties": false,
+        "properties": {
+          "exchange": {
+            "enum": [
+              "SHFE",
+              "DCE",
+              "CFFEX"
+            ],
+            "title": "Exchange",
+            "type": "string"
+          },
+          "fee_per_lot": {
+            "title": "Fee Per Lot",
+            "type": "string"
+          },
+          "instrument_id": {
+            "title": "Instrument Id",
+            "type": "string"
+          },
+          "margin_rate": {
+            "title": "Margin Rate",
+            "type": "string"
+          },
+          "multiplier": {
+            "title": "Multiplier",
+            "type": "integer"
+          },
+          "product": {
+            "title": "Product",
+            "type": "string"
+          },
+          "tick_size": {
+            "title": "Tick Size",
+            "type": "string"
+          }
+        },
+        "required": [
+          "instrument_id",
+          "product",
+          "exchange",
+          "multiplier",
+          "tick_size",
+          "margin_rate",
+          "fee_per_lot"
+        ],
+        "title": "InstrumentConfig",
         "type": "object"
       },
       "InstrumentResponse": {
@@ -530,6 +825,41 @@
         "title": "OrderResponse",
         "type": "object"
       },
+      "OrderStep": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "order",
+            "title": "Kind",
+            "type": "string"
+          },
+          "market_ready": {
+            "title": "Market Ready",
+            "type": "boolean"
+          },
+          "order": {
+            "$ref": "#/components/schemas/ReplayOrder"
+          },
+          "processed_at_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Processed At Ms"
+          }
+        },
+        "required": [
+          "kind",
+          "order",
+          "market_ready"
+        ],
+        "title": "OrderStep",
+        "type": "object"
+      },
       "PositionAggregateResponse": {
         "properties": {
           "instrument_id": {
@@ -607,6 +937,591 @@
           "yesterday_quantity"
         ],
         "title": "PositionResponse",
+        "type": "object"
+      },
+      "ProductLimitConfig": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "amount": {
+            "title": "Amount",
+            "type": "string"
+          },
+          "product_id": {
+            "title": "Product Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "account_id",
+          "product_id",
+          "amount"
+        ],
+        "title": "ProductLimitConfig",
+        "type": "object"
+      },
+      "ReplayAccount": {
+        "properties": {
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "available_funds": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Available Funds"
+          },
+          "circuit_broken": {
+            "title": "Circuit Broken",
+            "type": "boolean"
+          },
+          "equity": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Equity"
+          },
+          "floating_pnl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Floating Pnl"
+          },
+          "loss_percent": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Loss Percent"
+          },
+          "margin": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Margin"
+          },
+          "opening_allowed": {
+            "title": "Opening Allowed",
+            "type": "boolean"
+          },
+          "restricted_products": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Restricted Products",
+            "type": "array"
+          },
+          "settled_balance": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Settled Balance"
+          },
+          "warning": {
+            "title": "Warning",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "account_id",
+          "equity",
+          "floating_pnl",
+          "margin",
+          "available_funds",
+          "loss_percent",
+          "settled_balance",
+          "circuit_broken",
+          "warning",
+          "restricted_products",
+          "opening_allowed"
+        ],
+        "title": "ReplayAccount",
+        "type": "object"
+      },
+      "ReplayComparison": {
+        "properties": {
+          "baseline": {
+            "$ref": "#/components/schemas/ReplayResult"
+          },
+          "candidate": {
+            "$ref": "#/components/schemas/ReplayResult"
+          },
+          "dataset_digest": {
+            "title": "Dataset Digest",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "dataset_digest",
+          "baseline",
+          "candidate"
+        ],
+        "title": "ReplayComparison",
+        "type": "object"
+      },
+      "ReplayDataset": {
+        "additionalProperties": false,
+        "properties": {
+          "expected_digest": {
+            "anyOf": [
+              {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Digest"
+          },
+          "format_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Format Version",
+            "type": "integer"
+          },
+          "name": {
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/TradingSettings"
+          },
+          "repeat_daily": {
+            "default": false,
+            "title": "Repeat Daily",
+            "type": "boolean"
+          },
+          "seed": {
+            "$ref": "#/components/schemas/ReplaySeed"
+          },
+          "settlement_days": {
+            "items": {
+              "$ref": "#/components/schemas/SettlementDaySettings"
+            },
+            "maxItems": 100,
+            "title": "Settlement Days",
+            "type": "array"
+          },
+          "steps": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "close": "#/components/schemas/DayStep",
+                  "frame": "#/components/schemas/FrameStep",
+                  "open_day": "#/components/schemas/DayStep",
+                  "order": "#/components/schemas/OrderStep",
+                  "settle": "#/components/schemas/DayStep"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/FrameStep"
+                },
+                {
+                  "$ref": "#/components/schemas/OrderStep"
+                },
+                {
+                  "$ref": "#/components/schemas/DayStep"
+                }
+              ]
+            },
+            "maxItems": 5000,
+            "minItems": 1,
+            "title": "Steps",
+            "type": "array"
+          }
+        },
+        "required": [
+          "name",
+          "seed",
+          "policy",
+          "steps"
+        ],
+        "title": "ReplayDataset",
+        "type": "object"
+      },
+      "ReplayEvent": {
+        "properties": {
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "frame_sequence": {
+            "title": "Frame Sequence",
+            "type": "integer"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "product_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Product Id"
+          },
+          "step": {
+            "title": "Step",
+            "type": "integer"
+          },
+          "trading_day": {
+            "title": "Trading Day",
+            "type": "string"
+          }
+        },
+        "required": [
+          "step",
+          "trading_day",
+          "account_id",
+          "frame_sequence",
+          "kind",
+          "product_id"
+        ],
+        "title": "ReplayEvent",
+        "type": "object"
+      },
+      "ReplayOrder": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "instrument_id": {
+            "title": "Instrument Id",
+            "type": "string"
+          },
+          "offset": {
+            "enum": [
+              "OPEN",
+              "CLOSE_TODAY",
+              "CLOSE_YESTERDAY"
+            ],
+            "title": "Offset",
+            "type": "string"
+          },
+          "quantity": {
+            "title": "Quantity",
+            "type": "integer"
+          },
+          "request_id": {
+            "title": "Request Id",
+            "type": "string"
+          },
+          "side": {
+            "enum": [
+              "LONG",
+              "SHORT"
+            ],
+            "title": "Side",
+            "type": "string"
+          },
+          "trading_day": {
+            "title": "Trading Day",
+            "type": "string"
+          }
+        },
+        "required": [
+          "request_id",
+          "account_id",
+          "instrument_id",
+          "trading_day",
+          "side",
+          "offset",
+          "quantity"
+        ],
+        "title": "ReplayOrder",
+        "type": "object"
+      },
+      "ReplayOrderResult": {
+        "properties": {
+          "account_id": {
+            "title": "Account Id",
+            "type": "string"
+          },
+          "duplicate": {
+            "title": "Duplicate",
+            "type": "boolean"
+          },
+          "fee": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fee"
+          },
+          "price": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "request_id": {
+            "title": "Request Id",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "account_id",
+          "request_id",
+          "status",
+          "reason",
+          "price",
+          "fee",
+          "duplicate"
+        ],
+        "title": "ReplayOrderResult",
+        "type": "object"
+      },
+      "ReplayPoint": {
+        "properties": {
+          "accounts": {
+            "items": {
+              "$ref": "#/components/schemas/ReplayAccount"
+            },
+            "title": "Accounts",
+            "type": "array"
+          },
+          "frame_sequence": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Frame Sequence"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "order": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ReplayOrderResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phase": {
+            "title": "Phase",
+            "type": "string"
+          },
+          "prices": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Prices",
+            "type": "object"
+          },
+          "step": {
+            "title": "Step",
+            "type": "integer"
+          },
+          "trading_day": {
+            "title": "Trading Day",
+            "type": "string"
+          }
+        },
+        "required": [
+          "step",
+          "kind",
+          "trading_day",
+          "frame_sequence",
+          "phase",
+          "prices",
+          "accounts",
+          "order"
+        ],
+        "title": "ReplayPoint",
+        "type": "object"
+      },
+      "ReplayRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "candidate_policy": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TradingSettings"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "dataset": {
+            "$ref": "#/components/schemas/ReplayDataset"
+          }
+        },
+        "required": [
+          "dataset"
+        ],
+        "title": "ReplayRequest",
+        "type": "object"
+      },
+      "ReplayResult": {
+        "properties": {
+          "events": {
+            "items": {
+              "$ref": "#/components/schemas/ReplayEvent"
+            },
+            "title": "Events",
+            "type": "array"
+          },
+          "matches_recording": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Matches Recording"
+          },
+          "points": {
+            "items": {
+              "$ref": "#/components/schemas/ReplayPoint"
+            },
+            "title": "Points",
+            "type": "array"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/TradingSettings"
+          },
+          "report_count": {
+            "title": "Report Count",
+            "type": "integer"
+          },
+          "state_digest": {
+            "title": "State Digest",
+            "type": "string"
+          }
+        },
+        "required": [
+          "policy",
+          "points",
+          "events",
+          "report_count",
+          "state_digest",
+          "matches_recording"
+        ],
+        "title": "ReplayResult",
+        "type": "object"
+      },
+      "ReplaySeed": {
+        "additionalProperties": false,
+        "properties": {
+          "accounts": {
+            "items": {
+              "$ref": "#/components/schemas/AccountConfig"
+            },
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Accounts",
+            "type": "array"
+          },
+          "initial_fills": {
+            "items": {
+              "$ref": "#/components/schemas/InitialFillConfig"
+            },
+            "maxItems": 1000,
+            "title": "Initial Fills",
+            "type": "array"
+          },
+          "instruments": {
+            "items": {
+              "$ref": "#/components/schemas/InstrumentConfig"
+            },
+            "maxItems": 30,
+            "minItems": 1,
+            "title": "Instruments",
+            "type": "array"
+          },
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "trading_day": {
+            "title": "Trading Day",
+            "type": "string"
+          }
+        },
+        "required": [
+          "run_id",
+          "trading_day",
+          "accounts",
+          "instruments"
+        ],
+        "title": "ReplaySeed",
         "type": "object"
       },
       "ReportAccountResponse": {
@@ -1148,6 +2063,33 @@
         "title": "SettlementDayResponse",
         "type": "object"
       },
+      "SettlementDaySettings": {
+        "additionalProperties": false,
+        "properties": {
+          "close_sequence": {
+            "title": "Close Sequence",
+            "type": "integer"
+          },
+          "prices": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Prices",
+            "type": "object"
+          },
+          "trading_day": {
+            "title": "Trading Day",
+            "type": "string"
+          }
+        },
+        "required": [
+          "trading_day",
+          "close_sequence",
+          "prices"
+        ],
+        "title": "SettlementDaySettings",
+        "type": "object"
+      },
       "SettlementLineResponse": {
         "properties": {
           "basis": {
@@ -1572,6 +2514,41 @@
         "title": "TradeResponse",
         "type": "object"
       },
+      "TradingSettings": {
+        "additionalProperties": false,
+        "properties": {
+          "default_product_limit": {
+            "default": "1000000",
+            "title": "Default Product Limit",
+            "type": "string"
+          },
+          "loss_ratio": {
+            "default": "0.03",
+            "title": "Loss Ratio",
+            "type": "string"
+          },
+          "max_price_age_seconds": {
+            "default": 30,
+            "title": "Max Price Age Seconds",
+            "type": "integer"
+          },
+          "product_limits": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ProductLimitConfig"
+            },
+            "title": "Product Limits",
+            "type": "array"
+          },
+          "warning_ratio": {
+            "default": "0.02",
+            "title": "Warning Ratio",
+            "type": "string"
+          }
+        },
+        "title": "TradingSettings",
+        "type": "object"
+      },
       "ValidationError": {
         "properties": {
           "ctx": {
@@ -1659,6 +2636,16 @@
               }
             ]
           },
+          "policy": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TradingSettings"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "positions": {
             "items": {
               "$ref": "#/components/schemas/PositionResponse"
@@ -1669,6 +2656,13 @@
           "revision": {
             "title": "Revision",
             "type": "integer"
+          },
+          "risk_comparison": {
+            "items": {
+              "$ref": "#/components/schemas/AccountComparison"
+            },
+            "title": "Risk Comparison",
+            "type": "array"
           },
           "risks": {
             "items": {
@@ -2258,6 +3252,140 @@
         "summary": "Position Summary",
         "tags": [
           "ledger"
+        ]
+      }
+    },
+    "/api/replay/current": {
+      "get": {
+        "operationId": "exportReplayHistory",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReplayDataset"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Current",
+        "tags": [
+          "replay"
+        ]
+      }
+    },
+    "/api/replay/example": {
+      "get": {
+        "operationId": "getReplayExample",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReplayDataset"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Example",
+        "tags": [
+          "replay"
+        ]
+      }
+    },
+    "/api/replay/run": {
+      "post": {
+        "operationId": "runReplay",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplayRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReplayComparison"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Replay",
+        "tags": [
+          "replay"
+        ]
+      }
+    },
+    "/api/replay/validate": {
+      "post": {
+        "operationId": "validateReplayDataset",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplayDataset"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReplayDataset"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Validate",
+        "tags": [
+          "replay"
         ]
       }
     },

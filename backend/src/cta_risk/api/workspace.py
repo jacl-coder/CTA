@@ -4,7 +4,7 @@ import time
 from decimal import Decimal
 
 from fastapi import APIRouter, Request
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from cta_risk.api.ledger import AccountResponse, PositionResponse, accounts, positions
 from cta_risk.api.market import SourcesResponse, sources
@@ -12,8 +12,11 @@ from cta_risk.api.routes import system_status
 from cta_risk.api.schemas import SystemResponse
 from cta_risk.api.settlement import SessionStatus, status
 from cta_risk.api.trading import MarketResponse, RiskResponse, market, risk
+from cta_risk.application.analytics import AccountComparison, comparison
 from cta_risk.application.contracts import LedgerUnavailable
 from cta_risk.application.ledger import LedgerService
+from cta_risk.application.trading import encode
+from cta_risk.config.trading import TradingSettings
 from cta_risk.demonstration import DemoController, DemoStatus
 from cta_risk.domain.numbers import total
 from cta_risk.settlement.scheduler import SettlementScheduler
@@ -67,6 +70,8 @@ class Totals(BaseModel):
 
 class WorkspaceResponse(BaseModel):
     demo: DemoStatus | None = None
+    risk_comparison: list[AccountComparison] = Field(default_factory=list)
+    policy: TradingSettings | None = None
     instance_id: str
     run_id: str | None
     revision: int
@@ -147,6 +152,9 @@ async def workspace(request: Request) -> WorkspaceResponse:
             result.revision = service.trading_state().revision
             result.market = await market(service)
             result.risks = await risk(service)
+            assert service.policy is not None
+            result.risk_comparison = list(comparison(service.trading_state(), service.policy))
+            result.policy = TradingSettings.model_validate_json(encode(service.policy))
             result.totals = Totals.from_risks(result.risks)
         if service.market_plan is not None:
             result.sources = await sources(service)

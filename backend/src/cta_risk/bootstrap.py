@@ -1,5 +1,6 @@
 """组合根：装配适配层；创建应用不启动后台任务或修改数据库。"""
 
+import asyncio
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -12,6 +13,7 @@ from cta_risk.api.demo import ScenarioGuard
 from cta_risk.api.demo import router as demo_router
 from cta_risk.api.ledger import router as ledger_router
 from cta_risk.api.market import router as market_router
+from cta_risk.api.replay import router as replay_router
 from cta_risk.api.routes import router
 from cta_risk.api.settlement import router as settlement_router
 from cta_risk.api.static import mount_frontend
@@ -51,6 +53,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         openapi_url="/api/openapi.json",
         lifespan=lifespan,
     )
+    app.state.replay_lock = asyncio.Lock()
     app.state.demo = None
     app.state.ledger = None
     app.state.write_token = None
@@ -77,6 +80,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(settlement_router)
     app.include_router(workspace_router)
     app.include_router(demo_router)
+    app.include_router(replay_router)
     app.add_middleware(ScenarioGuard)
     packaged = Path(__file__).resolve().parent / "static"
     if settings.frontend_dir is not None:

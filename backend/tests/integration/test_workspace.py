@@ -378,6 +378,6 @@ async def test_openapi_exposes_named_typed_read_contracts() -> None:
     }
     for name in ("WorkspaceResponse", "Capabilities", "Totals"):
         # Scene controls are optional for legacy/specialized acceptance configurations.
-        optional = {"demo"} if name == "WorkspaceResponse" else set()
+        optional = {"demo", "policy", "risk_comparison"} if name == "WorkspaceResponse" else set()
         assert set(schemas[name]["required"]) == set(schemas[name]["properties"]) - optional
     assert "JsonValue" not in json.dumps(schemas["DailyReportResponse"])

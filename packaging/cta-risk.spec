@@ -13,7 +13,8 @@ if not list(migrations.glob("*.sql")):
 analysis = Analysis(
     [str(root / "packaging" / "entrypoint.py")],
     pathex=[str(root / "backend" / "src")],
-    datas=[(str(static), "cta_risk/static"), (str(migrations), "cta_risk/storage/migrations")],
+    datas=[(str(static), "cta_risk/static"), (str(migrations), "cta_risk/storage/migrations"),
+           (str(package / "replay/sample.json"), "cta_risk/replay")],
     hiddenimports=[],
     hookspath=[],
     runtime_hooks=[],

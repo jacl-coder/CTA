@@ -33,3 +33,12 @@ it('勾选两个账户后可以集中对比', () => {
   expect(screen.getByText('账户 C')).toBeInTheDocument();
   expect(screen.queryByText('账户 B')).not.toBeInTheDocument();
 });
+it('按各账户资金规模显示浮亏比例和生效阈值，并展示配置规则', () => {
+  const value = context({ account: 'A' });
+  value.data!.risk_comparison = [{ account_id: 'A', loss_percent: '3.00', breaker_percent: '3.00', warning_percent: '2.00', loss_limit: '3000.00', margin_percent: '10.00', exposures: [] }];
+  value.data!.policy = { warning_ratio: '0.02', loss_ratio: '0.03', default_product_limit: '2000000', max_price_age_seconds: 30, product_limits: [] };
+  render(wrap(<OverviewPage />, value));
+  expect(screen.getByText('3.00% / 3.00%')).toBeInTheDocument();
+  expect(screen.getByText('10.00%')).toBeInTheDocument();
+  expect(screen.getByText('当前生效规则与合约参数')).toBeInTheDocument();
+});

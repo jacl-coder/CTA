@@ -27,6 +27,14 @@ class ScenarioGuard(BaseHTTPMiddleware):
             return await call_next(request)
         if controller.switching:
             return JSONResponse({"detail": "正在切换场景，请稍后刷新"}, status_code=503)
+        if request.url.path == "/api/replay/run":
+            # Replay uses only the submitted immutable dataset. It must not hold the
+            # runtime switch lock while computing or block normal workspace reads.
+            try:
+                controller.check_run(request.headers.get("x-cta-run-id"))
+            except CommandConflict as exc:
+                return JSONResponse({"detail": str(exc)}, status_code=409)
+            return await call_next(request)
         async with controller.lock:
             # GET workspace/session deliberately omit the run binding so an old tab
             # can discover the new state. Business reads can opt in; writes must bind.

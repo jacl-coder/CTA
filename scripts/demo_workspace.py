@@ -120,6 +120,34 @@ def main() -> None:
                     "同一进程：持续行情 → 手工交易 → 3000 元熔断 → 反弹保持 → 清算 100390 元",
                     flush=True,
                 )
+                history = read("/api/replay/current")
+                before = read("/api/workspace")["revision"]
+                replay = post("/api/replay/run", {"dataset": history}, run_id)
+                assert replay["baseline"]["matches_recording"]
+                assert replay["baseline"] == replay["candidate"]
+                assert read("/api/workspace")["revision"] == before
+                example = read("/api/replay/example")
+                candidate = {**example["policy"], "loss_ratio": "0.05"}
+                compared = post(
+                    "/api/replay/run",
+                    {
+                        "dataset": example,
+                        "candidate_policy": candidate,
+                    },
+                    run_id,
+                )
+                assert compared["baseline"]["points"][3]["order"]["reason"] == "CIRCUIT_BROKEN"
+                assert compared["candidate"]["points"][3]["order"]["status"] == "FILLED"
+                assert (
+                    compared["baseline"]["points"][7]["accounts"][0]["settled_balance"]
+                    == "100390.00"
+                )
+                assert (
+                    compared["candidate"]["points"][7]["accounts"][0]["settled_balance"]
+                    == "101488.00"
+                )
+                assert read("/api/workspace")["revision"] == before
+                print("历史导出与完整状态重算一致、3%/5% 规则对照和在线账本隔离通过", flush=True)
                 post("/api/demo/switch", {"mode": "fault"}, run_id)
                 post("/api/settlement/close", {"trading_day": day}, run_id, status=409)
                 fault = read("/api/workspace")

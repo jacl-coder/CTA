@@ -381,6 +381,16 @@ class SQLiteLedgerStore:
             )
         )
 
+    def read_journal(self, run_id: str, revision: int) -> tuple[JournalEntry, ...]:
+        return tuple(
+            JournalEntry(item[0], item[1], item[2])
+            for item in self._db().execute(
+                "SELECT revision, command_json, outcome_json FROM trading_journal "
+                "WHERE run_id=? AND revision<=? ORDER BY revision",
+                (run_id, revision),
+            )
+        )
+
     def _insert_journal(self, run_id: str, entry: JournalEntry) -> None:
         latest = (
             self._db()
